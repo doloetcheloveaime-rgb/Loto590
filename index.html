@@ -1,243 +1,63 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LOTO 5/90 - Web App V2</title>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LOTO 5/90 - Bénin</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
-body{background:#f2f0e6;padding-bottom:90px}
-header{background:#0a4d2e;color:#fff;padding:16px;text-align:center;position:sticky;top:0;z-index:10}
-header h1{color:#f5c542;font-size:22px}
-header p{font-size:12px;opacity:.9}
-.solde{background:#fff;margin:14px;border-radius:16px;padding:16px;border:2px solid #f5c542;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.solde small{color:#666}
-.solde b{font-size:30px;color:#0a4d2e}
-.btn{width:100%;padding:14px;border:none;border-radius:12px;font-weight:800;font-size:16px;cursor:pointer}
-.btn-gold{background:#f5c542;color:#0a4d2e}
-.btn-green{background:#0a4d2e;color:#fff}
-.btn-outline{background:#fff;border:2px solid #0a4d2e;color:#0a4d2e}
-.btn-danger{background:#fff;border:2px solid #dc3545;color:#dc3545}
-.card{background:#fff;margin:12px 14px;border-radius:16px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-.card h3{color:#0a4d2e;margin-bottom:8px}
-.row{display:flex;gap:8px;flex-wrap:wrap}
-.chip{padding:10px 14px;border-radius:999px;border:2px solid #ddd;background:#fff;cursor:pointer;font-weight:700}
-.chip.active{background:#0a4d2e;color:#fff;border-color:#0a4d2e}
-.boules{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.num{display:inline-flex;width:42px;height:42px;border-radius:50%;background:#f5c542;align-items:center;justify-content:center;font-weight:900;font-size:15px;flex-shrink:0}
-.num-green{background:#0a4d2e;color:#fff}
-input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;margin:6px 0;font-size:15px}
-.tabbar{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;border-top:1px solid #ddd;padding:8px 0}
-.tabbar button{flex:1;background:none;border:none;font-weight:800;color:#0a4d2e;cursor:pointer;font-size:12px}
-.hidden{display:none}
-.badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800}
-.win{background:#d4edda;color:#155724}
-.wait{background:#fff3cd;color:#856404}
-.histo-item{border-bottom:1px solid #eee;padding:10px 0}
-.histo-item:last-child{border-bottom:none}
-.top-info{font-size:12px;color:#666;margin-top:6px}
-</style>
-</head>
-<body>
+body{font-family:sans-serif;background:#0f172a;color:#fff;text-align:center;margin:0;padding:15px}
+h1{color:#facc15}.grid{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;max-width:480px;margin:15px auto}
+.n{background:#1e293b;border:1px solid #334155;color:#fff;padding:10px 0;border-radius:10px;font-weight:bold;cursor:pointer}
+.n.sel{background:#facc15;color:#000;transform:scale(1.1)}
+button{background:#facc15;border:0;padding:14px 22px;border-radius:12px;font-weight:900;font-size:16px;width:100%;max-width:480px;cursor:pointer;margin-top:10px}
+input,select{padding:12px;border-radius:10px;border:0;width:100%;max-width:480px;margin:6px 0}
+.card{background:#1e293b;padding:14px;border-radius:14px;max-width:480px;margin:10px auto;text-align:left}
+.tab{display:flex;gap:8px;max-width:480px;margin:auto}.tab button{background:#334155;color:#fff}
+.tab button.on{background:#facc15;color:#000}
+</style></head><body>
+<h1>🎱 LOTO 5/90</h1><p>Choisis 5 numéros • Mise min 100F</p>
+<div class="tab"><button id="tClient" class="on" onclick="show('client')">JOUER</button><button id="tAdmin" onclick="show('admin')">ADMIN</button></div>
 
-<header>
-<h1>⭐ LOTO 5/90</h1>
-<p>Web App V2 - Sauvegarde Auto • Bénin • Ghana • Nigeria • Togo • Côte d'Ivoire</p>
-</header>
-
-<!-- ACCUEIL -->
-<div id="page-accueil">
-  <div class="solde">
-    <small>Solde actuel • Sauvegardé ✅</small><br>
-    <b id="soldeTxt">2 500 F CFA</b><br>
-    <div class="top-info" id="lastSave">Dernière sauvegarde : maintenant</div><br>
-    <button class="btn btn-gold" onclick="show('recharge')">+ Recharger</button>
-    <div style="height:8px"></div>
-    <button class="btn btn-outline" onclick="show('retrait')">Retirer</button>
-  </div>
-
-  <div class="card">
-    <h3>🎯 Prochain tirage</h3>
-    <p><b id="paysTxt">Ghana</b> • Aujourd'hui • 21h00 GMT</p>
-    <p style="margin-top:6px">Résultat du jour :</p>
-    <div class="boules"><span class="num">07</span><span class="num">12</span><span class="num">23</span><span class="num">45</span><span class="num">88</span></div>
-  </div>
-
-  <div class="card">
-    <h3>🔥 Jeux rapides</h3>
-    <button class="btn btn-green" onclick="show('jouer')">Jouer - Two Sure : 100F = 30.000F</button>
-    <div style="height:8px"></div>
-    <button class="btn btn-outline" onclick="show('pays')">Voir les 5 Pays</button>
-  </div>
+<div id="client">
+<div class="grid" id="grid"></div>
+<p id="sel">Sélection : -</p>
+<input id="name" placeholder="Ton nom WhatsApp">
+<input id="phone" placeholder="Ton numéro WhatsApp">
+<select id="mise"><option>100</option><option>200</option><option>500</option><option>1000</option><option>2000</option><option>5000</option></select>
+<button onclick="jouer()">VALIDER MON TICKET 🎟️</button>
+<p id="msg"></p><div id="mesTickets"></div>
 </div>
 
-<!-- PAYS -->
-<div id="page-pays" class="hidden">
-  <div class="card"><h3>🌍 Pays & Tirages</h3><p>Choisis un pays pour jouer</p></div>
-  <div id="paysList"></div>
+<div id="admin" style="display:none">
+<input id="codeAdmin" placeholder="Code admin : 1234">
+<button onclick="loadAdmin()">VOIR LES TICKETS EN DIRECT 👑</button>
+<div id="listAdmin"></div>
 </div>
 
-<!-- JOUER -->
-<div id="page-jouer" class="hidden">
-  <div class="card">
-    <h3>🎲 Jouer - <span id="jeuPays">Ghana</span></h3>
-    <label>Jeu</label>
-    <select id="jeuSelect" onchange="calcul()">
-      <option value="two">Two Sure - 2 numéros - x300</option>
-      <option value="perm2">Permutation P2 - x300</option>
-      <option value="perm3">Permutation P3 - x1500</option>
-      <option value="perm4">Permutation P4 - x5000</option>
-    </select>
-    <label>Choisis tes numéros (1 à 90)</label>
-    <div id="nums"></div>
-    <p style="margin-top:8px">Sélection : <b id="selTxt">Aucun</b></p>
-    <label>Mise (F CFA)</label>
-    <input id="mise" type="number" value="100" oninput="calcul()">
-    <p>Gain possible : <b id="gainTxt" style="color:#0a4d2e">0 F</b></p>
-    <button class="btn btn-gold" onclick="valider()">Valider le coupon</button>
-  </div>
-</div>
-
-<!-- RECHARGE -->
-<div id="page-recharge" class="hidden">
-  <div class="card">
-    <h3>💰 Recharger</h3>
-    <label>Méthode</label>
-    <select id="methode"><option>MTN MoMo</option><option>Moov Money</option><option>Celtiis Money</option></select>
-    <label>Montant</label>
-    <div class="row">
-      <button class="chip" onclick="setMontant(500)">500F</button>
-      <button class="chip" onclick="setMontant(1000)">1000F</button>
-      <button class="chip" onclick="setMontant(5000)">5000F</button>
-      <button class="chip" onclick="setMontant(10000)">10000F</button>
-    </div>
-    <input id="montant" type="number" value="1000">
-    <button class="btn btn-green" onclick="recharger()">Confirmer Recharge (Démo)</button>
-    <p style="font-size:12px;margin-top:8px;color:#666">Démo : pas de vrai paiement. En V3 on branche FedaPay / Kkiapay.</p>
-  </div>
-</div>
-
-<!-- RETRAIT -->
-<div id="page-retrait" class="hidden">
-  <div class="card">
-    <h3>🏦 Retirer</h3>
-    <input id="retraitMontant" type="number" placeholder="Montant à retirer">
-    <select><option>MTN MoMo</option><option>Moov Money</option><option>Celtiis Money</option></select>
-    <button class="btn btn-green" onclick="retirer()">Demander Retrait</button>
-  </div>
-</div>
-
-<!-- COMPTE -->
-<div id="page-compte" class="hidden">
-  <div class="card"><h3>👤 Mon Compte</h3><p>Joueur Démo • +229 01 00 00 00 00<br>Solde : <b id="solde2">2 500 F</b></p>
-  <div style="height:10px"></div>
-  <button class="btn btn-danger" onclick="resetAll()">↺ Réinitialiser (Solde 2500F + Effacer historique)</button>
-  </div>
-  <div class="card"><h3>🧾 Historique Coupons</h3><div id="histo"><p>Aucun coupon pour le moment. Joue ton premier coupon !</p></div></div>
-  <div class="card"><h3>📊 Résultats du jour</h3>
-    <p>🇬🇭 Ghana 21h00 : 07 - 12 - 23 - 45 - 88</p>
-    <p>🇳🇬 Nigeria 22h30 : 03 - 19 - 27 - 56 - 72</p>
-    <p>🇹🇬 Togo 20h00 : 11 - 12 - 35 - 44 - 90</p>
-    <p>🇧🇯 Bénin 21h30 : 05 - 14 - 28 - 60 - 83</p>
-    <p>🇨🇮 Côte d'Ivoire 20h30 : 09 - 17 - 31 - 52 - 76</p>
-  </div>
-</div>
-
-<div class="tabbar">
-  <button onclick="show('accueil')">🏠<br>Accueil</button>
-  <button onclick="show('pays')">🌍<br>Pays</button>
-  <button onclick="show('jouer')">🎲<br>Jouer</button>
-  <button onclick="show('recharge')">💰<br>Recharger</button>
-  <button onclick="show('compte')">👤<br>Compte</button>
-</div>
-
-<script>
-// --- V2 : SAUVEGARDE AUTO ---
-let solde = parseInt(localStorage.getItem('loto_solde') || '2500');
-let histoData = JSON.parse(localStorage.getItem('loto_histo') || '[]');
-let paysActuel = 'Ghana';
-let selection = [];
-let paysData = [
-  {nom:'Ghana', heure:'21h00', res:'07 - 12 - 23 - 45 - 88', flag:'🇬🇭'},
-  {nom:'Nigeria', heure:'22h30', res:'03 - 19 - 27 - 56 - 72', flag:'🇳🇬'},
-  {nom:'Togo', heure:'20h00', res:'11 - 12 - 35 - 44 - 90', flag:'🇹🇬'},
-  {nom:'Bénin', heure:'21h30', res:'05 - 14 - 28 - 60 - 83', flag:'🇧🇯'},
-  {nom:"Côte d'Ivoire", heure:'20h30', res:'09 - 17 - 31 - 52 - 76', flag:'🇨🇮'},
-];
-function save(){
-  localStorage.setItem('loto_solde', solde);
-  localStorage.setItem('loto_histo', JSON.stringify(histoData));
-  document.getElementById('lastSave').innerText = 'Dernière sauvegarde : ' + new Date().toLocaleTimeString('fr-FR');
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getDatabase,ref,push,onValue,update} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const firebaseConfig={apiKey:"AIzaSyAT2yhtnH9un6w4cPKsCdijz6ONFqqad4Y",authDomain:"loto590.firebaseapp.com",databaseURL:"https://loto590-default-rtdb.firebaseio.com",projectId:"loto590",storageBucket:"loto590.firebasestorage.app",messagingSenderId:"489454525767",appId:"1:489454525767:web:5919f1dae538ae001b8062"};
+const app=initializeApp(firebaseConfig); const db=getDatabase(app);
+let sel=[];
+const grid=document.getElementById('grid');
+for(let i=1;i<=90;i++){let b=document.createElement('button');b.className='n';b.textContent=i;b.onclick=()=>{if(sel.includes(i)){sel=sel.filter(x=>x!==i)}else{if(sel.length>=5)return alert('Déjà 5 numéros !');sel.push(i)}document.querySelectorAll('.n').forEach((el,idx)=>{el.classList.toggle('sel',sel.includes(idx+1))});document.getElementById('sel').textContent='Sélection : '+sel.sort((a,b)=>a-b).join(' - ')};grid.appendChild(b)}
+window.show=(t)=>{document.getElementById('client').style.display=t==='client'?'block':'none';document.getElementById('admin').style.display=t==='admin'?'block':'none';document.getElementById('tClient').className=t==='client'?'on':'';document.getElementById('tAdmin').className=t==='admin'?'on':''}
+window.jouer=async()=>{
+if(sel.length!==5)return alert('Choisis 5 numéros');
+let name=document.getElementById('name').value.trim(), phone=document.getElementById('phone').value.trim();
+if(!name||!phone)return alert('Mets ton nom et ton numéro');
+let mise=document.getElementById('mise').value;
+let code='LOTO-'+Math.floor(1000+Math.random()*9000);
+await push(ref(db,'tickets'),{name,phone,numeros:sel.sort((a,b)=>a-b),mise:Number(mise),code,statut:'en_attente',date:new Date().toLocaleString('fr-FR')});
+document.getElementById('msg').innerHTML='✅ Ticket créé ! Code : <b>'+code+'</b><br>Envoie ta mise par Mobile Money et attends validation.';
+sel=[];document.querySelectorAll('.n').forEach(e=>e.classList.remove('sel'));
 }
-function show(p){
-  ['accueil','pays','jouer','recharge','retrait','compte'].forEach(x=>{
-    document.getElementById('page-'+x).classList.add('hidden');
-  });
-  document.getElementById('page-'+p).classList.remove('hidden');
-  window.scrollTo(0,0);
+window.loadAdmin=()=>{
+if(document.getElementById('codeAdmin').value!=='1234')return alert('Mauvais code');
+onValue(ref(db,'tickets'),snap=>{
+let html='';let data=snap.val()||{};
+Object.entries(data).reverse().forEach(([id,t])=>{
+html+=`<div class="card"><b>${t.code}</b> - ${t.name} (${t.phone})<br>Numéros: ${t.numeros.join(' - ')}<br>Mise: ${t.mise}F - Statut: <b>${t.statut}</b><br>${t.date}<br><br><button onclick="valider('${id}','gagne')">✅ GAGNÉ</button> <button onclick="valider('${id}','perdu')" style="background:#ef4444;color:#fff">❌ PERDU</button></div>`});
+document.getElementById('listAdmin').innerHTML=html||'Aucun ticket pour le moment';
+});
 }
-function renderPays(){
-  document.getElementById('paysList').innerHTML = paysData.map(p=>`
-    <div class="card"><h3>${p.flag} ${p.nom} • ${p.heure}</h3>
-    <p>Résultat : ${p.res}</p><br>
-    <button class="btn btn-green" onclick="choisirPays('${p.nom}')">Jouer sur ${p.nom}</button></div>
-  `).join('');
-}
-function choisirPays(n){ paysActuel=n; document.getElementById('jeuPays').innerText=n; document.getElementById('paysTxt').innerText=n; show('jouer'); }
-function renderNums(){
-  let h=''; for(let i=1;i<=90;i++){ h+=`<button class="chip" id="n${i}" onclick="toggleNum(${i})">${i<10?'0'+i:i}</button>`; }
-  document.getElementById('nums').innerHTML=h;
-}
-function toggleNum(n){
-  if(selection.includes(n)) selection=selection.filter(x=>x!==n);
-  else selection.push(n);
-  document.querySelectorAll('#nums .chip').forEach(b=>b.classList.remove('active'));
-  selection.forEach(n=>document.getElementById('n'+n).classList.add('active'));
-  document.getElementById('selTxt').innerText = selection.join(' - ') || 'Aucun';
-  calcul();
-}
-function calcul(){
-  let mise = parseInt(document.getElementById('mise').value||0);
-  let jeu = document.getElementById('jeuSelect').value;
-  let mult = jeu==='two'?300: jeu==='perm2'?300: jeu==='perm3'?1500:5000;
-  document.getElementById('gainTxt').innerText = (mise*mult).toLocaleString()+' F';
-}
-function renderHisto(){
-  let div=document.getElementById('histo');
-  if(histoData.length===0){ div.innerHTML='<p>Aucun coupon pour le moment. Joue ton premier coupon !</p>'; return; }
-  div.innerHTML = histoData.map(h=>`<div class="histo-item"><b>${h.pays} - ${h.jeu}</b><br>Numéros : ${h.nums} • Mise : ${h.mise}F<br><span class="badge wait">En attente résultat</span></div>`).join('');
-}
-function valider(){
-  let mise = parseInt(document.getElementById('mise').value||0);
-  if(selection.length<2){ alert('Choisis au moins 2 numéros'); return; }
-  if(mise>solde){ alert('Solde insuffisant, recharge !'); show('recharge'); return; }
-  solde-=mise;
-  histoData.unshift({pays:paysActuel, jeu:document.getElementById('jeuSelect').value, nums:selection.join(' - '), mise:mise});
-  updateSolde(); renderHisto(); save();
-  alert('Coupon validé ! Bonne chance 🍀');
-  selection=[]; renderNums(); calcul(); show('compte');
-}
-function setMontant(v){ document.getElementById('montant').value=v; }
-function recharger(){
-  let m=parseInt(document.getElementById('montant').value||0);
-  solde+=m; updateSolde(); save(); alert('Recharge réussie : +'+m+'F (Démo)');
-  show('accueil');
-}
-function retirer(){
-  let m=parseInt(document.getElementById('retraitMontant').value||0);
-  if(m>solde){ alert('Solde insuffisant'); return; }
-  solde-=m; updateSolde(); save(); alert('Demande de retrait envoyée : '+m+'F');
-  show('compte');
-}
-function resetAll(){
-  if(!confirm('Tu veux vraiment tout effacer ?')) return;
-  solde=2500; histoData=[]; updateSolde(); renderHisto(); save(); alert('Réinitialisé ✅');
-}
-function updateSolde(){
-  document.getElementById('soldeTxt').innerText = solde.toLocaleString()+' F CFA';
-  document.getElementById('solde2').innerText = solde.toLocaleString()+' F';
-}
-renderPays(); renderNums(); calcul(); updateSolde(); renderHisto(); save();
-</script>
-</body>
-</html>
+window.valider=(id,s)=>{update(ref(db,'tickets/'+id),{statut:s})}
+</script></body></html>
