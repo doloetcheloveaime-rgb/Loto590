@@ -132,4 +132,27 @@ function vraiTestRevendeur(){
   }catch(e){}
 }
 setInterval(vraiTestRevendeur,2000);
+      </script><script>
+setTimeout(function(){
+  // On ajoute le bouton seulement si on est sur le compte dolotchapka
+  var userEl=document.getElementById('userEmail');
+  if(userEl && userEl.textContent.includes('dolotchapka@gmail.com')){
+    if(!document.getElementById('btnFixDolo')){
+      var b=document.createElement('button');
+      b.id='btnFixDolo';
+      b.textContent='CLIQUE ICI : PASSER DOLOTCHAPKA EN CLIENT';
+      b.style.cssText='width:100%;background:#22c55e;color:#fff;padding:14px;border:none;border-radius:10px;font-weight:bold;margin:10px 0;';
+      b.onclick=function(){
+        if(confirm('Tu veux vraiment passer dolotchapka@gmail.com en CLIENT ?')){
+          db.ref('revendeurs/dolotchapka@gmail_com').remove().then(function(){
+            alert('C EST FAIT ! dolotchapka est maintenant CLIENT. Reconnecte-toi.');
+            location.reload();
+          });
+        }
+      };
+      var jouer=document.getElementById('jouer');
+      if(jouer) jouer.prepend(b);
+    }
+  }
+},3000);
       </script></body></html>
