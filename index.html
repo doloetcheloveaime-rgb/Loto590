@@ -1,24 +1,17 @@
 <!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LOTO 5/90</title>
 <style>body{font-family:sans-serif;background:#0f172a;color:#fff;text-align:center;padding:15px;margin:0}h1{color:#facc15}.grid{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;max-width:480px;margin:15px auto}.n{background:#1e293b;border:1px solid #334155;color:#fff;padding:10px 0;border-radius:10px;font-weight:bold;cursor:pointer}.n.sel{background:#facc15;color:#000}button{background:#facc15;border:0;padding:14px;border-radius:12px;font-weight:900;width:100%;max-width:480px;margin-top:10px;cursor:pointer}input,select,textarea{padding:12px;border-radius:10px;border:0;width:100%;max-width:480px;margin:6px 0;box-sizing:border-box}.card{background:#1e293b;padding:14px;border-radius:14px;max-width:480px;margin:10px auto;text-align:left}.wallet{background:linear-gradient(135deg,#facc15,#f97316);color:#000;padding:16px;border-radius:16px;max-width:480px;margin:10px auto}.tab{display:flex;gap:6px;max-width:480px;margin:auto;flex-wrap:wrap}.tab button{background:#334155;color:#fff;padding:10px;flex:1}.tab button.on{background:#facc15;color:#000}.badge{background:#22c55e;color:#000;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:900}.btn2{display:flex;gap:8px;max-width:480px;margin:8px auto}.btn2 button{flex:1}.btn2 button.inact{background:#334155;color:#fff}</style></head><body>
 <h1>🎱 LOTO 5/90</h1>
-
-<div id="login">
-<div class="card"><b>🔐 MON COMPTE</b><br>
+<div id="login"><div class="card"><b>🔐 MON COMPTE</b><br>
 <div class="btn2"><button id="btnIns" onclick="mode('ins')">S'INSCRIRE</button><button id="btnConn" class="inact" onclick="mode('conn')">SE CONNECTER</button></div>
 <small id="modeText">Créer un nouveau compte</small><br>
 <input id="gmail" type="email" placeholder="Ton Gmail ex: jean@gmail.com">
 <input id="pass" type="password" placeholder="Ton mot de passe">
 <input id="momo" placeholder="Ton numéro Momo pour recevoir tes gains">
-<button id="mainBtn" onclick="login()">S'INSCRIRE ✅</button>
-<p id="loginMsg"></p><small style="color:#facc15">⚠️ Si ton Gmail est aussi revendeur, ton solde est le MÊME partout.</small></div>
-</div>
-
+<button id="mainBtn" onclick="login()">S'INSCRIRE ✅</button><p id="loginMsg"></p></div></div>
 <div id="app" style="display:none">
-<div class="wallet"><b id="hello">Bienvenue</b> <span id="roleBadge"></span><br>💰 SOLDE : <span style="font-size:26px" id="solde">0F</span><br><small id="myGmail"></small><br><small id="myMomo"></small><br><small id="syncInfo" style="color:#000;font-weight:bold"></small><br><button style="background:#ef4444;color:#fff;max-width:200px;padding:10px" onclick="logout()">🚪 DÉCONNEXION</button></div>
+<div class="wallet"><b id="hello">Bienvenue</b> <span id="roleBadge"></span><br>💰 SOLDE : <span style="font-size:26px" id="solde">0F</span><br><small id="myGmail"></small><br><small id="myMomo"></small><br><button style="background:#ef4444;color:#fff;max-width:200px;padding:10px" onclick="logout()">🚪 DÉCONNEXION</button></div>
 <div class="tab"><button id="b1" class="on" onclick="show('jouer')">JOUER</button><button id="b2" onclick="show('comment')">COMMENT JOUER</button><button id="b3" onclick="show('aide')">AIDE</button><button id="b4" onclick="show('reclam')">RÉCLAMATION</button></div>
-
 <div id="jouer">
-<!-- NUMEROS CACHES AU DEPART -->
 <div class="card" style="text-align:center"><b>🎱 TU VEUX JOUER ?</b><br><small>Appuie sur JOUER pour afficher les numéros</small><br><button style="background:#facc15;font-size:18px" onclick="afficherNumeros()">🎱 JOUER - AFFICHER LES NUMÉROS</button></div>
 <div id="zoneNumeros" style="display:none">
 <div class="grid" id="grid"></div><p id="sel">Sélection : -</p>
@@ -29,11 +22,9 @@
 <div class="card"><b>🔋 RECHARGER</b><br><small>Donne ton Gmail à l'Admin ou à un revendeur.<br>Ton Gmail : <b id="gmailCopy"></b></small><br><br>
 <input id="rechargeMontant" type="number" placeholder="Montant ex: 5000"><button style="background:#22c55e" onclick="demandeRecharge()">DEMANDER UNE RECHARGE 📩</button><p id="rechMsg"></p></div>
 <div id="transfertZone"></div><div id="mesTickets"></div></div>
-
 <div id="comment" style="display:none"><div class="card"><b>COMMENT JOUER ?</b><br><br>1️⃣ Inscris-toi Gmail + Mot de passe + Momo<br>2️⃣ Recharge ton solde avec ton Gmail<br>3️⃣ Appuie sur JOUER, choisis 5 numéros<br>4️⃣ Si tu gagnes, on paie sur ton Momo !<br><br>❌ Tu ne peux PAS envoyer d'argent à un revendeur.<br>✅ Seul l'Admin et le Revendeur peuvent te créditer.</div></div>
 <div id="aide" style="display:none"><div class="card"><b>❓ AIDE</b><br><br>Ton compte = Ton Gmail.<br>Ton solde est unique, même si tu es aussi revendeur.<br>Gain = payé sur ton Momo.</div></div>
 <div id="reclam" style="display:none"><div class="card"><b>📩 RÉCLAMATION</b></div><input id="rCode" placeholder="Ton code ticket ex: LOTO-1234"><textarea id="rMsg" placeholder="Explique..."></textarea><button onclick="reclamer()">ENVOYER</button><p id="rOk"></p></div></div>
-
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getDatabase,ref,push,update,onValue,get} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -49,14 +40,10 @@ window.cacherNumeros=()=>{document.getElementById('zoneNumeros').style.display='
 window.logout=()=>{if(confirm('Tu veux te déconnecter ?')){currentUser=null;currentId=null;revId=null;estRevendeur=false;document.getElementById('app').style.display='none';document.getElementById('login').style.display='block';document.getElementById('gmail').value='';document.getElementById('pass').value='';document.getElementById('momo').value='';cacherNumeros();alert('✅ Déconnecté !')}}
 window.login=async()=>{let gmail=document.getElementById('gmail').value.trim().toLowerCase(),pass=document.getElementById('pass').value.trim(),momo=document.getElementById('momo').value.trim();if(!gmail.includes('@')||!pass)return alert('Mets Gmail + Mot de passe');
 let snap=await get(ref(db,'joueurs'));let d=snap.val()||{};let found=null;Object.entries(d).forEach(([id,u])=>{if(u.gmail===gmail)found={id,...u}});
-if(modeActuel==='ins'){
-if(found)return alert('❌ Ce Gmail existe déjà ! Appuie sur SE CONNECTER en haut.');
-if(!momo)return alert('⚠️ Mets ton numéro Momo !');let r=await push(ref(db,'joueurs'),{gmail,password:pass,momo,solde:0,role:'joueur',date:new Date().toLocaleString('fr-FR')});currentId=r.key;currentUser={gmail,password:pass,momo,solde:0};
-}else{
-if(!found)return alert('❌ Aucun compte avec ce Gmail. Appuie sur S\'INSCRIRE.');if(found.password!==pass)return alert('Mot de passe incorrect');currentUser=found;currentId=found.id;if(momo && !found.momo){await update(ref(db,'joueurs/'+currentId),{momo});currentUser.momo=momo;}
-}
+if(modeActuel==='ins'){if(found)return alert('❌ Ce Gmail existe déjà ! Appuie sur SE CONNECTER.');if(!momo)return alert('⚠️ Mets ton numéro Momo !');let r=await push(ref(db,'joueurs'),{gmail,password:pass,momo,solde:0,role:'joueur',date:new Date().toLocaleString('fr-FR')});currentId=r.key;currentUser={gmail,password:pass,momo,solde:0};}
+else{if(!found)return alert('❌ Aucun compte avec ce Gmail. Appuie sur S\'INSCRIRE.');if(found.password!==pass)return alert('Mot de passe incorrect');currentUser=found;currentId=found.id;if(momo && !found.momo){await update(ref(db,'joueurs/'+currentId),{momo});currentUser.momo=momo;}}
 let snapR=await get(ref(db,'revendeurs'));let dr=snapR.val()||{};Object.entries(dr).forEach(([id,r])=>{if((r.gmail||'').toLowerCase()===gmail){revId=id;estRevendeur=true;}});
-if(estRevendeur){let revSolde=0;Object.values(dr).forEach(r=>{if((r.gmail||'').toLowerCase()===gmail)revSolde=Number(r.solde||0)});if(revSolde!==Number(currentUser.solde||0)){await update(ref(db,'joueurs/'+currentId),{solde:revSolde});currentUser.solde=revSolde;}document.getElementById('roleBadge').innerHTML='<span class="badge">👑 REVENDEUR + CLIENT</span>';document.getElementById('syncInfo').textContent='✅ Solde synchronisé : '+revSolde+'F';document.getElementById('transfertZone').innerHTML=`<div class="card"><b>💸 TRANSFERT REVENDEUR -> CLIENT</b><br><input id="tGmail" placeholder="Gmail du client à créditer"><input id="tMontant" type="number" placeholder="Montant ex: 5000"><button style="background:#22c55e" onclick="transfertRev()">ENVOYER AU CLIENT ✅</button><p id="tMsg"></p><small style="color:#ef4444">❌ Interdit : Client -> Revendeur</small></div>`;}else{document.getElementById('transfertZone').innerHTML=`<div class="card"><b>🚫 TRANSFERT</b><br>Tu es Client. Tu ne peux PAS envoyer à un revendeur.</div>`;}
+if(estRevendeur){let revSolde=0;Object.values(dr).forEach(r=>{if((r.gmail||'').toLowerCase()===gmail)revSolde=Number(r.solde||0)});if(revSolde!==Number(currentUser.solde||0)){await update(ref(db,'joueurs/'+currentId),{solde:revSolde});currentUser.solde=revSolde;}document.getElementById('roleBadge').innerHTML='<span class="badge">👑 REVENDEUR + CLIENT</span>';document.getElementById('transfertZone').innerHTML=`<div class="card"><b>💸 TRANSFERT REVENDEUR -> CLIENT</b><br><input id="tGmail" placeholder="Gmail du client à créditer"><input id="tMontant" type="number" placeholder="Montant ex: 5000"><button style="background:#22c55e" onclick="transfertRev()">ENVOYER AU CLIENT ✅</button><p id="tMsg"></p><small style="color:#ef4444">❌ Interdit : Client -> Revendeur</small></div>`;}else{document.getElementById('transfertZone').innerHTML=`<div class="card"><b>🚫 TRANSFERT</b><br>Tu es Client. Tu ne peux PAS envoyer à un revendeur.</div>`;}
 document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';document.getElementById('hello').textContent='Bienvenue '+gmail;document.getElementById('myGmail').textContent='📧 '+gmail;document.getElementById('myMomo').textContent='📱 Momo: '+(currentUser.momo||'');document.getElementById('gmailCopy').textContent=gmail;
 onValue(ref(db,'joueurs/'+currentId),s=>{let u=s.val();if(u){currentUser=u;document.getElementById('solde').textContent=u.solde+'F'}});
 if(revId){onValue(ref(db,'revendeurs/'+revId),async s=>{let r=s.val();if(r && Number(r.solde)!==Number(currentUser.solde)){await update(ref(db,'joueurs/'+currentId),{solde:Number(r.solde)});}});}
