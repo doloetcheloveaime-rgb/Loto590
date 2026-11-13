@@ -61,4 +61,19 @@ window.demandeRecharge=async function(){let m=document.getElementById('rechargeM
 window.demandeRetrait=async function(){let montant=Number(document.getElementById('retraitMontant').value);let momo=document.getElementById('retraitMomo').value.trim();if(!montant||!momo)return alert('Mets montant + Momo');if(montant>currentUser.solde)return alert('Solde insuffisant ! Tu as '+currentUser.solde+'F');if(montant<500)return alert('Retrait minimum 500F');let newSolde=currentUser.solde-montant;await update(ref(db,'joueurs/'+currentId),{solde:newSolde});if(revId)await update(ref(db,'revendeurs/'+revId),{solde:newSolde});await push(ref(db,'retraits'),{gmail:currentUser.gmail,momo:momo,montant:montant,statut:'en_attente - Admin va te payer sur Momo',date:new Date().toLocaleString('fr-FR')});document.getElementById('retraitMsg').textContent='Demande envoyee ! L Admin va te payer '+montant+'F sur '+momo;document.getElementById('retraitMontant').value=''};
 window.transfertRev=async function(){if(!estRevendeur)return alert('Interdit : Tu es Client');let destGmail=document.getElementById('tGmail').value.trim().toLowerCase(),montant=Number(document.getElementById('tMontant').value);if(!destGmail||!montant)return alert('Mets Gmail + montant');if(destGmail===currentUser.gmail)return alert('Tu ne peux pas te transferer a toi-meme');if(currentUser.solde<montant)return alert('Solde insuffisant');let snap=await get(ref(db,'joueurs'));let d=snap.val()||{};let dest=null;Object.entries(d).forEach(function(pair){if(pair[1].gmail===destGmail)dest={id:pair[0],...pair[1]}});if(!dest)return alert('Client introuvable');await update(ref(db,'joueurs/'+currentId),{solde:currentUser.solde-montant});if(revId)await update(ref(db,'revendeurs/'+revId),{solde:currentUser.solde-montant});await update(ref(db,'joueurs/'+dest.id),{solde:Number(dest.solde||0)+montant});await push(ref(db,'transferts'),{de:currentUser.gmail,vers:destGmail,montant:montant,type:'revendeur->client',date:new Date().toLocaleString('fr-FR')});document.getElementById('tMsg').textContent=montant+'F envoye a '+destGmail};
 window.reclamer=async function(){let c=document.getElementById('rCode').value,m=document.getElementById('rMsg').value;if(!c||!m)return alert('Mets code + message');await push(ref(db,'reclamations'),{code:c,gmail:currentUser.gmail,momo:currentUser.momo,message:m,date:new Date().toLocaleString('fr-FR')});document.getElementById('rOk').textContent='Envoye'}
+</script><script>
+setInterval(function(){
+  var badge=document.getElementById('roleBadge');
+  if(badge && badge.textContent.includes('REVENDEUR')){
+    var b1=document.getElementById('b1');
+    if(b1) b1.style.display='none';
+    badge.innerHTML='<span class="badge">REVENDEUR</span>';
+  }
+},1000);
+var oldAfficher=window.afficherNumeros;
+window.afficherNumeros=function(){
+  var badge=document.getElementById('roleBadge');
+  if(badge && badge.textContent.includes('REVENDEUR')){ alert('Compte Revendeur : Tu ne peux pas jouer ! Tu peux seulement transferer aux clients.'); return; }
+  if(oldAfficher) oldAfficher();
+};
 </script></body></html>
