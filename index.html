@@ -104,4 +104,32 @@ setInterval(function(){
     }
   }
 },1000);
+      </script><script>
+function vraiTestRevendeur(){
+  var badge=document.getElementById('roleBadge');
+  var userEl=document.getElementById('userEmail');
+  if(!badge || !userEl) return;
+  if(!badge.textContent.includes('REVENDEUR')) return;
+  var email=userEl.textContent.trim().toLowerCase();
+  if(!email || !email.includes('@')) return;
+  var key=email.replace(/[.#$\[\]]/g,'_');
+  try{
+    db.ref('revendeurs/'+key).once('value').then(function(snap){
+      if(!snap.exists()){
+        // Ce n'est PAS un vrai revendeur, c'est un CLIENT
+        badge.innerHTML='';
+        var msg=document.getElementById('msgRev');
+        if(msg) msg.style.display='none';
+        document.querySelectorAll('.card').forEach(function(c){
+          if(c.textContent.includes('CHOISIS TON JEU')) c.style.display='';
+        });
+        var zn=document.getElementById('zoneNumeros');
+        if(zn) zn.style.display='';
+        var b1=document.getElementById('b1');
+        if(b1) b1.style.display='';
+      }
+    });
+  }catch(e){}
+}
+setInterval(vraiTestRevendeur,2000);
       </script></body></html>
