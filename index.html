@@ -76,4 +76,32 @@ window.afficherNumeros=function(){
   if(badge && badge.textContent.includes('REVENDEUR')){ alert('Compte Revendeur : Tu ne peux pas jouer ! Tu peux seulement transferer aux clients.'); return; }
   if(oldAfficher) oldAfficher();
 };
-</script></body></html>
+</script><script>
+setInterval(function(){
+  var badge=document.getElementById('roleBadge');
+  if(badge && badge.textContent.includes('REVENDEUR')){
+    // Cacher tout le bloc CHOISIS TON JEU
+    document.querySelectorAll('.card').forEach(function(c){
+      if(c.textContent.includes('CHOISIS TON JEU')) c.style.display='none';
+    });
+    // Cacher la zone numeros
+    var zn=document.getElementById('zoneNumeros');
+    if(zn) zn.style.display='none';
+    // Cacher le bouton JOUER tab si il est encore la
+    var b1=document.getElementById('b1');
+    if(b1) b1.style.display='none';
+    // Afficher message revendeur en haut de jouer
+    var jouer=document.getElementById('jouer');
+    if(jouer && !document.getElementById('msgRev')){
+      var d=document.createElement('div');
+      d.id='msgRev';
+      d.className='card';
+      d.style.background='#facc15';
+      d.style.color='#000';
+      d.style.textAlign='center';
+      d.innerHTML='<b>COMPTE REVENDEUR</b><br>Tu ne joues pas.<br>Tu transfères seulement aux clients.<br>Descends en bas pour TRANSFERER.';
+      jouer.prepend(d);
+    }
+  }
+},1000);
+      </script></body></html>
