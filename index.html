@@ -1,63 +1,31 @@
 <!DOCTYPE html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LOTO 5/90 - Bénin</title>
-<style>
-body{font-family:sans-serif;background:#0f172a;color:#fff;text-align:center;margin:0;padding:15px}
-h1{color:#facc15}.grid{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;max-width:480px;margin:15px auto}
-.n{background:#1e293b;border:1px solid #334155;color:#fff;padding:10px 0;border-radius:10px;font-weight:bold;cursor:pointer}
-.n.sel{background:#facc15;color:#000;transform:scale(1.1)}
-button{background:#facc15;border:0;padding:14px 22px;border-radius:12px;font-weight:900;font-size:16px;width:100%;max-width:480px;cursor:pointer;margin-top:10px}
-input,select{padding:12px;border-radius:10px;border:0;width:100%;max-width:480px;margin:6px 0}
-.card{background:#1e293b;padding:14px;border-radius:14px;max-width:480px;margin:10px auto;text-align:left}
-.tab{display:flex;gap:8px;max-width:480px;margin:auto}.tab button{background:#334155;color:#fff}
-.tab button.on{background:#facc15;color:#000}
-</style></head><body>
-<h1>🎱 LOTO 5/90</h1><p>Choisis 5 numéros • Mise min 100F</p>
-<div class="tab"><button id="tClient" class="on" onclick="show('client')">JOUER</button><button id="tAdmin" onclick="show('admin')">ADMIN</button></div>
+<title>LOTO 5/90</title>
+<style>body{font-family:sans-serif;background:#0f172a;color:#fff;text-align:center;padding:15px;margin:0}h1{color:#facc15}.grid{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;max-width:480px;margin:15px auto}.n{background:#1e293b;border:1px solid #334155;color:#fff;padding:10px 0;border-radius:10px;font-weight:bold;cursor:pointer}.n.sel{background:#facc15;color:#000}button{background:#facc15;border:0;padding:14px;border-radius:12px;font-weight:900;width:100%;max-width:480px;margin-top:10px;cursor:pointer}input,select,textarea{padding:12px;border-radius:10px;border:0;width:100%;max-width:480px;margin:6px 0;box-sizing:border-box}.card{background:#1e293b;padding:14px;border-radius:14px;max-width:480px;margin:10px auto;text-align:left}.tab{display:flex;gap:6px;max-width:480px;margin:auto;flex-wrap:wrap}.tab button{background:#334155;color:#fff;padding:10px}.tab button.on{background:#facc15;color:#000}</style></head><body>
+<h1>🎱 LOTO 5/90</h1>
+<div class="tab"><button id="b1" class="on" onclick="show('jouer')">JOUER</button><button id="b2" onclick="show('comment')">COMMENT JOUER</button><button id="b3" onclick="show('aide')">AIDE</button><button id="b4" onclick="show('reclam')">RÉCLAMATION</button></div>
 
-<div id="client">
-<div class="grid" id="grid"></div>
-<p id="sel">Sélection : -</p>
-<input id="name" placeholder="Ton nom WhatsApp">
-<input id="phone" placeholder="Ton numéro WhatsApp">
+<div id="jouer"><div class="grid" id="grid"></div><p id="sel">Sélection : -</p>
+<input id="name" placeholder="Ton nom WhatsApp"><input id="phone" placeholder="Ton numéro WhatsApp">
 <select id="mise"><option>100</option><option>200</option><option>500</option><option>1000</option><option>2000</option><option>5000</option></select>
-<button onclick="jouer()">VALIDER MON TICKET 🎟️</button>
-<p id="msg"></p><div id="mesTickets"></div>
-</div>
+<button onclick="jouer()">VALIDER MON TICKET 🎟️</button><p id="msg"></p><div id="mesTickets"></div></div>
 
-<div id="admin" style="display:none">
-<input id="codeAdmin" placeholder="Code admin : 1234">
-<button onclick="loadAdmin()">VOIR LES TICKETS EN DIRECT 👑</button>
-<div id="listAdmin"></div>
-</div>
+<div id="comment" style="display:none"><div class="card"><b>COMMENT JOUER ?</b><br><br>1️⃣ Choisis 5 numéros entre 1 et 90<br>2️⃣ Choisis ta mise (100F minimum)<br>3️⃣ Mets ton nom et ton numéro WhatsApp<br>4️⃣ Clique sur VALIDER<br>5️⃣ Envoie ta mise par Mobile Money<br>6️⃣ Attends le résultat du tirage<br><br>Si tes 5 numéros sortent, tu gagnes GROS !</div></div>
+
+<div id="aide" style="display:none"><div class="card"><b>❓ AIDE</b><br><br>• Tu as un problème avec ton ticket ?<br>• Tu n'as pas reçu ton gain ?<br>• Tu veux savoir si tu as gagné ?<br><br>Va dans l'onglet <b>RÉCLAMATION</b> et envoie ton message.<br><br>WhatsApp Admin : Mets ton numéro ici après.</div></div>
+
+<div id="reclam" style="display:none"><div class="card"><b>📩 RÉCLAMATION</b><br>Un problème ? Dis-nous tout.</div>
+<input id="rCode" placeholder="Ton code ticket ex: LOTO-1234"><textarea id="rMsg" placeholder="Explique ton problème..."></textarea>
+<button onclick="reclamer()">ENVOYER MA RÉCLAMATION</button><p id="rOk"></p></div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getDatabase,ref,push,onValue,update} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-const firebaseConfig={apiKey:"AIzaSyAT2yhtnH9un6w4cPKsCdijz6ONFqqad4Y",authDomain:"loto590.firebaseapp.com",databaseURL:"https://loto590-default-rtdb.firebaseio.com",projectId:"loto590",storageBucket:"loto590.firebasestorage.app",messagingSenderId:"489454525767",appId:"1:489454525767:web:5919f1dae538ae001b8062"};
-const app=initializeApp(firebaseConfig); const db=getDatabase(app);
-let sel=[];
-const grid=document.getElementById('grid');
-for(let i=1;i<=90;i++){let b=document.createElement('button');b.className='n';b.textContent=i;b.onclick=()=>{if(sel.includes(i)){sel=sel.filter(x=>x!==i)}else{if(sel.length>=5)return alert('Déjà 5 numéros !');sel.push(i)}document.querySelectorAll('.n').forEach((el,idx)=>{el.classList.toggle('sel',sel.includes(idx+1))});document.getElementById('sel').textContent='Sélection : '+sel.sort((a,b)=>a-b).join(' - ')};grid.appendChild(b)}
-window.show=(t)=>{document.getElementById('client').style.display=t==='client'?'block':'none';document.getElementById('admin').style.display=t==='admin'?'block':'none';document.getElementById('tClient').className=t==='client'?'on':'';document.getElementById('tAdmin').className=t==='admin'?'on':''}
-window.jouer=async()=>{
-if(sel.length!==5)return alert('Choisis 5 numéros');
-let name=document.getElementById('name').value.trim(), phone=document.getElementById('phone').value.trim();
-if(!name||!phone)return alert('Mets ton nom et ton numéro');
-let mise=document.getElementById('mise').value;
-let code='LOTO-'+Math.floor(1000+Math.random()*9000);
-await push(ref(db,'tickets'),{name,phone,numeros:sel.sort((a,b)=>a-b),mise:Number(mise),code,statut:'en_attente',date:new Date().toLocaleString('fr-FR')});
-document.getElementById('msg').innerHTML='✅ Ticket créé ! Code : <b>'+code+'</b><br>Envoie ta mise par Mobile Money et attends validation.';
-sel=[];document.querySelectorAll('.n').forEach(e=>e.classList.remove('sel'));
-}
-window.loadAdmin=()=>{
-if(document.getElementById('codeAdmin').value!=='1234')return alert('Mauvais code');
-onValue(ref(db,'tickets'),snap=>{
-let html='';let data=snap.val()||{};
-Object.entries(data).reverse().forEach(([id,t])=>{
-html+=`<div class="card"><b>${t.code}</b> - ${t.name} (${t.phone})<br>Numéros: ${t.numeros.join(' - ')}<br>Mise: ${t.mise}F - Statut: <b>${t.statut}</b><br>${t.date}<br><br><button onclick="valider('${id}','gagne')">✅ GAGNÉ</button> <button onclick="valider('${id}','perdu')" style="background:#ef4444;color:#fff">❌ PERDU</button></div>`});
-document.getElementById('listAdmin').innerHTML=html||'Aucun ticket pour le moment';
-});
-}
-window.valider=(id,s)=>{update(ref(db,'tickets/'+id),{statut:s})}
+import {getDatabase,ref,push} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const cfg={apiKey:"AIzaSyAT2yhtnH9un6w4cPKsCdijz6ONFqqad4Y",authDomain:"loto590.firebaseapp.com",databaseURL:"https://loto590-default-rtdb.firebaseio.com",projectId:"loto590",storageBucket:"loto590.firebasestorage.app",messagingSenderId:"489454525767",appId:"1:489454525767:web:5919f1dae538ae001b8062"};
+const app=initializeApp(cfg);const db=getDatabase(app);
+let sel=[];const grid=document.getElementById('grid');
+for(let i=1;i<=90;i++){let b=document.createElement('button');b.className='n';b.textContent=i;b.onclick=()=>{if(sel.includes(i))sel=sel.filter(x=>x!==i);else{if(sel.length>=5)return alert('Déjà 5 numéros !');sel.push(i)}document.querySelectorAll('.n').forEach((el,idx)=>el.classList.toggle('sel',sel.includes(idx+1)));document.getElementById('sel').textContent='Sélection : '+sel.sort((a,b)=>a-b).join(' - ')};grid.appendChild(b)}
+window.show=(t)=>{['jouer','comment','aide','reclam'].forEach(x=>document.getElementById(x).style.display=x===t?'block':'none');document.getElementById('b1').className=t==='jouer'?'on':'';document.getElementById('b2').className=t==='comment'?'on':'';document.getElementById('b3').className=t==='aide'?'on':'';document.getElementById('b4').className=t==='reclam'?'on':''}
+window.jouer=async()=>{if(sel.length!==5)return alert('Choisis 5 numéros');let name=document.getElementById('name').value.trim(),phone=document.getElementById('phone').value.trim();if(!name||!phone)return alert('Mets nom et numéro');let mise=document.getElementById('mise').value;let code='LOTO-'+Math.floor(1000+Math.random()*9000);await push(ref(db,'tickets'),{name,phone,numeros:sel.sort((a,b)=>a-b),mise:Number(mise),code,statut:'en_attente',date:new Date().toLocaleString('fr-FR')});document.getElementById('msg').innerHTML='✅ Ticket créé ! Code : <b>'+code+'</b><br>Garde ce code pour réclamer.';sel=[];document.querySelectorAll('.n').forEach(e=>e.classList.remove('sel'))}
+window.reclamer=async()=>{let c=document.getElementById('rCode').value,m=document.getElementById('rMsg').value;if(!c||!m)return alert('Mets ton code et ton message');await push(ref(db,'reclamations'),{code:c,message:m,date:new Date().toLocaleString('fr-FR')});document.getElementById('rOk').textContent='✅ Réclamation envoyée, on te répond vite.'}
 </script></body></html>
