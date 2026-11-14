@@ -1,287 +1,77 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LOTO 5/90</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
-body{background:#0f172a;color:#fff;padding:12px;padding-bottom:80px}
-.titre{text-align:center;font-size:30px;font-weight:900;color:#facc15;margin:10px 0 15px}
-.card{background:#1e293b;border-radius:14px;padding:14px;margin-bottom:12px}
-.card h2{font-size:17px;margin-bottom:10px}
-.tabs{display:flex;gap:10px;margin:10px 0}
-.tabs button{flex:1;padding:12px;border:none;border-radius:10px;font-weight:bold;cursor:pointer}
-#tabIns{background:#facc15;color:#000}
-#tabConn{background:#334155;color:#fff}
-input{width:100%;padding:12px;border-radius:10px;border:none;margin-bottom:10px;font-size:15px}
-.btnJaune{width:100%;padding:13px;border:none;border-radius:10px;background:#facc15;color:#000;font-weight:bold;font-size:16px;cursor:pointer}
-.btnGris{width:100%;padding:12px;border:none;border-radius:10px;background:#334155;color:#fff;font-weight:bold;margin-top:10px}
-.choixType{display:flex;gap:10px;margin:10px 0}
-.choixType button{flex:1;padding:11px;border-radius:10px;font-weight:bold;cursor:pointer;border:2px solid #facc15}
-#btnClient{background:#22c55e;color:#fff;border-color:#22c55e}
-#btnRev{background:#fff;color:#000}
-.paysGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
-.paysCard{background:#fff;color:#111;border-radius:12px;padding:12px;cursor:pointer}
-.paysCard b{font-size:15px}
-.paysCard small{color:#666}
-.tirageGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
-.tirageCard{background:#fff;color:#111;border-radius:12px;padding:12px;cursor:pointer}
-.tirageCard .reste{color:#dc2626;font-weight:bold;font-size:13px}
-.fermeRow{display:flex;gap:10px;overflow-x:auto;padding:5px 0}
-.fermeRow .tirageCard{min-width:160px}
-.numGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
-.numBtn{background:#fff;color:#111;border:none;border-radius:50%;width:48px;height:48px;font-weight:bold;font-size:16px;margin:auto;cursor:pointer}
-.numBtn.sel{background:#facc15}
-</style>
-</head>
-<body>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LOTO 590</title>
+<style>body{margin:0;background:#0f172a;color:#fff;font-family:Arial}header{background:#facc15;color:#000;padding:14px;text-align:center;font-weight:900;font-size:22px}.card{background:#1e293b;margin:12px;border-radius:14px;padding:14px}.btnJaune{width:100%;padding:13px;border:none;border-radius:10px;background:#facc15;font-weight:900;margin-top:10px}input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;margin-top:8px;color:#000}.numGrid{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;margin:10px 0}.numBtn{padding:10px 0;border:1px solid #ddd;border-radius:8px;background:#fff;font-weight:bold}.numBtn.sel{background:#facc15}.paysGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.paysBtn{padding:12px;border-radius:10px;border:none;background:#334155;color:#fff;font-weight:bold}.tirageGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.tirageBtn{padding:14px;border-radius:10px;border:none;background:#facc15;font-weight:900}</style>
+</head><body>
+<header>⭐ LOTO 590 ⭐<div style="font-size:12px;font-weight:normal;">Bénin • Togo • Ghana • Côte d'Ivoire • Sénégal</div></header>
 
-<div class="titre">🎱 LOTO 5/90</div>
-
-<!-- ===== MON COMPTE ===== -->
 <div class="card" id="compteSection">
-<h2>MON COMPTE</h2>
-<div class="tabs">
-<button id="tabIns" onclick="switchCompte('ins')">S INSCRIRE</button>
-<button id="tabConn" onclick="switchCompte('conn')">SE CONNECTER</button>
+<h2>👤 MON COMPTE</h2>
+<div style="display:flex;gap:8px;">
+<button id="tabIns" onclick="switchCompte('ins')" style="flex:1;padding:11px;border:none;border-radius:20px;background:#facc15;font-weight:bold;">S INSCRIRE</button>
+<button id="tabConn" onclick="switchCompte('conn')" style="flex:1;padding:11px;border:none;border-radius:20px;background:#334155;color:#fff;font-weight:bold;">SE CONNECTER</button>
 </div>
-<p id="texteCompte" style="color:#cbd5e1;font-size:14px;margin-bottom:10px;">Creer un nouveau compte</p>
-<input id="emailInput" type="email" placeholder="Ton Gmail ex: jean@gmail.com">
-<input id="passInput" type="password" placeholder="Ton mot de passe">
-<input id="momoInput" type="text" placeholder="Ton numero Momo">
-<div id="blocType" style="background:#fff;border-radius:12px;padding:12px;color:#111;">
-<b style="font-size:13px;">TU VEUX CREER QUEL COMPTE ?</b>
-<div class="choixType">
-<button id="btnClient" onclick="choisirType('CLIENT')">CLIENT</button>
-<button id="btnRev" onclick="choisirType('REVENDEUR')">REVENDEUR</button>
+<div style="display:flex;gap:8px;margin-top:10px;">
+<button id="btnClient" onclick="choisirType('CLIENT')" style="flex:1;padding:10px;border:none;border-radius:20px;background:#facc15;font-weight:bold;">CLIENT</button>
+<button id="btnVendeur" onclick="choisirType('VENDEUR')" style="flex:1;padding:10px;border:none;border-radius:20px;background:#fff;font-weight:bold;">VENDEUR</button>
+<button id="btnAdmin" onclick="choisirType('ADMIN')" style="flex:1;padding:10px;border:none;border-radius:20px;background:#fff;font-weight:bold;">ADMIN</button>
 </div>
-<p id="texteType" style="font-size:13px;color:#555;">Choisi : CLIENT - Tu joues pour toi</p>
+<input id="emailInput" placeholder="Ton Gmail...">
+<input id="passInput" type="password" placeholder="Ton mot de passe...">
+<button class="btnJaune" id="btnCompte" onclick="actionCompte()">S INSCRIRE</button>
 </div>
-<button class="btnJaune" id="btnActionBas" onclick="actionCompte()">S INSCRIRE</button>
-<button class="btnGris" onclick="alert('Mot de passe oublié - Contacte le support')">J AI OUBLIE MON MOT DE PASSE</button>
-</div>
-<!-- ===== MON ESPACE - APRES CONNEXION ===== -->
+
 <div class="card" id="monEspace" style="display:none;background:#facc15;color:#000;">
-<h2 style="color:#000;">👋 MON ESPACE</h2>
-<p style="font-size:14px;">Connecté en tant que :</p>
-<b id="emailAffiche" style="font-size:15px;">-</b>
-<div style="background:#fff;border-radius:12px;padding:12px;margin-top:10px;text-align:center;">
-<div style="font-size:13px;color:#666;">MON SOLDE</div>
-<div style="font-size:28px;font-weight:900;" id="soldeAffiche">0 FCFA</div>
-</div>
-<button onclick="alert('Recharge - Bientôt : MTN / Moov / Orange')" style="width:100%;padding:12px;border:none;border-radius:10px;background:#000;color:#facc15;font-weight:bold;margin-top:10px;">💰 RECHARGER</button>
-<button onclick="alert('Retrait - Bientôt')" style="width:100%;padding:12px;border:none;border-radius:10px;background:#fff;color:#000;font-weight:bold;margin-top:8px;">🏦 RETIRER</button>
+<h2 style="color:#000;">👋 MON ESPACE</h2><p>Connecté : <b id="emailAffiche">-</b></p>
+<div style="background:#fff;border-radius:12px;padding:12px;text-align:center;"><div style="font-size:13px;color:#666;">MON SOLDE</div><div style="font-size:28px;font-weight:900;" id="soldeAffiche">0 FCFA</div></div>
+<button onclick="alert('Recharge Bientôt : MTN / Moov / Orange')" style="width:100%;padding:12px;border:none;border-radius:10px;background:#000;color:#facc15;font-weight:bold;margin-top:10px;">💰 RECHARGER</button>
+<button onclick="alert('Retrait Bientôt')" style="width:100%;padding:12px;border:none;border-radius:10px;background:#fff;font-weight:bold;margin-top:8px;">🏦 RETIRER</button>
 <button onclick="deconnecter()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#dc2626;color:#fff;font-weight:bold;margin-top:8px;">DÉCONNEXION</button>
 </div>
-<!-- ===== JOUER ===== -->
-<div class="card" id="jouerSection">
-<h2>🎲 JOUER</h2>
-<div><b>⏳ Ferme bientôt</b></div>
-<div id="fermeRow" class="fermeRow"></div>
-<div style="display:flex;justify-content:space-between;margin-top:12px;"><b>🌍 Choisir un pays</b><span id="totalOuverts" style="font-size:12px;color:#94a3b8;"></span></div>
-<div id="paysGrid" class="paysGrid"></div>
-<div id="tiragesPaysSection" style="display:none;">
-<button onclick="retourPays()" style="padding:8px 12px;border-radius:20px;border:none;background:#fff;">← <span id="nomPaysTitre">BÉNIN</span></button>
-<div style="background:#dc2626;text-align:center;padding:10px;border-radius:10px;margin-top:10px;font-weight:bold;">Aujourd'hui <span id="jourNum"></span></div>
-<div id="tiragesGrid" class="tirageGrid"></div>
 
-}
-</div>
-</div>
+<div class="card"><h2>🌍 CHOISIS TON PAYS</h2><div id="paysGrid" class="paysGrid"></div>
+<div id="tiragesPaysSection" style="display:none;margin-top:12px;"><button onclick="retourPays()" style="padding:8px 14px;border:none;border-radius:20px;background:#fff;font-weight:bold;">⬅ Retour Pays</button><h3 id="titrePays"></h3><div id="tiragesGrid" class="tirageGrid"></div></div></div>
 
-<!-- ===== COMMENT JOUER ===== -->
-<div class="card">
-<h2>📖 COMMENT JOUER</h2>
-<p style="font-size:14px;color:#cbd5e1;line-height:1.6;">1. Choisis un pays<br>2. Choisis un tirage<br>3. Choisis 5 numéros entre 1 et 90<br>4. Mets ta mise et valide<br><br><b style="color:#facc15;">NAP 2 = 2 bons numéros | PERM = combinaison</b></p>
+<div class="card"><h2>🎲 JOUER</h2>
+<div id="jeuZone" style="display:none;background:#fff;color:#111;border-radius:12px;padding:12px;margin-top:10px;">
+<b id="titreJeu">Choisis tes numéros</b>
+<p><b>1. COMBIEN DE NUMÉROS ? (3 à 10)</b></p><div id="nbChoix" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+<p><b>2. QUEL JEU ?</b></p>
+<div style="display:flex;gap:6px;flex-wrap:wrap;">
+<button onclick="choisirJeu('NAP2')" style="padding:10px 14px;border-radius:20px;border:2px solid #facc15;background:#facc15;font-weight:bold;">NAP 2</button>
+<button onclick="choisirJeu('NAP1')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;font-weight:bold;">NAP 1</button>
+<button onclick="choisirJeu('NAP3')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;font-weight:bold;">NAP 3</button>
+<button onclick="choisirJeu('NAP4')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;font-weight:bold;">NAP 4</button>
+<button onclick="choisirJeu('NAP5')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;font-weight:bold;">NAP 5</button>
+<button onclick="choisirJeu('P2')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;font-weight:bold;">PERM P2</button>
+<button onclick="choisirJeu('P3')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;font-weight:bold;">PERM P3</button>
+<button onclick="choisirJeu('P4')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;font-weight:bold;">PERM P4</button>
+<button onclick="choisirJeu('P5')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;font-weight:bold;">PERM P5</button>
 </div>
-// ===== COMPTE =====
-var modeCompte = 'ins';
-var typeCompte = 'CLIENT';
-function switchCompte(mode){
-  modeCompte = mode;
-  var ins = document.getElementById('tabIns');
-  var conn = document.getElementById('tabConn');
-  if(mode==='ins'){
-    ins.style.background='#facc15'; ins.style.color='#000';
-    conn.style.background='#334155'; conn.style.color='#fff';
-    document.getElementById('texteCompte').textContent='Creer un nouveau compte';
-    document.getElementById('momoInput').style.display='block';
-    document.getElementById('blocType').style.display='block';
-    document.getElementById('btnActionBas').textContent='S INSCRIRE';
-  } else {
-    conn.style.background='#facc15'; conn.style.color='#000';
-    ins.style.background='#334155'; ins.style.color='#fff';
-    document.getElementById('texteCompte').textContent='Connecte-toi à ton compte';
-    document.getElementById('momoInput').style.display='none';
-    document.getElementById('blocType').style.display='none';
-    document.getElementById('btnActionBas').textContent='SE CONNECTER';
-  }
-}
-function choisirType(t){
-  typeCompte = t;
-  var c = document.getElementById('btnClient');
-  var r = document.getElementById('btnRev');
-  if(t==='CLIENT'){
-    c.style.background='#22c55e'; c.style.color='#fff';
-    r.style.background='#fff'; r.style.color='#000';
-    document.getElementById('texteType').textContent='Choisi : CLIENT - Tu joues pour toi';
-  } else {
-    r.style.background='#22c55e'; r.style.color='#fff';
-    c.style.background='#fff'; c.style.color='#000';
-    document.getElementById('texteType').textContent='Choisi : REVENDEUR - Tu vends pour les autres';
-  }
-}
-function actionCompte(){
-  var email = document.getElementById('emailInput').value;
-  var pass = document.getElementById('passInput').value;
-  if(!email || !pass){ alert('Mets ton Gmail et ton mot de passe'); return; }
-  if(modeCompte==='ins'){
-    localStorage.setItem('loto_email', email);
-    localStorage.setItem('loto_pass', pass);
-    localStorage.setItem('loto_type', typeCompte);
-    localStorage.setItem('loto_solde', '0');
-    alert('Compte '+typeCompte+' créé ! Connecte-toi maintenant.');
-    switchCompte('conn');
-  } else {
-    var savedEmail = localStorage.getItem('loto_email');
-    var savedPass = localStorage.getItem('loto_pass');
-    if(savedEmail && (email !== savedEmail || pass !== savedPass)){
-      alert('Gmail ou mot de passe incorrect. Vérifie ou inscris-toi d abord.');
-      return;
-    }
-    localStorage.setItem('loto_email', email);
-    ouvrirEspace(email);
-  }
-}
-function ouvrirEspace(email){
-  document.getElementById('compteSection').style.display='none';
-  document.getElementById('monEspace').style.display='block';
-  document.getElementById('emailAffiche').textContent = email + ' (' + (localStorage.getItem('loto_type')||'CLIENT') + ')';
-  document.getElementById('soldeAffiche').textContent = (localStorage.getItem('loto_solde')||'0') + ' FCFA';
-  window.scrollTo(0,0);
-}
-function deconnecter(){
-  document.getElementById('monEspace').style.display='none';
-  document.getElementById('compteSection').style.display='block';
-  switchCompte('conn');
-}
+<p id="texteJeuChoisi" style="font-size:13px;color:#555;">Choisi : NAP 2 dans 5 numéros</p>
+<p><b>3. CHOISIS TES NUMÉROS</b></p><div id="numGrid" class="numGrid"></div>
+<p>Sélectionnés : <b id="selNums">Aucun</b></p><label>Mise (FCFA)</label><input id="miseInput" type="number" value="100">
+<button class="btnJaune" onclick="validerJeu()">VALIDER MON TICKET 🎫</button><div id="ticketZone"></div>
+</div></div>
 
-// ===== PAYS + TIRAGES =====
-var MES_PAYS = {"BÉNIN":[8,11,14,18,21,0],"CÔTE D'IVOIRE":[9,13,18,21],"TOGO":[11,14,18],"GHANA":[10,18],"NIGÉRIA":[10,14,19],"FRANCE":[12,20]};
-var DRAPEAUX = {"BÉNIN":"🇧🇯","CÔTE D'IVOIRE":"🇨🇮","TOGO":"🇹🇬","GHANA":"🇬🇭","NIGÉRIA":"🇳🇬","FRANCE":"🇫🇷"};
-function pad(n){ return n<10 ? "0"+n : ""+n; }
-function formatReste(m){ if(m<=0) return "CLÔTURÉ"; if(m<60) return m+" min"; var h=Math.floor(m/60), mm=m%60; return h+"h"+pad(mm); }
-function heureFermeture(ht){ var total=ht*60-70; if(total<0) total+=1440; return {h:Math.floor(total/60), m:total%60}; }
-function getTirages(){
-  var now=new Date(); var list=[];
-  Object.keys(MES_PAYS).forEach(function(pays){
-    MES_PAYS[pays].forEach(function(ht){
-      var f=heureFermeture(ht);
-      var cible=new Date(now); cible.setHours(f.h,f.m,0,0);
-      if(cible<now) cible.setDate(cible.getDate()+1);
-      var diff=Math.floor((cible-now)/60000);
-      var nom=(ht==0?"00H":pad(ht)+"H");
-      list.push({pays:pays,heureTirage:ht,nom:nom,fermeH:f.h,fermeM:f.m,diff:diff});
-    });
-  });
-  return list.sort(function(a,b){return a.diff-b.diff;});
-}
-function afficherPays(){
-  var g=document.getElementById('paysGrid'); if(!g) return;
-  var html='';
-  Object.keys(MES_PAYS).forEach(function(p){
-    html+='<div class="paysCard" onclick="ouvrirPays(\''+p+'\')"><div>'+(DRAPEAUX[p]||'🌍')+' <b>'+p+'</b></div><small>'+MES_PAYS[p].length+' tirages →</small></div>';
-  });
-  g.innerHTML=html;
-  var total=Object.keys(MES_PAYS).reduce(function(s,k){return s+MES_PAYS[k].length;},0);
-  document.getElementById('totalOuverts').textContent=total+' ouverts';
-  var fh='';
-  getTirages().slice(0,4).forEach(function(t){
-    fh+='<div class="tirageCard" onclick="ouvrirPays(\''+t.pays+'\')"><b>'+(DRAPEAUX[t.pays]||'')+' '+t.nom+'</b><div style="font-size:12px;color:#666;">'+t.pays+'<br>Ferme '+pad(t.fermeH)+':'+pad(t.fermeM)+'</div><div class="reste">'+formatReste(t.diff)+'</div></div>';
-  });
-  document.getElementById('fermeRow').innerHTML=fh;
-}
-var paysActuel='BÉNIN';
-function ouvrirPays(pays){
-  paysActuel=pays;
-  document.getElementById('paysGrid').style.display='none';
-  document.getElementById('tiragesPaysSection').style.display='block';
-  document.getElementById('nomPaysTitre').textContent=pays;
-  document.getElementById('jourNum').textContent=new Date().getDate();
-  var html='';
-  getTirages().filter(function(t){return t.pays===pays;}).forEach(function(t){
-    html+='<div class="tirageCard" onclick="ouvrirJeu(\''+t.nom+'\')"><b>'+(DRAPEAUX[pays]||'')+' '+t.nom+'</b><div style="font-size:12px;color:#666;">Ferme '+pad(t.fermeH)+':'+pad(t.fermeM)+'</div><div class="reste">'+formatReste(t.diff)+'</div></div>';
-  });
-  document.getElementById('tiragesGrid').innerHTML=html;
-  window.scrollTo(0,0);
-}
-function retourPays(){
-  document.getElementById('tiragesPaysSection').style.display='none';
-  document.getElementById('paysGrid').style.display='grid';
-}
-var sel=[]; var nbNumeros=5; var jeuChoisi='NAP2';
-function choisirNb(n){
-  nbNumeros=n; sel=[];
-  document.querySelectorAll('#nbChoix button').forEach(function(b){
-    b.style.background = (parseInt(b.textContent)===n ? '#facc15' : '#fff');
-  });
-  dessinerNumeros();
-  majTexteJeu();
-}
-function choisirJeu(j){
-  jeuChoisi=j;
-  document.querySelectorAll('.typeJeuBtn').forEach(function(b){
-    var est = b.textContent.includes(j.replace('NAP','NAP ').replace('P','PERM P'));
-    if(b.textContent.replace(/\s/g,'')===j || (j.startsWith('P') && b.textContent.includes('PERM '+j)) || (j.startsWith('NAP') && b.textContent.includes(j.replace('NAP','NAP ')))) b.style.background='#facc15';
-    else b.style.background='#fff';
-  });
-  majTexteJeu();
-}
-function majTexteJeu(){
-  var ex = {
-    'NAP1':'Il faut 1 bon numéro','NAP2':'Il faut 2 bons numéros','NAP3':'Il faut 3 bons numéros','NAP4':'Il faut 4 bons numéros','NAP5':'Il faut 5 bons numéros',
-    'P2':'Permutation - 2 numéros doivent sortir dans n importe quel ordre','P3':'Permutation - 3 numéros doivent sortir','P4':'Permutation - 4 numéros doivent sortir','P5':'Permutation - 5 numéros doivent sortir'
-  };
-  document.getElementById('texteJeuChoisi').textContent='Choisi : '+jeuChoisi+' dans '+nbNumeros+' numéros - '+(ex[jeuChoisi]||'');
-  document.getElementById('selNums').textContent=sel.length?sel.join(' - '):'Aucun';
-}
-function dessinerNumeros(){
-  var h='';
-  for(var i=1;i<=90;i++){ h+='<button class="numBtn'+(sel.includes(i)?' sel':'')+'" id="n'+i+'" onclick="toggleNum('+i+')">'+i+'</button>'; }
-  document.getElementById('numGrid').innerHTML=h;
-  majTexteJeu();
-}
-function ouvrirJeu(nom){
-  document.getElementById('jeuZone').style.display='block';
-  document.getElementById('titreJeu').textContent=paysActuel+' - Tirage '+nom+' : Choisis tes numéros';
-  sel=[]; nbNumeros=5; jeuChoisi='NAP2';
-  var nbHtml='';
-  for(var k=3;k<=10;k++){ nbHtml+='<button onclick="choisirNb('+k+')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:'+(k===5?'#facc15':'#fff')+';font-weight:bold;">'+k+'</button>'; }
-  document.getElementById('nbChoix').innerHTML=nbHtml;
-  dessinerNumeros();
-}
-function toggleNum(n){
-  var idx=sel.indexOf(n);
-  if(idx>=0){ sel.splice(idx,1); }
-  else { if(sel.length>=nbNumeros){ alert('Tu as déjà '+nbNumeros+' numéros. Change en haut si tu veux plus.'); return; } sel.push(n); }
-  dessinerNumeros();
-}
-function validerJeu(){
-  if(sel.length!==nbNumeros){ alert('Choisis '+nbNumeros+' numéros. Tu as '+sel.length); return; }
-  var mise=parseInt(document.getElementById('miseInput').value||'0');
-  if(!mise || mise<100){ alert('Mise minimum 100 FCFA'); return; }
-  var solde=parseInt(localStorage.getItem('loto_solde')||'0');
-  if(mise>solde){ alert('Solde insuffisant ! Ton solde : '+solde+' FCFA. Recharge d abord.'); return; }
-  solde-=mise;
-  localStorage.setItem('loto_solde', ''+solde);
-  if(document.getElementById('soldeAffiche')) document.getElementById('soldeAffiche').textContent=solde+' FCFA';
-  var code='LOTO'+Math.floor(100000+Math.random()*899999);
-  document.getElementById('ticketZone').innerHTML='<div style="background:#dcfce7;border:2px solid #22c55e;border-radius:12px;padding:12px;"><b style="color:#16a34a;">✅ TICKET VALIDÉ !</b><br>Code : <b>'+code+'</b><br>Jeu : <b>'+jeuChoisi+' dans '+nbNumeros+' numéros</b><br>Numéros : <b>'+sel.join(' - ')+'</b><br>Mise : <b>'+mise+' FCFA</b><br>Nouveau solde : <b>'+solde+' FCFA</b></div>';
-  alert('Ticket validé ! Code : '+code+'\nNouveau solde : '+solde+' FCFA');
-  sel=[]; dessinerNumeros();
+<div class="card"><h2>📖 COMMENT JOUER</h2><p style="font-size:14px;color:#cbd5e1;line-height:1.6;">1. Inscris-toi / Connecte-toi<br>2. Recharge ton solde<br>3. Choisis ton pays et ton tirage<br>4. Choisis 3 à 10 numéros, NAP ou PERM P2 à P5<br>5. Valide ton ticket - Bonne chance !</p></div><script>
+var modeCompte='ins'; var typeCompte='CLIENT'; var paysActuel='BENIN';
+function switchCompte(m){modeCompte=m;document.getElementById('tabIns').style.background=m==='ins'?'#facc15':'#334155';document.getElementById('tabIns').style.color=m==='ins'?'#000':'#fff';document.getElementById('tabConn').style.background=m==='conn'?'#facc15':'#334155';document.getElementById('tabConn').style.color=m==='conn'?'#000':'#fff';document.getElementById('btnCompte').textContent=m==='ins'?'S INSCRIRE':'SE CONNECTER';}
+function choisirType(t){typeCompte=t;['CLIENT','VENDEUR','ADMIN'].forEach(function(x){document.getElementById('btn'+x.charAt(0)+x.slice(1).toLowerCase()).style.background=x===t?'#facc15':'#fff';});}
+function actionCompte(){var email=document.getElementById('emailInput').value;var pass=document.getElementById('passInput').value;if(!email||!pass){alert('Mets ton Gmail et ton mot de passe');return;}if(modeCompte==='ins'){localStorage.setItem('loto_email',email);localStorage.setItem('loto_pass',pass);localStorage.setItem('loto_type',typeCompte);if(!localStorage.getItem('loto_solde'))localStorage.setItem('loto_solde','0');alert('Compte '+typeCompte+' créé ! Connecte-toi maintenant.');switchCompte('conn');}else{var se=localStorage.getItem('loto_email');var sp=localStorage.getItem('loto_pass');if(se&&(email!==se||pass!==sp)){alert('Gmail ou mot de passe incorrect');return;}localStorage.setItem('loto_email',email);ouvrirEspace(email);}}
+function ouvrirEspace(email){document.getElementById('compteSection').style.display='none';document.getElementById('monEspace').style.display='block';document.getElementById('emailAffiche').textContent=email+' ('+(localStorage.getItem('loto_type')||'CLIENT')+')';document.getElementById('soldeAffiche').textContent=(localStorage.getItem('loto_solde')||'0')+' FCFA';window.scrollTo(0,0);}
+function deconnecter(){document.getElementById('monEspace').style.display='none';document.getElementById('compteSection').style.display='block';switchCompte('conn');}
+var PAYS={BENIN:['08H','10H','13H','16H','19H'],TOGO:['08H','11H','14H','17H'],GHANA:['09H','12H','15H','18H'],'COTE D IVOIRE':['08H','12H','16H'],SENEGAL:['09H','13H','17H']};
+function afficherPays(){var h='';Object.keys(PAYS).forEach(function(p){h+='<button class="paysBtn" onclick="choisirPays(\''+p+'\')">'+p+'</button>';});document.getElementById('paysGrid').innerHTML=h;}
+function choisirPays(p){paysActuel=p;document.getElementById('tiragesPaysSection').style.display='block';document.getElementById('titrePays').textContent='Tirages '+p;var h='';PAYS[p].forEach(function(t){h+='<button class="tirageBtn" onclick="ouvrirJeu(\''+t+'\')">'+t+' 🎲</button>';});document.getElementById('tiragesGrid').innerHTML=h;}
+function retourPays(){document.getElementById('tiragesPaysSection').style.display='none';}
+var sel=[];var nbNumeros=5;var jeuChoisi='NAP2';
+function choisirNb(n){nbNumeros=n;sel=[];document.querySelectorAll('#nbChoix button').forEach(function(b){b.style.background=parseInt(b.textContent)===n?'#facc15':'#fff';});dessinerNumeros();majTexteJeu();}
+function choisirJeu(j){jeuChoisi=j;majTexteJeu();}
+function majTexteJeu(){var ex={'NAP1':'Il faut 1 bon numéro','NAP2':'Il faut 2 bons numéros','NAP3':'Il faut 3 bons numéros','NAP4':'Il faut 4 bons numéros','NAP5':'Il faut 5 bons numéros','P2':'Permutation - 2 numéros doivent sortir','P3':'Permutation - 3 numéros doivent sortir','P4':'Permutation - 4 numéros doivent sortir','P5':'Permutation - 5 numéros doivent sortir'};document.getElementById('texteJeuChoisi').textContent='Choisi : '+jeuChoisi+' dans '+nbNumeros+' numéros - '+(ex[jeuChoisi]||'');document.getElementById('selNums').textContent=sel.length?sel.join(' - '):'Aucun';}
+function dessinerNumeros(){var h='';for(var i=1;i<=90;i++){h+='<button class="numBtn'+(sel.includes(i)?' sel':'')+'" onclick="toggleNum('+i+')">'+i+'</button>';}document.getElementById('numGrid').innerHTML=h;majTexteJeu();}
+function ouvrirJeu(nom){document.getElementById('jeuZone').style.display='block';document.getElementById('titreJeu').textContent=paysActuel+' - Tirage '+nom+' : Choisis tes numéros';sel=[];nbNumeros=5;jeuChoisi='NAP2';var nbHtml='';for(var k=3;k<=10;k++){nbHtml+='<button onclick="choisirNb('+k+')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:'+(k===5?'#facc15':'#fff')+';font-weight:bold;">'+k+'</button>';}document.getElementById('nbChoix').innerHTML=nbHtml;dessinerNumeros();document.getElementById('jeuZone').scrollIntoView();}
+function toggleNum(n){var idx=sel.indexOf(n);if(idx>=0){sel.splice(idx,1);}else{if(sel.length>=nbNumeros){alert('Tu as déjà '+nbNumeros+' numéros.');return;}sel.push(n);}dessinerNumeros();}
+function validerJeu(){if(sel.length!==nbNumeros){alert('Choisis '+nbNumeros+' numéros. Tu as '+sel.length);return;}var mise=parseInt(document.getElementById('miseInput').value||'0');if(!mise||mise<100){alert('Mise minimum 100 FCFA');return;}var solde=parseInt(localStorage.getItem('loto_solde')||'0');if(mise>solde){alert('Solde insuffisant ! Ton solde : '+solde+' FCFA. Recharge d abord.');return;}solde-=mise;localStorage.setItem('loto_solde',''+solde);if(document.getElementById('soldeAffiche'))document.getElementById('soldeAffiche').textContent=solde+' FCFA';var code='LOTO'+Math.floor(100000+Math.random()*899999);document.getElementById('ticketZone').innerHTML='<div style="background:#dcfce7;border:2px solid #22c55e;border-radius:12px;padding:12px;"><b style="color:#16a34a;">✅ TICKET VALIDÉ !</b><br>Code : <b>'+code+'</b><br>Jeu : <b>'+jeuChoisi+' dans '+nbNumeros+' numéros</b><br>Numéros : <b>'+sel.join(' - ')+'</b><br>Mise : <b>'+mise+' FCFA</b><br>Nouveau solde : <b>'+solde+' FCFA</b></div>';alert('Ticket validé ! Code : '+code+'\nNouveau solde : '+solde+' FCFA');sel=[];dessinerNumeros();}
 afficherPays();
-setInterval(afficherPays,30000);
-</script>
-</body>
-</html>
+</script></body></html>
