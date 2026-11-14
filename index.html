@@ -204,4 +204,61 @@ function ajouterChoixCompte(){
   });
 }
 setInterval(ajouterChoixCompte,1500);
-      </script></body></html>
+      </script><style>
+#fermeBox{margin:10px 0;}
+#fermeScroll{display:flex;gap:10px;overflow-x:auto;padding:5px 2px;scrollbar-width:none;}
+#fermeScroll::-webkit-scrollbar{display:none;}
+.fermeCard{min-width:150px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:10px;box-shadow:0 2px 6px rgba(0,0,0,.06);flex-shrink:0;}
+.fermeCard b{font-size:14px;}
+.fermeTime{font-size:12px;color:#666;margin-top:4px;}
+.fermeMin{font-size:13px;font-weight:bold;color:#dc2626;margin-top:4px;}
+.fermeOpen{color:#16a34a !important;}
+.marquee{overflow:hidden;white-space:nowrap;background:#fef3c7;border-radius:8px;padding:6px 0;margin-top:8px;}
+.marquee span{display:inline-block;padding-left:100%;animation:defile 18s linear infinite;font-weight:bold;font-size:13px;}
+@keyframes defile{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+</style>
+
+<script>
+function ajouterFermeBientot(){
+  if(document.getElementById('fermeBox')) return;
+  var jouer=document.getElementById('jouer');
+  if(!jouer) return;
+  var box=document.createElement('div');
+  box.id='fermeBox';
+  box.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;"><b style="font-size:16px;">⏳ Ferme bientôt</b><span style="font-size:12px;color:#888;">Fais vite !</span></div><div id="fermeScroll"></div><div class="marquee"><span id="marqueeTxt">Chargement...</span></div>';
+  jouer.prepend(box);
+  majFerme();
+  setInterval(majFerme,1000*15);
+}
+function majFerme(){
+  var scroll=document.getElementById('fermeScroll');
+  var marq=document.getElementById('marqueeTxt');
+  if(!scroll) return;
+  // ICI TU PEUX CHANGER TES HEURES DE TIRAGE
+  var tirages=[
+    {nom:'NAP 2', heure:'10:00'},
+    {nom:'NAP 3', heure:'13:00'},
+    {nom:'PERM 2', heure:'18:00'},
+    {nom:'JACKPOT', heure:'21:00'},
+  ];
+  var now=new Date();
+  var html=''; var textes=[];
+  tirages.forEach(function(t){
+    var parts=t.heure.split(':');
+    var cible=new Date(now); cible.setHours(parseInt(parts[0]),parseInt(parts[1]),0,0);
+    // Si heure passée, c'est pour demain
+    if(cible<now) cible.setDate(cible.getDate()+1);
+    var diff=Math.floor((cible-now)/60000); // minutes restantes
+    var ferme = diff<=5 ? 'CLÔTURÉ BIENTÔT' : diff+' min';
+    var cls = diff<=5 ? 'fermeMin' : 'fermeMin fermeOpen';
+    // Fermeture = 5 min avant tirage
+    var resteFerme = diff-5;
+    if(resteFerme<0) resteFerme=0;
+    html+='<div class="fermeCard"><b>🌍 '+t.nom+'</b><div class="fermeTime">Auj. '+t.heure+' - Ferme dans</div><div class="'+cls+'">'+ (resteFerme<=0 ? 'CLÔTURÉ' : resteFerme+' min') +'</div></div>';
+    textes.push(t.nom+' ferme dans '+resteFerme+' min • ');
+  });
+  scroll.innerHTML=html;
+  if(marq) marq.textContent='🔴 '+textes.join('')+'Fais vite, joue avant la fermeture !';
+}
+setInterval(ajouterFermeBientot,1500);
+</script></body></html>
