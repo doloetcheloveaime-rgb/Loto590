@@ -4,7 +4,6 @@
 <style>body{margin:0;background:#0f172a;color:#fff;font-family:Arial}header{background:#facc15;color:#000;padding:14px;text-align:center;font-weight:900;font-size:22px}.card{background:#1e293b;margin:12px;border-radius:14px;padding:14px}.btnJaune{width:100%;padding:13px;border:none;border-radius:10px;background:#facc15;font-weight:900;margin-top:10px}input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;margin-top:8px;color:#000}.numGrid{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;margin:10px 0}.numBtn{padding:10px 0;border:1px solid #ddd;border-radius:8px;background:#fff;font-weight:bold}.numBtn.sel{background:#facc15}.paysGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.paysBtn{padding:12px;border-radius:10px;border:none;background:#334155;color:#fff;font-weight:bold}.tirageGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.tirageBtn{padding:14px;border-radius:10px;border:none;background:#facc15;font-weight:900}</style>
 </head><body>
 <header>⭐ LOTO 590 ⭐<div style="font-size:12px;font-weight:normal;">Bénin • Togo • Ghana • Côte d'Ivoire • Sénégal</div></header>
-
 <div class="card" id="compteSection">
 <h2>👤 MON COMPTE</h2>
 <div style="display:flex;gap:8px;">
@@ -20,7 +19,6 @@
 <input id="passInput" type="password" placeholder="Ton mot de passe...">
 <button class="btnJaune" id="btnCompte" onclick="actionCompte()">S INSCRIRE</button>
 </div>
-
 <div class="card" id="monEspace" style="display:none;background:#facc15;color:#000;">
 <h2 style="color:#000;">👋 MON ESPACE</h2><p>Connecté : <b id="emailAffiche">-</b></p>
 <div style="background:#fff;border-radius:12px;padding:12px;text-align:center;"><div style="font-size:13px;color:#666;">MON SOLDE</div><div style="font-size:28px;font-weight:900;" id="soldeAffiche">0 FCFA</div></div>
@@ -28,14 +26,11 @@
 <button onclick="alert('Retrait Bientôt')" style="width:100%;padding:12px;border:none;border-radius:10px;background:#fff;font-weight:bold;margin-top:8px;">🏦 RETIRER</button>
 <button onclick="deconnecter()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#dc2626;color:#fff;font-weight:bold;margin-top:8px;">DÉCONNEXION</button>
 </div>
-
 <div class="card"><h2>🌍 CHOISIS TON PAYS</h2><div id="paysGrid" class="paysGrid"></div>
-<div id="tiragesPaysSection" style="display:none;margin-top:12px;"><button onclick="retourPays()" style="padding:8px 14px;border:none;border-radius:20px;background:#fff;font-weight:bold;">⬅ Retour Pays</button><h3 id="titrePays"></h3><div id="tiragesGrid" class="tirageGrid"></div></div></div>
-
-<div class="card"><h2>🎲 JOUER</h2>
+<div id="tiragesPaysSection" style="display:none;margin-top:12px;"><button onclick="retourPays()" style="padding:8px 14px;border:none;border-radius:20px;background:#fff;font-weight:bold;">⬅ Retour Pays</button><h3 id="titrePays"></h3><div id="tiragesGrid" class="tirageGrid"></div></div></div><div class="card"><h2>🎲 JOUER</h2>
 <div id="jeuZone" style="display:none;background:#fff;color:#111;border-radius:12px;padding:12px;margin-top:10px;">
 <b id="titreJeu">Choisis tes numéros</b>
-<p><b>1. COMBIEN DE NUMÉROS ? (3 à 10)</b></p><div id="nbChoix" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+<p><b>1. CHOISIS TES NUMÉROS (3 à 10) - Clique librement</b></p><div id="nbChoix"></div>
 <p><b>2. QUEL JEU ?</b></p>
 <div style="display:flex;gap:6px;flex-wrap:wrap;">
 <button onclick="choisirJeu('NAP2')" style="padding:10px 14px;border-radius:20px;border:2px solid #facc15;background:#facc15;font-weight:bold;">NAP 2</button>
@@ -48,14 +43,13 @@
 <button onclick="choisirJeu('P4')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;font-weight:bold;">PERM P4</button>
 <button onclick="choisirJeu('P5')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;font-weight:bold;">PERM P5</button>
 </div>
-<p id="texteJeuChoisi" style="font-size:13px;color:#555;">Choisi : NAP 2 dans 5 numéros</p>
-<p><b>3. CHOISIS TES NUMÉROS</b></p><div id="numGrid" class="numGrid"></div>
+<p id="texteJeuChoisi" style="font-size:13px;color:#555;background:#fef3c7;padding:8px;border-radius:8px;">Choisi : NAP 2</p>
+<p><b>3. CLIQUE TES NUMÉROS (1 à 90)</b></p><div id="numGrid" class="numGrid"></div>
 <p>Sélectionnés : <b id="selNums">Aucun</b></p><label>Mise (FCFA)</label><input id="miseInput" type="number" value="100">
 <button class="btnJaune" onclick="validerJeu()">VALIDER MON TICKET 🎫</button><div id="ticketZone"></div>
 </div></div>
-
-<div class="card"><h2>📖 COMMENT JOUER</h2><p style="font-size:14px;color:#cbd5e1;line-height:1.6;">1. Inscris-toi / Connecte-toi<br>2. Recharge ton solde<br>3. Choisis ton pays et ton tirage<br>4. Choisis 3 à 10 numéros, NAP ou PERM P2 à P5<br>5. Valide ton ticket - Bonne chance !</p></div><script>
-var modeCompte='ins'; var typeCompte='CLIENT'; var paysActuel='BENIN';
+<div class="card"><h2>📖 COMMENT JOUER</h2><p style="font-size:14px;color:#cbd5e1;line-height:1.6;">1. Inscris-toi / Connecte-toi<br>2. Recharge ton solde<br>3. Choisis ton pays et ton tirage<br>4. Choisis 3 à 10 numéros<br>5. Choisis NAP ou PERM P2 / P3 / P4 / P5 dedans<br>Ex : 6 numéros + P5 dedans = il faut les 5 gagnants dans tes 6<br>Ex : 7 numéros + P2 dedans = il faut 2 gagnants dans tes 7<br>6. Valide ton ticket - Bonne chance !</p></div><script>
+var modeCompte='ins';var typeCompte='CLIENT';var paysActuel='BENIN';
 function switchCompte(m){modeCompte=m;document.getElementById('tabIns').style.background=m==='ins'?'#facc15':'#334155';document.getElementById('tabIns').style.color=m==='ins'?'#000':'#fff';document.getElementById('tabConn').style.background=m==='conn'?'#facc15':'#334155';document.getElementById('tabConn').style.color=m==='conn'?'#000':'#fff';document.getElementById('btnCompte').textContent=m==='ins'?'S INSCRIRE':'SE CONNECTER';}
 function choisirType(t){typeCompte=t;['CLIENT','VENDEUR','ADMIN'].forEach(function(x){document.getElementById('btn'+x.charAt(0)+x.slice(1).toLowerCase()).style.background=x===t?'#facc15':'#fff';});}
 function actionCompte(){var email=document.getElementById('emailInput').value;var pass=document.getElementById('passInput').value;if(!email||!pass){alert('Mets ton Gmail et ton mot de passe');return;}if(modeCompte==='ins'){localStorage.setItem('loto_email',email);localStorage.setItem('loto_pass',pass);localStorage.setItem('loto_type',typeCompte);if(!localStorage.getItem('loto_solde'))localStorage.setItem('loto_solde','0');alert('Compte '+typeCompte+' créé ! Connecte-toi maintenant.');switchCompte('conn');}else{var se=localStorage.getItem('loto_email');var sp=localStorage.getItem('loto_pass');if(se&&(email!==se||pass!==sp)){alert('Gmail ou mot de passe incorrect');return;}localStorage.setItem('loto_email',email);ouvrirEspace(email);}}
@@ -65,13 +59,12 @@ var PAYS={BENIN:['08H','10H','13H','16H','19H'],TOGO:['08H','11H','14H','17H'],G
 function afficherPays(){var h='';Object.keys(PAYS).forEach(function(p){h+='<button class="paysBtn" onclick="choisirPays(\''+p+'\')">'+p+'</button>';});document.getElementById('paysGrid').innerHTML=h;}
 function choisirPays(p){paysActuel=p;document.getElementById('tiragesPaysSection').style.display='block';document.getElementById('titrePays').textContent='Tirages '+p;var h='';PAYS[p].forEach(function(t){h+='<button class="tirageBtn" onclick="ouvrirJeu(\''+t+'\')">'+t+' 🎲</button>';});document.getElementById('tiragesGrid').innerHTML=h;}
 function retourPays(){document.getElementById('tiragesPaysSection').style.display='none';}
-var sel=[];var nbNumeros=5;var jeuChoisi='NAP2';
-function choisirNb(n){nbNumeros=n;sel=[];document.querySelectorAll('#nbChoix button').forEach(function(b){b.style.background=parseInt(b.textContent)===n?'#facc15':'#fff';});dessinerNumeros();majTexteJeu();}
+var sel=[];var jeuChoisi='NAP2';
 function choisirJeu(j){jeuChoisi=j;majTexteJeu();}
-function majTexteJeu(){var ex={'NAP1':'Il faut 1 bon numéro','NAP2':'Il faut 2 bons numéros','NAP3':'Il faut 3 bons numéros','NAP4':'Il faut 4 bons numéros','NAP5':'Il faut 5 bons numéros','P2':'Permutation - 2 numéros doivent sortir','P3':'Permutation - 3 numéros doivent sortir','P4':'Permutation - 4 numéros doivent sortir','P5':'Permutation - 5 numéros doivent sortir'};document.getElementById('texteJeuChoisi').textContent='Choisi : '+jeuChoisi+' dans '+nbNumeros+' numéros - '+(ex[jeuChoisi]||'');document.getElementById('selNums').textContent=sel.length?sel.join(' - '):'Aucun';}
+function majTexteJeu(){var besoin=jeuChoisi==='NAP1'?1:jeuChoisi==='NAP2'||jeuChoisi==='P2'?2:jeuChoisi==='NAP3'||jeuChoisi==='P3'?3:jeuChoisi==='NAP4'||jeuChoisi==='P4'?4:5;var txt='';if(jeuChoisi.startsWith('P')){txt='PERMUTATION '+jeuChoisi+' : Tu as choisi '+sel.length+' numéros (3 à 10 max). Il faut '+besoin+' gagnants DEDANS tes numéros pour gagner. On tire 5 numéros.';}else{txt=jeuChoisi+' : Tu as choisi '+sel.length+' numéros. Il faut '+besoin+' bons numéros pour gagner.';}document.getElementById('texteJeuChoisi').textContent=txt;document.getElementById('selNums').textContent=sel.length?sel.join(' - '):'Aucun';}
 function dessinerNumeros(){var h='';for(var i=1;i<=90;i++){h+='<button class="numBtn'+(sel.includes(i)?' sel':'')+'" onclick="toggleNum('+i+')">'+i+'</button>';}document.getElementById('numGrid').innerHTML=h;majTexteJeu();}
-function ouvrirJeu(nom){document.getElementById('jeuZone').style.display='block';document.getElementById('titreJeu').textContent=paysActuel+' - Tirage '+nom+' : Choisis tes numéros';sel=[];nbNumeros=5;jeuChoisi='NAP2';var nbHtml='';for(var k=3;k<=10;k++){nbHtml+='<button onclick="choisirNb('+k+')" style="padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:'+(k===5?'#facc15':'#fff')+';font-weight:bold;">'+k+'</button>';}document.getElementById('nbChoix').innerHTML=nbHtml;dessinerNumeros();document.getElementById('jeuZone').scrollIntoView();}
-function toggleNum(n){var idx=sel.indexOf(n);if(idx>=0){sel.splice(idx,1);}else{if(sel.length>=nbNumeros){alert('Tu as déjà '+nbNumeros+' numéros.');return;}sel.push(n);}dessinerNumeros();}
-function validerJeu(){if(sel.length!==nbNumeros){alert('Choisis '+nbNumeros+' numéros. Tu as '+sel.length);return;}var mise=parseInt(document.getElementById('miseInput').value||'0');if(!mise||mise<100){alert('Mise minimum 100 FCFA');return;}var solde=parseInt(localStorage.getItem('loto_solde')||'0');if(mise>solde){alert('Solde insuffisant ! Ton solde : '+solde+' FCFA. Recharge d abord.');return;}solde-=mise;localStorage.setItem('loto_solde',''+solde);if(document.getElementById('soldeAffiche'))document.getElementById('soldeAffiche').textContent=solde+' FCFA';var code='LOTO'+Math.floor(100000+Math.random()*899999);document.getElementById('ticketZone').innerHTML='<div style="background:#dcfce7;border:2px solid #22c55e;border-radius:12px;padding:12px;"><b style="color:#16a34a;">✅ TICKET VALIDÉ !</b><br>Code : <b>'+code+'</b><br>Jeu : <b>'+jeuChoisi+' dans '+nbNumeros+' numéros</b><br>Numéros : <b>'+sel.join(' - ')+'</b><br>Mise : <b>'+mise+' FCFA</b><br>Nouveau solde : <b>'+solde+' FCFA</b></div>';alert('Ticket validé ! Code : '+code+'\nNouveau solde : '+solde+' FCFA');sel=[];dessinerNumeros();}
+function ouvrirJeu(nom){document.getElementById('jeuZone').style.display='block';document.getElementById('titreJeu').textContent=paysActuel+' - Tirage '+nom+' : Choisis tes numéros';sel=[];jeuChoisi='NAP2';document.getElementById('nbChoix').innerHTML='<div style="background:#fef3c7;padding:10px;border-radius:10px;font-size:13px;">Choisis librement <b>3 à 10 numéros</b> en cliquant ci-dessous. Après, choisis P2 / P3 / P4 / P5 dedans. Plafond 10, au-dessus ça ne valide pas.</div>';dessinerNumeros();document.getElementById('jeuZone').scrollIntoView();}
+function toggleNum(n){var idx=sel.indexOf(n);if(idx>=0){sel.splice(idx,1);}else{if(sel.length>=10){alert('Maximum 10 numéros. Plafond 10.');return;}sel.push(n);}dessinerNumeros();}
+function validerJeu(){var besoin=jeuChoisi==='NAP1'?1:jeuChoisi==='NAP2'||jeuChoisi==='P2'?2:jeuChoisi==='NAP3'||jeuChoisi==='P3'?3:jeuChoisi==='NAP4'||jeuChoisi==='P4'?4:5;if(jeuChoisi.startsWith('P')){if(sel.length<3){alert('PERMUTATION : Il faut au moins 3 numéros. Tu as '+sel.length);return;}if(sel.length>10){alert('PERMUTATION : Maximum 10 numéros. Au-dessus de 10, ça ne valide pas.');return;}if(sel.length<besoin){alert('Pour '+jeuChoisi+' il faut au moins '+besoin+' numéros dedans. Tu as '+sel.length);return;}}else{if(sel.length<besoin){alert('Pour '+jeuChoisi+' il faut au moins '+besoin+' numéros. Tu as '+sel.length);return;}if(sel.length>10){alert('Maximum 10 numéros');return;}}var mise=parseInt(document.getElementById('miseInput').value||'0');if(!mise||mise<100){alert('Mise minimum 100 FCFA');return;}var solde=parseInt(localStorage.getItem('loto_solde')||'0');if(mise>solde){alert('Solde insuffisant ! Ton solde : '+solde+' FCFA. Recharge d abord.');return;}solde-=mise;localStorage.setItem('loto_solde',''+solde);if(document.getElementById('soldeAffiche'))document.getElementById('soldeAffiche').textContent=solde+' FCFA';var code='LOTO'+Math.floor(100000+Math.random()*899999);document.getElementById('ticketZone').innerHTML='<div style="background:#dcfce7;border:2px solid #22c55e;border-radius:12px;padding:12px;"><b style="color:#16a34a;">✅ TICKET VALIDÉ !</b><br>Code : <b>'+code+'</b><br>Jeu : <b>'+jeuChoisi+' dans '+sel.length+' numéros</b><br>Numéros : <b>'+sel.join(' - ')+'</b><br>Mise : <b>'+mise+' FCFA</b><br>Nouveau solde : <b>'+solde+' FCFA</b></div>';alert('Ticket validé ! '+jeuChoisi+' dans '+sel.length+' numéros\nCode : '+code);sel=[];dessinerNumeros();}
 afficherPays();
 </script></body></html>
