@@ -61,7 +61,19 @@ input{width:100%;padding:12px;border-radius:10px;border:none;margin-bottom:10px;
 <button class="btnJaune" id="btnActionBas" onclick="actionCompte()">S INSCRIRE</button>
 <button class="btnGris" onclick="alert('Mot de passe oublié - Contacte le support')">J AI OUBLIE MON MOT DE PASSE</button>
 </div>
-
+<!-- ===== MON ESPACE - APRES CONNEXION ===== -->
+<div class="card" id="monEspace" style="display:none;background:#facc15;color:#000;">
+<h2 style="color:#000;">👋 MON ESPACE</h2>
+<p style="font-size:14px;">Connecté en tant que :</p>
+<b id="emailAffiche" style="font-size:15px;">-</b>
+<div style="background:#fff;border-radius:12px;padding:12px;margin-top:10px;text-align:center;">
+<div style="font-size:13px;color:#666;">MON SOLDE</div>
+<div style="font-size:28px;font-weight:900;" id="soldeAffiche">0 FCFA</div>
+</div>
+<button onclick="alert('Recharge - Bientôt : MTN / Moov / Orange')" style="width:100%;padding:12px;border:none;border-radius:10px;background:#000;color:#facc15;font-weight:bold;margin-top:10px;">💰 RECHARGER</button>
+<button onclick="alert('Retrait - Bientôt')" style="width:100%;padding:12px;border:none;border-radius:10px;background:#fff;color:#000;font-weight:bold;margin-top:8px;">🏦 RETIRER</button>
+<button onclick="deconnecter()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#dc2626;color:#fff;font-weight:bold;margin-top:8px;">DÉCONNEXION</button>
+</div>
 <!-- ===== JOUER ===== -->
 <div class="card" id="jouerSection">
 <h2>🎲 JOUER</h2>
@@ -131,10 +143,34 @@ function actionCompte(){
   var pass = document.getElementById('passInput').value;
   if(!email || !pass){ alert('Mets ton Gmail et ton mot de passe'); return; }
   if(modeCompte==='ins'){
-    alert('Compte '+typeCompte+' créé pour '+email+' ! Bienvenue sur LOTO 5/90');
+    localStorage.setItem('loto_email', email);
+    localStorage.setItem('loto_pass', pass);
+    localStorage.setItem('loto_type', typeCompte);
+    localStorage.setItem('loto_solde', '0');
+    alert('Compte '+typeCompte+' créé ! Connecte-toi maintenant.');
+    switchCompte('conn');
   } else {
-    alert('Bienvenue '+email+' ! Tu es connecté.');
+    var savedEmail = localStorage.getItem('loto_email');
+    var savedPass = localStorage.getItem('loto_pass');
+    if(savedEmail && (email !== savedEmail || pass !== savedPass)){
+      alert('Gmail ou mot de passe incorrect. Vérifie ou inscris-toi d abord.');
+      return;
+    }
+    localStorage.setItem('loto_email', email);
+    ouvrirEspace(email);
   }
+}
+function ouvrirEspace(email){
+  document.getElementById('compteSection').style.display='none';
+  document.getElementById('monEspace').style.display='block';
+  document.getElementById('emailAffiche').textContent = email + ' (' + (localStorage.getItem('loto_type')||'CLIENT') + ')';
+  document.getElementById('soldeAffiche').textContent = (localStorage.getItem('loto_solde')||'0') + ' FCFA';
+  window.scrollTo(0,0);
+}
+function deconnecter(){
+  document.getElementById('monEspace').style.display='none';
+  document.getElementById('compteSection').style.display='block';
+  switchCompte('conn');
 }
 
 // ===== PAYS + TIRAGES =====
