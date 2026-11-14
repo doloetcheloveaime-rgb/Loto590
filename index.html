@@ -155,4 +155,53 @@ setTimeout(function(){
     }
   }
 },3000);
+      </script><script>
+window.choixCompte='client';
+function ajouterChoixCompte(){
+  // On cherche le formulaire d'inscription
+  var boutons=document.querySelectorAll('button');
+  var btnInscrire=null;
+  boutons.forEach(function(b){
+    var t=b.textContent.toUpperCase();
+    if(t.includes("S'INSCRIRE") || t.includes('INSCRIRE') || t.includes('CREER COMPTE') || t.includes('CRÉER COMPTE')) btnInscrire=b;
+  });
+  if(!btnInscrire) return;
+  if(document.getElementById('choixCompteBox')) return;
+  var box=document.createElement('div');
+  box.id='choixCompteBox';
+  box.style.cssText='width:100%;margin:10px 0;padding:10px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;text-align:center;';
+  box.innerHTML='<div style="font-weight:bold;margin-bottom:8px;">TU VEUX CREER QUEL COMPTE ?</div>'+
+  '<div style="display:flex;gap:10px;">'+
+  '<button type="button" id="btnClient" style="flex:1;padding:12px;border-radius:10px;border:2px solid #22c55e;background:#22c55e;color:#fff;font-weight:bold;">CLIENT</button>'+
+  '<button type="button" id="btnRev" style="flex:1;padding:12px;border-radius:10px;border:2px solid #f59e0b;background:#fff;color:#000;font-weight:bold;">REVENDEUR</button>'+
+  '</div><div id="txtChoix" style="font-size:12px;margin-top:6px;color:#666;">Choisi : CLIENT - Tu joues pour toi</div>';
+  btnInscrire.parentNode.insertBefore(box, btnInscrire);
+  document.getElementById('btnClient').onclick=function(){
+    window.choixCompte='client';
+    this.style.background='#22c55e'; this.style.color='#fff';
+    document.getElementById('btnRev').style.background='#fff'; document.getElementById('btnRev').style.color='#000';
+    document.getElementById('txtChoix').textContent='Choisi : CLIENT - Tu joues pour toi';
+  };
+  document.getElementById('btnRev').onclick=function(){
+    window.choixCompte='revendeur';
+    this.style.background='#f59e0b'; this.style.color='#fff';
+    document.getElementById('btnClient').style.background='#fff'; document.getElementById('btnClient').style.color='#000';
+    document.getElementById('txtChoix').textContent='Choisi : REVENDEUR - Tu vends pour les autres';
+  };
+  // Quand il clique S'INSCRIRE, on corrige dans Firebase après 2 sec
+  btnInscrire.addEventListener('click', function(){
+    setTimeout(function(){
+      var emailEl=document.querySelector('input[type="email"]');
+      var email=emailEl ? emailEl.value.trim().toLowerCase() : '';
+      if(!email) return;
+      var key=email.replace(/[.#$\[\]]/g,'_');
+      if(window.choixCompte==='client'){
+        db.ref('revendeurs/'+key).remove();
+      } else {
+        db.ref('revendeurs/'+key).set({email:email, solde:0, date:Date.now()});
+      }
+    },2500);
+  });
+}
+setInterval(ajouterChoixCompte,1500);
       </script></body></html>
