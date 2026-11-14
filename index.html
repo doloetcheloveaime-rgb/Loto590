@@ -1,8 +1,56 @@
 <!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LOTO 5/90</title>
 <style>body{font-family:sans-serif;background:#0f172a;color:#fff;text-align:center;padding:15px;margin:0}h1{color:#facc15}.grid{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;max-width:480px;margin:15px auto}.n{background:#1e293b;border:1px solid #334155;color:#fff;padding:10px 0;border-radius:10px;font-weight:bold;cursor:pointer}.n.sel{background:#facc15;color:#000}.n.banker{background:#ef4444;color:#fff}button{background:#facc15;border:0;padding:14px;border-radius:12px;font-weight:900;width:100%;max-width:480px;margin-top:10px;cursor:pointer}input,select,textarea{padding:12px;border-radius:10px;border:0;width:100%;max-width:480px;margin:6px 0;box-sizing:border-box}.card{background:#1e293b;padding:14px;border-radius:14px;max-width:480px;margin:10px auto;text-align:left}.wallet{background:linear-gradient(135deg,#facc15,#f97316);color:#000;padding:16px;border-radius:16px;max-width:480px;margin:10px auto}.tab{display:flex;gap:6px;max-width:480px;margin:auto;flex-wrap:wrap}.tab button{background:#334155;color:#fff;padding:10px;flex:1}.tab button.on{background:#facc15;color:#000}.badge{background:#22c55e;color:#000;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:900}.btn2{display:flex;gap:8px;max-width:480px;margin:8px auto}.btn2 button{flex:1}.btn2 button.inact{background:#334155;color:#fff}.revCard{background:#fff;color:#000;padding:14px;border-radius:14px;max-width:480px;margin:10px auto;text-align:left}.retraitBox{background:#dcfce7;color:#000;padding:14px;border-radius:14px;max-width:480px;margin:10px auto;text-align:left}.debug{background:#ef4444;color:#fff;padding:10px;border-radius:10px;max-width:480px;margin:10px auto;display:none}.typeBtn{padding:12px;border-radius:12px;background:#334155;color:#fff;text-align:left}.typeBtn.on{background:#facc15;color:#000}table{width:100%;border-collapse:collapse;font-size:13px}td,th{border:1px solid #334155;padding:6px;text-align:left}</style></head><body>
 <h1>🎱 LOTO 5/90</h1>
-<div id="login"><div class="card"><b>MON COMPTE</b><br><div class="btn2"><button id="btnIns" onclick="mode('ins')">S INSCRIRE</button><button id="btnConn" class="inact" onclick="mode('conn')">SE CONNECTER</button></div><small id="modeText">Creer un nouveau compte</small><br><input id="gmail" type="email" placeholder="Ton Gmail ex: jean@gmail.com"><input id="pass" type="password" placeholder="Ton mot de passe"><input id="momo" placeholder="Ton numero Momo"><button id="mainBtn" onclick="login()">S INSCRIRE</button><p id="loginMsg"></p><div id="debugBox" class="debug"></div><button style="background:#334155;color:#fff" onclick="oublie()">J AI OUBLIE MON MOT DE PASSE</button></div></div>
-<div id="app" style="display:none">
+<!-- ===== NOUVEAUX BOUTONS INSCRIT / CONNECTER ===== -->
+<div style="display:flex;gap:8px;margin:10px 0;">
+  <button id="tabIns" onclick="switchCompte('ins')" style="flex:1;padding:12px;border:none;border-radius:10px;background:#facc15;color:#000;font-weight:bold;">S INSCRIRE</button>
+  <button id="tabConn" onclick="switchCompte('conn')" style="flex:1;padding:12px;border:none;border-radius:10px;background:#334155;color:#fff;font-weight:bold;">SE CONNECTER</button>
+</div>
+
+<script>
+function switchCompte(mode){
+  var ins = document.getElementById('tabIns');
+  var conn = document.getElementById('tabConn');
+  if(!ins || !conn) return;
+
+  if(mode === 'ins'){
+    ins.style.background = '#facc15'; ins.style.color = '#000';
+    conn.style.background = '#334155'; conn.style.color = '#fff';
+  } else {
+    conn.style.background = '#facc15'; conn.style.color = '#000';
+    ins.style.background = '#334155'; ins.style.color = '#fff';
+  }
+
+  // Change le bouton du bas aussi
+  var tous = document.querySelectorAll('button');
+  tous.forEach(function(b){
+    var t = b.textContent.trim().toUpperCase();
+    if(t === 'S INSCRIRE' && b.id !== 'tabIns') b.textContent = (mode==='ins' ? 'S INSCRIRE' : 'SE CONNECTER');
+    if(t === 'SE CONNECTER' && b.id !== 'tabConn') b.textContent = (mode==='ins' ? 'S INSCRIRE' : 'SE CONNECTER');
+  });
+
+  // Cacher / Montrer Momo + CLIENT / REVENDEUR
+  var inputs = document.querySelectorAll('input');
+  inputs.forEach(function(inp){
+    var ph = (inp.placeholder || '').toLowerCase();
+    if(ph.includes('momo')){
+      inp.style.display = (mode === 'conn' ? 'none' : 'block');
+    }
+  });
+  document.querySelectorAll('div').forEach(function(d){
+    if(d.textContent.includes('CLIENT') && d.textContent.includes('REVENDEUR')){
+      d.style.display = (mode === 'conn' ? 'none' : 'block');
+    }
+  });
+
+  // Change le petit texte
+  var petit = document.querySelector('p');
+  if(petit && petit.textContent.includes('Creer')){
+    petit.textContent = (mode === 'conn' ? 'Connecte-toi à ton compte' : 'Creer un nouveau compte');
+  }
+}
+</script>
+<!-- ===== FIN NOUVEAUX BOUTONS ===== --><div id="app" style="display:none">
 <div class="wallet"><b id="hello">Bienvenue</b> <span id="roleBadge"></span><br>SOLDE : <span style="font-size:26px" id="solde">0F</span><br><small id="myGmail"></small><br><small id="myMomo"></small><br><small>Gain = sur ton compte par Gmail. Retrait = paye sur ton Momo par l Admin.</small><br><button style="background:#ef4444;color:#fff;max-width:200px;padding:10px" onclick="logout()">DECONNEXION</button></div>
 <div class="tab"><button id="b1" class="on" onclick="showTab('jouer')">JOUER</button><button id="b2" onclick="showTab('comment')">COMMENT JOUER</button><button id="b3" onclick="showTab('revendeurs')">REVENDEURS</button><button id="b4" onclick="showTab('aide')">AIDE</button><button id="b5" onclick="showTab('reclam')">RECLAMATION</button></div>
 <div id="jouer"><!-- ===== PAYS + FERME BIENTOT - LOTO590 V2 ===== -->
@@ -399,54 +447,5 @@ setInterval(ajouterChoixCompte,1500);
       </script><style>
 
 </script><script>
-<!-- ===== NOUVEAUX BOUTONS INSCRIT / CONNECTER ===== -->
-<div style="display:flex;gap:8px;margin:10px 0;">
-  <button id="tabIns" onclick="switchCompte('ins')" style="flex:1;padding:12px;border:none;border-radius:10px;background:#facc15;color:#000;font-weight:bold;">S INSCRIRE</button>
-  <button id="tabConn" onclick="switchCompte('conn')" style="flex:1;padding:12px;border:none;border-radius:10px;background:#334155;color:#fff;font-weight:bold;">SE CONNECTER</button>
-</div>
 
-<script>
-function switchCompte(mode){
-  var ins = document.getElementById('tabIns');
-  var conn = document.getElementById('tabConn');
-  if(!ins || !conn) return;
-
-  if(mode === 'ins'){
-    ins.style.background = '#facc15'; ins.style.color = '#000';
-    conn.style.background = '#334155'; conn.style.color = '#fff';
-  } else {
-    conn.style.background = '#facc15'; conn.style.color = '#000';
-    ins.style.background = '#334155'; ins.style.color = '#fff';
-  }
-
-  // Change le bouton du bas aussi
-  var tous = document.querySelectorAll('button');
-  tous.forEach(function(b){
-    var t = b.textContent.trim().toUpperCase();
-    if(t === 'S INSCRIRE' && b.id !== 'tabIns') b.textContent = (mode==='ins' ? 'S INSCRIRE' : 'SE CONNECTER');
-    if(t === 'SE CONNECTER' && b.id !== 'tabConn') b.textContent = (mode==='ins' ? 'S INSCRIRE' : 'SE CONNECTER');
-  });
-
-  // Cacher / Montrer Momo + CLIENT / REVENDEUR
-  var inputs = document.querySelectorAll('input');
-  inputs.forEach(function(inp){
-    var ph = (inp.placeholder || '').toLowerCase();
-    if(ph.includes('momo')){
-      inp.style.display = (mode === 'conn' ? 'none' : 'block');
-    }
-  });
-  document.querySelectorAll('div').forEach(function(d){
-    if(d.textContent.includes('CLIENT') && d.textContent.includes('REVENDEUR')){
-      d.style.display = (mode === 'conn' ? 'none' : 'block');
-    }
-  });
-
-  // Change le petit texte
-  var petit = document.querySelector('p');
-  if(petit && petit.textContent.includes('Creer')){
-    petit.textContent = (mode === 'conn' ? 'Connecte-toi à ton compte' : 'Creer un nouveau compte');
-  }
-}
-</script>
-<!-- ===== FIN NOUVEAUX BOUTONS ===== -->
 </script></body></html>
