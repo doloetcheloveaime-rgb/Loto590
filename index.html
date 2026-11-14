@@ -398,4 +398,74 @@ function ajouterChoixCompte(){
 setInterval(ajouterChoixCompte,1500);
       </script><style>
 
+</script><script>
+// ===== FIX JAUNE INSCRIT / CONNECTER =====
+function fixJauneCompte(){
+  var boutons = document.querySelectorAll('button');
+  var btnIns = null, btnConn = null;
+
+  boutons.forEach(function(b){
+    var t = b.textContent.trim().toUpperCase();
+    if(t.includes('S INSCRIRE') || t.includes("S'INSCRIRE")) btnIns = b;
+    if(t.includes('SE CONNECTER')) btnConn = b;
+  });
+
+  if(!btnIns || !btnConn) return;
+
+  // On marque les 2 boutons pour les retrouver
+  btnIns.id = 'btnInscrireTab';
+  btnConn.id = 'btnConnecterTab';
+
+  function mettreJauneSur(qui){
+    // Les 2 boutons : on enlève le jaune partout
+    [btnIns, btnConn].forEach(function(b){
+      b.style.background = '#334155';
+      b.style.color = '#fff';
+    });
+    // On met le jaune sur celui cliqué
+    qui.style.background = '#facc15';
+    qui.style.color = '#000';
+
+    // On change aussi le petit texte en dessous
+    var titre = document.querySelector('h2, h3');
+    // On change le bouton du bas aussi
+    var btnBas = document.querySelectorAll('button');
+    btnBas.forEach(function(b){
+      var txt = b.textContent.trim().toUpperCase();
+      if(txt === 'S INSCRIRE' || txt === 'SE CONNECTER'){
+        if(b !== btnIns && b !== btnConn){
+          b.textContent = (qui === btnIns ? 'S INSCRIRE' : 'SE CONNECTER');
+          b.style.background = '#facc15';
+          b.style.color = '#000';
+        }
+      }
+    });
+
+    // Si on est sur CONNEXION : on cache Numero Momo + CLIENT/REVENDEUR
+    var inputs = document.querySelectorAll('input');
+    var blocClient = null;
+    document.querySelectorAll('div').forEach(function(d){
+      if(d.textContent.includes('CLIENT') && d.textContent.includes('REVENDEUR')) blocClient = d;
+    });
+
+    if(qui === btnConn){
+      // Cacher Momo
+      inputs.forEach(function(inp){
+        if((inp.placeholder||'').toLowerCase().includes('momo')) inp.style.display='none';
+      });
+      if(blocClient) blocClient.style.display='none';
+    } else {
+      // Re-afficher Momo
+      inputs.forEach(function(inp){
+        if((inp.placeholder||'').toLowerCase().includes('momo')) inp.style.display='block';
+      });
+      if(blocClient) blocClient.style.display='block';
+    }
+  }
+
+  btnIns.onclick = function(){ mettreJauneSur(btnIns); };
+  btnConn.onclick = function(){ mettreJauneSur(btnConn); };
+}
+setTimeout(fixJauneCompte, 800);
+setInterval(fixJauneCompte, 2000);
 </script></body></html>
