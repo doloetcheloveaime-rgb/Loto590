@@ -1,142 +1,287 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LOTO 590 - V9842</title>
-<meta name="theme-color" content="#facc15"><meta name="description" content="LOTO 590 - Joue, gagne, recharge avec ton revendeur.">
-<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="LOTO 590">
-<link rel="icon" href="data:,⭐">
-<style>*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#111827;color:#fff;padding:10px;padding-bottom:80px}input{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:5px 0;font-size:15px}label{font-size:12px;font-weight:bold;color:#444}button{cursor:pointer}.top{background:#facc15;color:#000;border-radius:14px;padding:14px;text-align:center}.top h1{margin:0;font-size:32px}.top p{margin:4px 0 0;font-size:13px}.card{background:#fff;color:#111;border-radius:14px;padding:14px;margin-top:12px}.box{background:#f3f4f6;border-radius:10px;padding:12px;margin-top:10px;color:#111}.numGrid{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}.numBtn{padding:9px 0;border:1px solid #ddd;border-radius:8px;background:#fff;font-weight:bold}.numBtn.sel{background:#facc15}.jeuBtn{padding:9px 12px;border:1px solid #ddd;border-radius:20px;background:#fff;font-weight:bold}.jeuBtn.sel{background:#000;color:#facc15}.swBtn{padding:10px 14px;border:1px solid #ddd;border-radius:20px;background:#fff;font-weight:bold}.swBtn.sel{background:#facc15}.tabBtn{padding:9px 12px;border:1px solid #ddd;border-radius:20px;background:#fff;font-weight:bold}.tabBtn.sel{background:#000;color:#facc15}.btnJaune{width:100%;padding:13px;border:none;border-radius:10px;background:#facc15;font-weight:900;margin-top:8px}.modeBtn{padding:16px 10px;border:none;border-radius:12px;font-weight:900}.badge{font-size:11px;background:#000;color:#facc15;padding:3px 8px;border-radius:20px}</style></head><body>
-<div class="top"><h1>⭐ LOTO 590</h1><p>Joue • Gagne • Recharge avec ton revendeur</p><span class="badge">V9842 - FINALE</span><br><button id="btnInstaller" onclick="installerApp()" style="display:none;margin-top:10px;padding:12px 20px;border:none;border-radius:20px;background:#000;color:#facc15;font-weight:900;">📲 INSTALLER L'APPLICATION</button></div>
-<div class="card" id="menuChoix"><h2 style="text-align:center;margin:0;">👇 TU ES QUI ?</h2><p style="text-align:center;font-size:13px;">Choisis, ça change tout l'écran.</p><div style="display:flex;gap:8px;"><button class="modeBtn" onclick="choisirMode('client')" style="flex:1;background:#facc15;">🎲 JE SUIS CLIENT<br><span style="font-size:11px;">Je veux jouer</span></button><button class="modeBtn" onclick="choisirMode('revendeur')" style="flex:1;background:#16a34a;color:#fff;">👥 JE SUIS REVENDEUR<br><span style="font-size:11px;">Je veux vendre</span></button></div></div>
-<div id="compteSection" style="display:none;"><div class="card"><div style="display:flex;gap:6px;"><button class="swBtn sel" id="btn-conn" onclick="switchCompte('conn')">🔐 CONNEXION</button><button class="swBtn" id="btn-inscr" onclick="switchCompte('inscr')">📝 INSCRIPTION</button><button class="swBtn" id="btn-admin" onclick="switchCompte('admin')">👑 ADMIN</button></div>
-<div id="form-conn"><h2>🔐 CONNEXION CLIENT</h2><label>Gmail</label><input id="connGmail" placeholder="ton@gmail.com"><label>Mot de passe</label><input id="connPass" type="password" placeholder="Ton mot de passe..."><button class="btnJaune" onclick="connecterClient()">✅ SE CONNECTER</button><div id="msgConn"></div></div>
-<div id="form-inscr" style="display:none;"><h2>📝 INSCRIPTION CLIENT</h2><label>Gmail</label><input id="inscrGmail" placeholder="ton@gmail.com"><label>Mot de passe</label><input id="inscrPass" type="password" placeholder="Choisis un mot de passe..."><label>Numéro WhatsApp</label><input id="inscrTel" placeholder="01 90..."><button class="btnJaune" onclick="inscrireClient()">✅ CRÉER MON COMPTE</button><div id="msgInscr"></div></div>
-<div id="form-admin" style="display:none;"><h2>👑 ADMIN - TOI SEUL</h2><label>Gmail Admin</label><input id="adminGmail" placeholder="beninloto590@gmail.com"><label>Mot de passe Admin</label><input id="adminPass" type="password" placeholder="loto123"><button class="btnJaune" onclick="connexionAdmin()">👑 ENTRER ADMIN</button><div id="msgAdmin"></div></div></div></div>
-<!-- FIN PARTIE 1 --><div id="monEspace" style="display:none;"><div class="card" style="background:linear-gradient(90deg,#facc15,#f97316);text-align:center;"><h2 style="margin:0;">👋 BONJOUR <span id="emailAffiche"></span></h2><div style="display:flex;gap:8px;margin-top:10px;"><div style="flex:1;background:#fff;border-radius:10px;padding:10px;color:#111;"><small>🎲 SOLDE JEU</small><div id="soldeJeuAffiche" style="font-size:22px;font-weight:900;">0 FCFA</div></div><div style="flex:1;background:#fff;border-radius:10px;padding:10px;color:#111;"><small>🏆 SOLDE GAIN</small><div id="soldeGainAffiche" style="font-size:22px;font-weight:900;">0 FCFA</div></div></div>
-<button onclick="toggleRecharger()" style="width:100%;padding:13px;border:none;border-radius:10px;background:#16a34a;color:#fff;font-weight:900;margin-top:10px;">💰 RECHARGER - J'AI UN CODE</button>
-<div id="rechargeZone" style="display:none;background:#fff;border-radius:10px;padding:12px;margin-top:8px;color:#111;text-align:left;"><b>💰 METS TON CODE</b><br><span style="font-size:12px;">Le revendeur te donne un CODE, tu le mets ici.</span><label>CODE</label><input id="codeRechargeClient" placeholder="LOTO-XXXXXX"><label>Montant du CODE</label><input id="montantCodeClient" type="number" placeholder="Ex: 10000"><button onclick="activerCodeClient()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#facc15;font-weight:900;margin-top:6px;">✅ ACTIVER MON CODE</button><div id="msgCodeClient"></div><a href="https://wa.me/22901909090?text=Bonjour%20je%20veux%20recharger" target="_blank" style="display:block;text-align:center;margin-top:8px;font-weight:bold;color:#16a34a;">💬 Demander un CODE sur WhatsApp</a></div>
-<button onclick="toggleRetrait()" style="width:100%;padding:13px;border:none;border-radius:10px;background:#000;color:#facc15;font-weight:900;margin-top:8px;">🏦 RETIRER MON GAIN - <span id="gainRetraitAffiche">0 FCFA</span></button>
-<div id="retraitZoneBox" style="display:none;background:#fff;border-radius:10px;padding:12px;margin-top:8px;color:#111;text-align:left;"><b>🏦 DEMANDE DE RETRAIT</b><br><span style="font-size:12px;">Tu reçois par MoMo.</span><label>Ton Gmail</label><input id="gmailRetraitClient" placeholder="ton@gmail.com"><label>Ton numéro MoMo</label><input id="numeroMomoRetrait" placeholder="01 90..."><label>Montant à retirer</label><input id="montantRetrait" type="number" placeholder="Ex: 5000"><button onclick="demanderRetrait()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#16a34a;color:#fff;font-weight:900;margin-top:6px;">✅ ENVOYER MA DEMANDE</button><div id="msgRetraitClient"></div></div>
-<button onclick="deconnecter()" style="width:100%;padding:10px;border:none;border-radius:10px;background:#dc2626;color:#fff;font-weight:bold;margin-top:8px;">🚪 DÉCONNEXION</button></div></div>
-<div id="zoneRevendeurs" style="display:none;">
-<div class="card"><h2>👥 NOS REVENDEURS</h2><p style="font-size:13px;">Choisis un revendeur proche de toi, envoie-lui WhatsApp, il te donne un CODE.</p><div id="listeRevendeursPublic">Chargement...</div></div>
-<div id="monEspaceRevendeur" style="display:none;"><div class="card" style="background:linear-gradient(90deg,#16a34a,#06b6d4);color:#fff;text-align:center;"><h2 style="margin:0;">👥 BONJOUR <span id="nomRevAffiche"></span></h2><p id="emailRevAffiche"></p><div style="background:#fff;color:#111;border-radius:10px;padding:12px;"><small>💰 MON SOLDE REVENDEUR</small><div id="soldeRevAffiche" style="font-size:24px;font-weight:900;">0 FCFA</div></div>
-<button onclick="demanderRechargeAdmin()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#000;color:#facc15;font-weight:900;margin-top:10px;">💬 DEMANDER RECHARGE À L'ADMIN</button></div>
-<div class="card"><h2>🔑 ACTIVER MON CODE REVENDEUR</h2><label>CODE REVENDEUR</label><input id="codeRechargeRev" placeholder="REV-XXXXXX"><label>Montant</label><input id="montantCodeRev" type="number" placeholder="Ex: 50000"><button onclick="activerCodeRevendeur()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#facc15;font-weight:900;">✅ ACTIVER</button><div id="msgCodeRev"></div></div>
-<div class="card"><h2>🎫 GÉNÉRER CODE POUR UN CLIENT</h2><label>Gmail du client</label><input id="gmailClientRev" placeholder="client@gmail.com"><label>Numéro WhatsApp du client</label><input id="numeroClientRev" placeholder="01 90..."><label>Montant</label><input id="montantClientRev" type="number" value="10000"><button onclick="revendeurGenererCodeClient()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#16a34a;color:#fff;font-weight:900;">✅ GÉNÉRER CODE CLIENT</button><div id="codeGenereRev"></div></div>
-<div class="card" style="text-align:center;"><button onclick="deconnecterRevendeur()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#dc2626;color:#fff;font-weight:bold;">🚪 DÉCONNEXION REVENDEUR</button></div></div>
-<div class="card" id="boxInsRev"><h2>📝 TU VEUX DEVENIR REVENDEUR ?</h2><p style="font-size:13px;">Inscris-toi, l'Admin va t'accepter.</p><div class="box"><label>Ton nom / pseudo</label><input id="insRevNom" placeholder="Ton nom..."><label>Ton Gmail</label><input id="insRevGmail" placeholder="revendeur@gmail.com"><label>Ton mot de passe</label><input id="insRevPass" type="password" placeholder="Ton mot de passe..."><label>Ton numéro WhatsApp</label><input id="insRevTel" placeholder="01 90..."><label>Ton quartier / Ville</label><input id="insRevVille" placeholder="Calavi, Cotonou..."><button onclick="inscrireRevendeur()" style="width:100%;padding:14px;border:none;border-radius:10px;background:#16a34a;color:#fff;font-weight:900;margin-top:8px;">✅ JE M'INSCRIS COMME REVENDEUR</button><div id="msgInsRev"></div></div>
-<div class="box" style="background:#fef3c7;"><b>🔐 DÉJÀ REVENDEUR ? CONNECTE-TOI ICI</b><br><span style="font-size:12px;">Ton Gmail + mot de passe revendeur, pas le compte client.</span><label>Gmail revendeur</label><input id="loginRevGmail" placeholder="revendeur@gmail.com"><label>Mot de passe revendeur</label><input id="loginRevPass" type="password" placeholder="Ton mot de passe..."><button onclick="connecterRevendeur()" style="width:100%;padding:14px;border:none;border-radius:10px;background:#000;color:#facc15;font-weight:900;margin-top:8px;">🔐 CONNEXION REVENDEUR</button><div id="msgLoginRev"></div></div></div>
-<button onclick="retourMenu()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#fff;font-weight:900;margin-top:10px;">⬅ RETOUR MENU</button></div>
-<!-- FIN PARTIE 2 --><div id="zoneClient">
-<div class="card" id="cardPays" style="display:none;"><h2>🌍 CHOISIS TON PAYS</h2><div id="paysGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"></div>
-<div id="tiragesPaysSection" style="display:none;margin-top:12px;"><button onclick="retourPays()" style="padding:8px 14px;border:none;border-radius:20px;background:#fff;font-weight:bold;">⬅ Retour</button><h3 id="titrePays"></h3><div id="tiragesGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;"></div></div></div>
-<div class="card" id="cardConnecteToi" style="background:#dc2626;text-align:center;"><h2 style="margin:0;">🔒 CONNECTE-TOI D'ABORD</h2><p style="font-size:14px;">Connecte-toi avec ton Gmail + mot de passe en haut pour jouer et voir TES tickets.<br>Tes tickets sont privés, personne d'autre ne les voit.</p></div>
-<div class="card" id="cardJouer" style="display:none;"><h2>🎲 JOUER</h2><div id="jeuZone" style="display:none;background:#fff;color:#111;border-radius:12px;padding:12px;">
-<b id="titreJeu">Choisis</b><p><b>QUEL JEU ?</b></p>
-<div style="display:flex;gap:6px;flex-wrap:wrap;">
-<button class="jeuBtn sel" data-jeu="NAP2" onclick="choisirJeu('NAP2')">NAP 2</button>
-<button class="jeuBtn" data-jeu="NAP1" onclick="choisirJeu('NAP1')">NAP 1</button>
-<button class="jeuBtn" data-jeu="NAP3" onclick="choisirJeu('NAP3')">NAP 3</button>
-<button class="jeuBtn" data-jeu="NAP4" onclick="choisirJeu('NAP4')">NAP 4</button>
-<button class="jeuBtn" data-jeu="NAP5" onclick="choisirJeu('NAP5')">NAP 5</button>
-<button class="jeuBtn" data-jeu="P2" onclick="choisirJeu('P2')">PERM P2</button>
-<button class="jeuBtn" data-jeu="P3" onclick="choisirJeu('P3')">PERM P3</button>
-<button class="jeuBtn" data-jeu="P4" onclick="choisirJeu('P4')">PERM P4</button>
-<button class="jeuBtn" data-jeu="P5" onclick="choisirJeu('P5')">PERM P5</button></div>
-<p id="texteJeuChoisi" style="font-size:13px;background:#fef3c7;padding:8px;border-radius:8px;">Choisi : NAP 2</p>
-<p><b>CLIQUE TES NUMÉROS (1 à 90)</b></p><div id="numGrid" class="numGrid"></div>
-<p>Sélectionnés : <b id="selNums">Aucun</b></p><label>Mise</label><input id="miseInput" type="number" value="100">
-<button class="btnJaune" onclick="validerJeu()">VALIDER TICKET 🎫</button><div id="ticketZone"></div></div></div>
-<div class="card" id="cardMesTickets" style="display:none;"><h2>🎫 MES TICKETS</h2><div id="listeMesTickets">🔒 Connecte-toi pour voir TES tickets.</div></div></div>
-<div id="zoneAdmin" style="display:none;">
-<div class="card" style="background:linear-gradient(90deg,#10b981,#06b6d4);"><h2 style="text-align:center;margin:0;">CAISSE ADMIN - TOI SEUL</h2><div id="caisseAffiche" style="text-align:center;font-size:32px;font-weight:900;">0F</div><input id="caisseInput" type="number" value="1000000"><button class="btnJaune" onclick="ajouterCaisseTest()">AJOUTER CAISSE</button><button onclick="quitterAdmin()" style="width:100%;padding:10px;border:none;border-radius:10px;background:#dc2626;color:#fff;font-weight:bold;margin-top:8px;">🔒 QUITTER ADMIN</button></div>
-<div class="card"><h2>👇 CLIQUE UN ONGLET</h2><div style="display:flex;gap:6px;flex-wrap:wrap;">
-<button class="tabBtn sel" data-tab="tickets" onclick="showTab('tickets')">🎫 TICKETS</button>
-<button class="tabBtn" data-tab="resultats" onclick="showTab('resultats')">🎲 RÉSULTATS</button>
-<button class="tabBtn" data-tab="recharge" onclick="showTab('recharge')">💰 RECHARGER</button>
-<button class="tabBtn" data-tab="revendeurs" onclick="showTab('revendeurs')">👥 REVENDEURS</button>
-<button class="tabBtn" data-tab="retrait" onclick="showTab('retrait')">🏦 RETRAIT</button>
-<button class="tabBtn" data-tab="clients" onclick="showTab('clients')">👤 CLIENTS</button></div></div>
-<div class="card" id="boxTickets"><h2>🎫 TOUS LES TICKETS</h2><div id="listeTousTickets">Aucun ticket.</div></div>
-<div class="card" id="boxResultats" style="display:none;"><h2>🎲 RÉSULTAT - 5 NUMÉROS</h2><div class="box"><b>NAP1 x6 | NAP2 x300 | NAP3 x3000 | NAP4 x8000 | NAP5 x50000</b><br><span style="font-size:13px;">Si le ticket gagne en NORMAL ou en DOUBLE CHANCE, il gagne. C'est une 2ème chance.</span></div><div class="box"><label>Tirage</label><input id="tirageNom" placeholder="BENIN 10H"><label>TYPE DE TIRAGE - CHOISIS</label><div style="display:flex;gap:8px;margin-top:8px;"><button id="btnTypeNormal" onclick="choisirTypeResultat('NORMAL')" style="flex:1;padding:13px;border:3px solid #16a34a;border-radius:10px;background:#16a34a;color:#fff;font-weight:900;">✅ NORMAL<br><span style="font-size:11px;">Juste 5 numéros</span></button><button id="btnTypeDouble" onclick="choisirTypeResultat('DOUBLE')" style="flex:1;padding:13px;border:3px solid #ddd;border-radius:10px;background:#fff;font-weight:900;">🎲 DOUBLE CHANCE<br><span style="font-size:11px;">Facultatif - 5 + 5 numéros</span></button></div><label>5 numéros NORMAL</label><input id="numsGagnants" placeholder="5 - 12 - 23 - 45 - 89"><div id="zoneDoubleChance" style="display:none;"><label>5 numéros DOUBLE CHANCE - 2ème chance</label><input id="numsDoubleChance" placeholder="3 - 14 - 27 - 40 - 71"><p style="font-size:12px;color:#666;">Si le ticket perd en NORMAL mais gagne ici, il gagne quand même.</p></div><button class="btnJaune" onclick="publierResultat()">📢 PUBLIER + COMPTER</button><div id="statsResultat"></div><div id="zonePayer"></div></div><h3>Derniers résultats</h3><div id="listeResultats"></div></div>
-<div class="card" id="boxRecharge" style="display:none;"><h2>💰 RECHARGER CLIENT</h2><div class="box"><label>Gmail client</label><input id="gmailClient" placeholder="client@gmail.com"><label>Montant JEU</label><input id="montantClient" type="number" value="10000"><button onclick="rechargerClient()" style="width:100%;padding:13px;border:none;border-radius:10px;background:#16a34a;color:#fff;font-weight:900;margin-top:10px;">✅ GÉNÉRER CODE CLIENT</button><div id="codeGenere"></div></div><div id="listeRecharges"></div></div>
-<div class="card" id="boxRevendeurs" style="display:none;"><h2>👥 AJOUTER UN REVENDEUR - TOI SEUL</h2><p style="font-size:13px;">Tu ajoutes ici, il apparaît dans la liste publique. Doublon bloqué.</p><div class="box"><label>Nom du revendeur</label><input id="nomRev" placeholder="Revendeur Calavi"><label>Gmail</label><input id="gmailRev" placeholder="revendeur@gmail.com"><label>Mot de passe revendeur</label><input id="passRev" type="password" placeholder="Mot de passe pour lui..."><label>Numéro WhatsApp</label><input id="telRev" placeholder="01 90..."><label>Quartier / Ville</label><input id="villeRev" placeholder="Calavi"><button onclick="ajouterRevendeur()" style="width:100%;padding:13px;border:none;border-radius:10px;background:#16a34a;color:#fff;font-weight:900;margin-top:10px;">✅ AJOUTER LE REVENDEUR</button></div><div class="box"><b>🔑 GÉNÉRER CODE POUR REVENDEUR</b><br>Tu génères un CODE, tu l'envoies au revendeur, il l'active et son SOLDE RECHARGÉ se remplit.<br><label>Gmail revendeur</label><input id="gmailRevCode" placeholder="revendeur@gmail.com"><label>Montant</label><input id="montantRevCode" type="number" value="50000"><button onclick="adminGenererCodeRevendeur()" style="width:100%;padding:13px;border:none;border-radius:10px;background:#facc15;font-weight:900;margin-top:10px;">✅ GÉNÉRER CODE REVENDEUR</button><div id="codeGenereRevAdmin"></div></div><h3>Demandes d'inscription revendeur</h3><div id="listeDemandesRev"></div><h3>Mes revendeurs</h3><div id="listeRevendeurs"></div></div>
-<div class="card" id="boxRetrait" style="display:none;"><h2>🏦 RETRAIT GAIN</h2><div class="box"><label>Gmail</label><input id="gmailRetrait" placeholder="client@gmail.com"><label>MoMo</label><input id="momoRetrait" placeholder="01 90..."><label>Montant</label><input id="montantRetraitAdmin" type="number" placeholder="600000"><button onclick="validerRetraitAdmin()" style="width:100%;padding:13px;border:none;border-radius:10px;background:#16a34a;color:#fff;font-weight:900;margin-top:10px;">✅ J'AI PAYÉ PAR MOMO - WHATSAPP - CAISSE INTACTE</button></div><div id="listeRetraits"></div></div>
-<div class="card" id="boxClients" style="display:none;"><h2>👤 TOUS LES CLIENTS</h2><div id="listeClients"></div></div>
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BENIN LOTO 590</title><style>*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#0f172a;color:#fff;padding-bottom:80px}header{background:linear-gradient(90deg,#facc15,#f97316);color:#000;padding:14px;text-align:center;font-weight:900;font-size:22px;position:sticky;top:0;z-index:10}.card{background:#1e293b;margin:12px;padding:14px;border-radius:14px}button{cursor:pointer}input,select{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:none;font-size:16px}.btn{width:100%;padding:13px;border:none;border-radius:10px;font-weight:900;margin:6px 0;font-size:16px}.vert{background:#16a34a;color:#fff}.jaune{background:#facc15}.rouge{background:#dc2626;color:#fff}.noir{background:#000;color:#facc15}.gris{background:#334155;color:#fff}.paysGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.numGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.num{padding:13px 0;text-align:center;background:#334155;border-radius:10px;font-weight:900;font-size:18px}.num.sel{background:#facc15;color:#000}.tirageBtn{padding:12px;border:none;border-radius:10px;background:#fff;color:#000;font-weight:900;margin:5px;width:48%}.ticket{background:#fff;color:#000;padding:10px;border-radius:10px;margin:8px 0}.profilCache{display:none}.profilCache.ouvert{display:block}</style></head><body>
+<header>🎲 BENIN LOTO 590</header>
+
+<div id="menuChoix" class="card" style="text-align:center">
+<h2>Bienvenue 👋</h2>
+<button class="btn jaune" onclick="choisirMode('client')">🎲 JE SUIS CLIENT</button>
+<button class="btn noir" onclick="choisirMode('admin')">👑 ADMIN</button>
+<button class="btn gris" onclick="choisirMode('revendeur')">🏪 REVENDEUR</button>
 </div>
-<!-- FIN PARTIE 3 --><script>
-const ADMIN_WA='22901909090',ADMIN_GMAIL='beninloto590@gmail.com',PRIX={NAP1:6,NAP2:300,NAP3:3000,NAP4:8000,NAP5:50000,P2:200,P3:2000,P4:20000,P5:100000};
-let paysSelect=null,tirageSelect=null,jeuSelect='NAP2',selectedNums=[],typeTirage='NORMAL';
-function getCaisse(){return parseInt(localStorage.getItem('loto_caisse')||'1000000')}
-function setCaisse(v){localStorage.setItem('loto_caisse',v)}
-function getClients(){return JSON.parse(localStorage.getItem('loto_clients')||'[]')}
-function setClients(l){localStorage.setItem('loto_clients',JSON.stringify(l))}
-function getRevendeurs(){return JSON.parse(localStorage.getItem('loto_revendeurs')||'[]')}
-function setRevendeurs(l){localStorage.setItem('loto_revendeurs',JSON.stringify(l))}
-function getCodes(){return JSON.parse(localStorage.getItem('loto_codes')||'[]')}
-function setCodes(l){localStorage.setItem('loto_codes',JSON.stringify(l))}
-function getTickets(){return JSON.parse(localStorage.getItem('loto_tickets')||'[]')}
-function setTickets(l){localStorage.setItem('loto_tickets',JSON.stringify(l))}
-function getResultats(){return JSON.parse(localStorage.getItem('loto_resultats')||'[]')}
-function setResultats(l){localStorage.setItem('loto_resultats',JSON.stringify(l))}
-function getRetraits(){return JSON.parse(localStorage.getItem('loto_retraits')||'[]')}
-function setRetraits(l){localStorage.setItem('loto_retraits',JSON.stringify(l))}
-function getCompte(g){var l=getClients();var c=l.find(x=>x.gmail===g);if(!c){c={gmail:g,jeu:0,gain:0};l.push(c);setClients(l)}return c}
-function setCompte(g,j,ga){var l=getClients();var i=l.findIndex(x=>x.gmail===g);if(i<0)l.push({gmail:g,jeu:j,gain:ga});else{l[i].jeu=j;l[i].gain=ga}setClients(l)}
-function getRev(g){var l=getRevendeurs();return l.find(x=>x.gmail===g)}
-function setRevSolde(g,v){var l=getRevendeurs();var i=l.findIndex(x=>x.gmail===g);if(i>=0){l[i].solde=v;setRevendeurs(l)}}
-function currentGmail(){return localStorage.getItem('loto_email')||''}
-function currentRevGmail(){return localStorage.getItem('loto_rev_email')||''}
-function showTab(t){['boxTickets','boxResultats','boxRecharge','boxRevendeurs','boxRetrait','boxClients'].forEach(id=>document.getElementById(id).style.display='none');var m={tickets:'boxTickets',resultats:'boxResultats',recharge:'boxRecharge',revendeurs:'boxRevendeurs',retrait:'boxRetrait',clients:'boxClients'};document.getElementById(m[t]).style.display='block';if(t==='tickets')afficherTousTickets();if(t==='resultats')afficherResultats();if(t==='recharge')afficherRecharges();if(t==='revendeurs')afficherRevendeurs();if(t==='retrait')afficherRetraits();if(t==='clients')afficherClients()}
-function maj(){var g=currentGmail();if(!g)return;var c=getCompte(g);document.getElementById('soldeJeuAffiche').textContent=c.jeu.toLocaleString()+' FCFA';document.getElementById('soldeGainAffiche').textContent=c.gain.toLocaleString()+' FCFA';document.getElementById('gainRetraitAffiche').textContent=c.gain.toLocaleString()+' FCFA';if(document.getElementById('caisseAffiche'))document.getElementById('caisseAffiche').textContent=getCaisse().toLocaleString()+'F'}
-function choisirMode(m){document.getElementById('menuChoix').style.display='none';document.getElementById('zoneRevendeurs').style.display=m==='revendeur'?'block':'none';document.getElementById('zoneClient').style.display=m==='client'?'block':'none';document.getElementById('compteSection').style.display=m==='client'?'block':'none';if(m==='client'){afficherPays();cacherTicketsSiPasConnecte();if(currentGmail())ouvrirEspace(currentGmail());else {document.getElementById('monEspace').style.display='none';document.getElementById('compteSection').style.display='block';switchCompte('conn')}}if(m==='revendeur'){afficherRevendeursPublic();if(currentRevGmail())ouvrirEspaceRevendeur(currentRevGmail())}}
-function retourMenu(){document.getElementById('menuChoix').style.display='block';document.getElementById('zoneClient').style.display='none';document.getElementById('zoneRevendeurs').style.display='none';document.getElementById('zoneAdmin').style.display='none'}
-function switchCompte(t){['conn','inscr','admin'].forEach(x=>document.getElementById('form-'+x).style.display='none');document.getElementById('form-'+t).style.display='block';document.querySelectorAll('.swBtn').forEach(b=>b.classList.remove('sel'));document.getElementById('btn-'+t).classList.add('sel')}
-function inscrireClient(){var g=document.getElementById('inscrGmail').value.trim().toLowerCase(),p=document.getElementById('inscrPass').value.trim(),t=document.getElementById('inscrTel').value.trim();if(!g||!p||!t)return document.getElementById('msgInscr').innerHTML='<span style="color:red;">❌ Mets Gmail + mot de passe + numéro.</span>';var l=getClients();if(l.some(x=>x.gmail===g))return document.getElementById('msgInscr').innerHTML='<span style="color:red;">❌ Ce Gmail existe déjà, connecte-toi.</span>';l.push({gmail:g,pass:p,tel:t,jeu:0,gain:0});setClients(l);document.getElementById('msgInscr').innerHTML='<span style="color:green;">✅ Compte créé, connecte-toi.</span>';switchCompte('conn')}
-function connecterClient(){var g=document.getElementById('connGmail').value.trim().toLowerCase(),p=document.getElementById('connPass').value.trim();if(!g||!p)return document.getElementById('msgConn').innerHTML='<span style="color:red;">❌ Mets Gmail + mot de passe.</span>';var c=getClients().find(x=>x.gmail===g);if(!c)return document.getElementById('msgConn').innerHTML='<span style="color:red;">❌ Compte pas trouvé, inscris-toi.</span>';if(c.pass!==p)return document.getElementById('msgConn').innerHTML='<span style="color:red;">❌ Mot de passe faux.</span>';localStorage.setItem('loto_email',g);ouvrirEspace(g)}
-function ouvrirEspace(e){document.getElementById('compteSection').style.display='none';document.getElementById('monEspace').style.display='block';document.getElementById('emailAffiche').textContent=e;var cp=getCompte(e);setCompte(e,cp.jeu,cp.gain);maj();afficherMes();afficherPays();;if(document.getElementById('cardJouer'))document.getElementById('cardJouer').style.display='block';if(document.getElementById('cardMesTickets'))document.getElementById('cardMesTickets').style.display='block';if(document.getElementById('cardConnecteToi'))document.getElementById('cardConnecteToi').style.display='none';if(document.getElementById('cardPays'))document.getElementById('cardPays').style.display='block';}
-function cacherTicketsSiPasConnecte(){var g=currentGmail();var connecte=!!g;if(document.getElementById('cardJouer'))document.getElementById('cardJouer').style.display=connecte?'block':'none';if(document.getElementById('cardMesTickets'))document.getElementById('cardMesTickets').style.display=connecte?'block':'none';if(document.getElementById('cardConnecteToi'))document.getElementById('cardConnecteToi').style.display=connecte?'none':'block';if(document.getElementById('cardPays'))document.getElementById('cardPays').style.display=connecte?'block':'none';if(!connecte&&document.getElementById('listeMesTickets'))document.getElementById('listeMesTickets').innerHTML='🔒 Connecte-toi pour voir TES tickets.';}
-function deconnecter(){localStorage.removeItem('loto_email');document.getElementById('monEspace').style.display='none';document.getElementById('compteSection').style.display='block';switchCompte('conn');cacherTicketsSiPasConnecte();}
-function connexionAdmin(){var g=document.getElementById('adminGmail').value.trim().toLowerCase(),p=document.getElementById('adminPass').value.trim();if(p==='1234#code'){document.getElementById('compteSection').style.display='none';document.getElementById('zoneAdmin').style.display='block';document.getElementById('zoneClient').style.display='none';maj();afficherTousTickets();afficherResultats();afficherRecharges();afficherRevendeurs();afficherRetraits();afficherClients()}else document.getElementById('msgAdmin').innerHTML='<span style="color:red;">❌ Gmail ou mot de passe Admin faux.</span>'}
-function quitterAdmin(){document.getElementById('zoneAdmin').style.display='none';document.getElementById('zoneClient').style.display='block';document.getElementById('compteSection').style.display='block';switchCompte('conn');maj()}
-function ajouterCaisseTest(){var v=parseInt(document.getElementById('caisseInput').value||'0');setCaisse(getCaisse()+v);maj()}
-function toggleRecharger(){var z=document.getElementById('rechargeZone');z.style.display=z.style.display==='none'?'block':'none'}
-function toggleRetrait(){var z=document.getElementById('retraitZoneBox');z.style.display=z.style.display==='none'?'block':'none'}
-function activerCodeClient(){var code=document.getElementById('codeRechargeClient').value.trim().toUpperCase(),m=parseInt(document.getElementById('montantCodeClient').value||'0');if(!code||!m)return document.getElementById('msgCodeClient').innerHTML='❌ Mets CODE + montant.';var codes=getCodes();var idx=codes.findIndex(c=>c.code===code&&!c.utilise&&c.type==='client');if(idx<0)return document.getElementById('msgCodeClient').innerHTML='❌ CODE faux ou déjà utilisé.';if(codes[idx].montant!==m)return document.getElementById('msgCodeClient').innerHTML='❌ Montant du CODE différent. Mets '+codes[idx].montant+' FCFA.';codes[idx].utilise=true;codes[idx].utilisePar=currentGmail();setCodes(codes);var g=currentGmail();var c=getCompte(g);setCompte(g,c.jeu+m,c.gain);maj();document.getElementById('msgCodeClient').innerHTML='✅ CODE accepté ! +'+m.toLocaleString()+' FCFA sur ton SOLDE JEU.'}
-function demanderRetrait(){var g=document.getElementById('gmailRetraitClient').value.trim().toLowerCase(),momo=document.getElementById('numeroMomoRetrait').value.trim(),m=parseInt(document.getElementById('montantRetrait').value||'0');if(!g||!momo||!m)return document.getElementById('msgRetraitClient').innerHTML='❌ Mets Gmail + MoMo + montant.';var c=getCompte(g);if(c.gain<m)return document.getElementById('msgRetraitClient').innerHTML='❌ Ton gain est '+c.gain.toLocaleString()+' FCFA, pas assez.';var l=getRetraits();l.unshift({gmail:g,momo:momo,montant:m,date:new Date().toLocaleString(),statut:'EN ATTENTE'});setRetraits(l);document.getElementById('msgRetraitClient').innerHTML='✅ Demande envoyée ! L\'Admin va te payer par MoMo.';window.open('https://wa.me/'+ADMIN_WA+'?text='+encodeURIComponent('🏦 RETRAIT - Gmail : '+g+' - MoMo : '+momo+' - Montant : '+m+' FCFA - Paye-moi vite.'),'_blank')}
-<!-- FIN PARTIE 4 -->function afficherPays(){var pays=[['🇧🇯','BENIN'],['🇹🇬','TOGO'],['🇳🇬','NIGERIA'],['🇨🇮',"COTE D'IVOIRE"],['🇬🇭','GHANA'],['🇨🇲','CAMEROUN']];document.getElementById('paysGrid').innerHTML=pays.map(p=>'<button onclick="ouvrirPays(\''+p[1]+'\')" style="padding:14px 6px;border:none;border-radius:10px;background:#facc15;font-weight:900;">'+p[0]+'<br>'+p[1]+'</button>').join('');document.getElementById('tiragesPaysSection').style.display='none'}}
-function afficherPays(){var pays=[['🇧🇯','BENIN'],['🇹🇬','TOGO'],['🇳🇬','NIGERIA'],['🇨🇮','CI'],['🇬🇭','GHANA'],['🇨🇲','CAMEROUN']];document.getElementById('paysGrid').innerHTML=pays.map(p=>'<button onclick="ouvrirPays(\''+p[1]+'\')" style="padding:14px 6px;border:none;border-radius:10px;background:#facc15;font-weight:900;">'+p[0]+'<br>'+p[1]+'</button>').join('');document.getElementById('tiragesPaysSection').style.display='none'}
-function retourPays(){document.getElementById('tiragesPaysSection').style.display='none'}
-function choisirTirage(t){tirageSelect=t;document.getElementById('jeuZone').style.display='block';document.getElementById('titreJeu').textContent=paysSelect+' - '+t+' - Choisis ton jeu';dessinerNumeros();window.scrollTo({top:document.getElementById('cardJouer').offsetTop,behavior:'smooth'})}
-function choisirJeu(j){jeuSelect=j;document.querySelectorAll('.jeuBtn').forEach(b=>b.classList.remove('sel'));document.querySelector('[data-jeu="'+j+'"]').classList.add('sel');document.getElementById('texteJeuChoisi').textContent='Choisi : '+j+' - Tu gagnes '+PRIX[j].toLocaleString()+' FCFA pour 100 FCFA si tu gagnes.';dessinerNumeros()}
-function dessinerNumeros(){var need=jeuSelect==='NAP1'?1:jeuSelect==='NAP2'?2:jeuSelect==='NAP3'||jeuSelect==='P3'?3:jeuSelect==='NAP4'||jeuSelect==='P4'?4:5;var html='';for(var i=1;i<=90;i++){var sel=selectedNums.includes(i);html+='<button class="numBtn'+(sel?' sel':'')+'" onclick="toggleNum('+i+')">'+i+'</button>'}document.getElementById('numGrid').innerHTML=html;document.getElementById('selNums').textContent=selectedNums.length?selectedNums.join(' - '):'Aucun'}
-function toggleNum(n){var need=jeuSelect==='NAP1'?1:jeuSelect==='NAP2'?2:jeuSelect==='NAP3'||jeuSelect==='P3'?3:jeuSelect==='NAP4'||jeuSelect==='P4'?4:5;var idx=selectedNums.indexOf(n);if(idx>=0)selectedNums.splice(idx,1);else{if(selectedNums.length>=need){alert('Tu dois choisir '+need+' numéros pour '+jeuSelect);return}selectedNums.push(n)}dessinerNumeros()}
-function validerJeu(){if(!currentGmail())return alert('Connecte-toi d\'abord.');if(!tirageSelect)return alert('Choisis ton pays + tirage d\'abord.');var need=jeuSelect==='NAP1'?1:jeuSelect==='NAP2'?2:jeuSelect==='NAP3'||jeuSelect==='P3'?3:jeuSelect==='NAP4'||jeuSelect==='P4'?4:5;if(selectedNums.length!==need)return alert('Choisis '+need+' numéros pour '+jeuSelect);var mise=parseInt(document.getElementById('miseInput').value||'0');if(mise<100)return alert('Mise minimum 100 FCFA.');var c=getCompte(currentGmail());if(c.jeu<mise)return alert('Solde JEU pas assez. Tu as '+c.jeu+' FCFA. Recharge avec un CODE.');setCompte(currentGmail(),c.jeu-mise,c.gain);var t={id:Date.now(),gmail:currentGmail(),pays:paysSelect,tirage:tirageSelect,jeu:jeuSelect,nums:[...selectedNums],mise:mise,gainPot:Math.round(mise/100*PRIX[jeuSelect]),statut:'EN ATTENTE',date:new Date().toLocaleString()};var l=getTickets();l.unshift(t);setTickets(l);maj();afficherMes();selectedNums=[];dessinerNumeros();document.getElementById('ticketZone').innerHTML='<div style="background:#dcfce7;padding:12px;border-radius:10px;margin-top:10px;">✅ TICKET VALIDÉ !<br>'+jeuSelect+' - Mise '+mise+' FCFA - Gain possible '+t.gainPot.toLocaleString()+' FCFA</div>';setTimeout(()=>{document.getElementById('ticketZone').innerHTML=''},4000)}
-function afficherMes(){var g=currentGmail();if(!g)return;var l=getTickets().filter(t=>t.gmail===g);var html=l.length?l.map(t=>'<div style="background:#fff;padding:10px;border-radius:10px;margin-bottom:8px;color:#111;">🎫 <b>'+t.jeu+'</b> - '+t.pays+' '+t.tirage+'<br>Numéros : <b>'+t.nums.join(' - ')+'</b><br>Mise : '+t.mise+' FCFA - Gain possible : '+t.gainPot.toLocaleString()+' FCFA<br>Statut : <b>'+t.statut+'</b> - '+t.date+'</div>').join(''):'Aucun ticket pour toi. Joue maintenant.';document.getElementById('listeMesTickets').innerHTML=html}
-function afficherTousTickets(){var l=getTickets();document.getElementById('listeTousTickets').innerHTML=l.length?l.map(t=>'<div style="background:#fff;padding:10px;border-radius:10px;margin-bottom:8px;color:#111;">🎫 '+t.gmail+' - <b>'+t.jeu+'</b> - '+t.pays+' '+t.tirage+' - '+t.nums.join('-')+' - Mise '+t.mise+' - Gain '+t.gainPot+' - <b>'+t.statut+'</b></div>').join(''):'Aucun ticket.'}
-function choisirTypeResultat(t){typeTirage=t;document.getElementById('btnTypeNormal').style.background=t==='NORMAL'?'#16a34a':'#fff';document.getElementById('btnTypeNormal').style.color=t==='NORMAL'?'#fff':'#000';document.getElementById('btnTypeDouble').style.background=t==='DOUBLE'?'#facc15':'#fff';document.getElementById('zoneDoubleChance').style.display=t==='DOUBLE'?'block':'none'}
-function publierResultat(){var tirage=document.getElementById('tirageNom').value.trim().toUpperCase();var nums=document.getElementById('numsGagnants').value.trim().split(/[, -]+/).map(x=>parseInt(x)).filter(x=>!isNaN(x));if(!tirage||nums.length!==5)return alert('Mets tirage + 5 numéros NORMAL.');var numsDouble=[];if(typeTirage==='DOUBLE'){numsDouble=document.getElementById('numsDoubleChance').value.trim().split(/[, -]+/).map(x=>parseInt(x)).filter(x=>!isNaN(x));if(numsDouble.length!==5)return alert('DOUBLE CHANCE : mets aussi 5 numéros.')}var tickets=getTickets();var gagnants=[];tickets.forEach(t=>{if(t.tirage!==tirage||t.statut!=='EN ATTENTE')return;var gagneNormal=false,gagneDouble=false;if(t.jeu.startsWith('NAP')){gagneNormal=t.nums.every(n=>nums.includes(n));if(typeTirage==='DOUBLE')gagneDouble=t.nums.every(n=>numsDouble.includes(n))}else{var nb=t.nums.filter(n=>nums.includes(n)).length;var need=t.jeu==='P2'?2:t.jeu==='P3'?3:t.jeu==='P4'?4:5;gagneNormal=nb>=need;if(typeTirage==='DOUBLE'){var nb2=t.nums.filter(n=>numsDouble.includes(n)).length;gagneDouble=nb2>=need}}if(gagneNormal||gagneDouble){t.statut='GAGNÉ';var c=getCompte(t.gmail);setCompte(t.gmail,c.jeu,c.gain+t.gainPot);gagnants.push(t)}});setTickets(tickets);var res={tirage:tirage,nums:nums,numsDouble:numsDouble,type:typeTirage,date:new Date().toLocaleString(),gagnants:gagnants.length};var rl=getResultats();rl.unshift(res);setResultats(rl);maj();afficherResultats();afficherTousTickets();document.getElementById('statsResultat').innerHTML='<div style="background:#dcfce7;padding:12px;border-radius:10px;margin-top:10px;">✅ Résultat publié ! '+gagnants.length+' gagnant(s).</div>';document.getElementById('zonePayer').innerHTML=gagnants.length?'<div style="background:#fef3c7;padding:12px;border-radius:10px;margin-top:10px;"><b>🏆 GAGNANTS À PAYER :</b><br>'+gagnants.map(g=>g.gmail+' - '+g.jeu+' - '+g.gainPot.toLocaleString()+' FCFA').join('<br>')+'</div>':''}
-function afficherResultats(){var l=getResultats();document.getElementById('listeResultats').innerHTML=l.length?l.map(r=>'<div style="background:#fff;padding:10px;border-radius:10px;margin-bottom:8px;color:#111;">🎲 <b>'+r.tirage+'</b> - '+r.type+'<br>Normal : '+r.nums.join(' - ')+(r.numsDouble.length?' <br>Double : '+r.numsDouble.join(' - '):'')+'<br>'+r.gagnants+' gagnant(s) - '+r.date+'</div>').join(''):'Aucun résultat.'}
-function rechargerClient(){var g=document.getElementById('gmailClient').value.trim().toLowerCase(),m=parseInt(document.getElementById('montantClient').value||'0');if(!g||!m)return alert('Mets Gmail + montant.');var code='LOTO-'+Math.random().toString(36).substring(2,8).toUpperCase();var l=getCodes();l.push({code:code,montant:m,type:'client',gmail:g,utilise:false});setCodes(l);document.getElementById('codeGenere').innerHTML='<div style="background:#dcfce7;padding:12px;border-radius:10px;margin-top:10px;">✅ CODE CLIENT : <b style="font-size:22px;">'+code+'</b><br>Montant : '+m.toLocaleString()+' FCFA<br>Envoie ce CODE au client.</div>';afficherRecharges()}
-function afficherRecharges(){var l=getCodes();document.getElementById('listeRecharges').innerHTML=l.length?l.map(c=>'<div style="background:#fff;padding:8px;border-radius:8px;margin-bottom:6px;color:#111;">'+c.code+' - '+c.montant+' FCFA - '+c.type+' - '+(c.utilise?'✅ Utilisé par '+c.utilisePar:'⏳ Pas encore')+'</div>').join(''):'Aucun code.'}
-function afficherRevendeursPublic(){var l=getRevendeurs();document.getElementById('listeRevendeursPublic').innerHTML=l.length?l.map(r=>'<div style="background:#fff;padding:10px;border-radius:10px;margin-bottom:8px;color:#111;display:flex;justify-content:space-between;align-items:center;"><div><b>'+r.nom+'</b><br>'+r.ville+' - '+r.tel+'</div><button onclick="window.open(\'https://wa.me/229'+r.tel.replace(/\D/g,'').slice(-8)+'?text='+encodeURIComponent('Bonjour '+r.nom+', je veux recharger mon compte LOTO 590.' )+'\',\'_blank\')" style="padding:10px 14px;border:none;border-radius:10px;background:#16a34a;color:#fff;font-weight:900;">💬 WhatsApp</button></div>').join(''):'Aucun revendeur pour le moment.'}
-function ajouterRevendeur(){var nom=document.getElementById('nomRev').value.trim(),g=document.getElementById('gmailRev').value.trim().toLowerCase(),p=document.getElementById('passRev').value.trim(),tel=document.getElementById('telRev').value.trim(),ville=document.getElementById('villeRev').value.trim();if(!nom||!g||!p||!tel||!ville)return alert('Remplis tout.');var l=getRevendeurs();if(l.some(x=>x.gmail===g))return alert('Ce revendeur existe déjà.');l.push({nom:nom,gmail:g,pass:p,tel:tel,ville:ville,solde:0});setRevendeurs(l);afficherRevendeurs();afficherRevendeursPublic();alert('✅ Revendeur ajouté !')}
-function afficherRevendeurs(){var l=getRevendeurs();document.getElementById('listeRevendeurs').innerHTML=l.length?l.map(r=>'<div style="background:#fff;padding:10px;border-radius:10px;margin-bottom:8px;color:#111;"><b>'+r.nom+'</b> - '+r.gmail+' - '+r.ville+' - '+r.tel+'<br>Solde : <b>'+r.solde.toLocaleString()+' FCFA</b> <button onclick="supprimerRevendeur(\''+r.gmail+'\')" style="float:right;padding:6px 10px;border:none;border-radius:8px;background:#dc2626;color:#fff;">Supprimer</button></div>').join(''):'Aucun revendeur.';var dem=JSON.parse(localStorage.getItem('loto_demandes_rev')||'[]');document.getElementById('listeDemandesRev').innerHTML=dem.length?dem.map((d,i)=>'<div style="background:#fef3c7;padding:10px;border-radius:10px;margin-bottom:8px;color:#111;"><b>'+d.nom+'</b> - '+d.gmail+' - '+d.ville+' - '+d.tel+'<br><button onclick="accepterDemandeRev('+i+')" style="padding:8px 12px;border:none;border-radius:8px;background:#16a34a;color:#fff;font-weight:900;">✅ ACCEPTER</button></div>').join(''):'Aucune demande.'}
-function supprimerRevendeur(g){setRevendeurs(getRevendeurs().filter(x=>x.gmail!==g));afficherRevendeurs();afficherRevendeursPublic()}
-function inscrireRevendeur(){var nom=document.getElementById('insRevNom').value.trim(),g=document.getElementById('insRevGmail').value.trim().toLowerCase(),p=document.getElementById('insRevPass').value.trim(),tel=document.getElementById('insRevTel').value.trim(),ville=document.getElementById('insRevVille').value.trim();if(!nom||!g||!p||!tel||!ville)return document.getElementById('msgInsRev').innerHTML='❌ Remplis tout.';var dem=JSON.parse(localStorage.getItem('loto_demandes_rev')||'[]');dem.unshift({nom:nom,gmail:g,pass:p,tel:tel,ville:ville});localStorage.setItem('loto_demandes_rev',JSON.stringify(dem));document.getElementById('msgInsRev').innerHTML='✅ Demande envoyée ! L\'Admin va t\'accepter.';window.open('https://wa.me/'+ADMIN_WA+'?text='+encodeURIComponent('👥 JE VEUX ÊTRE REVENDEUR - Nom : '+nom+' - Gmail : '+g+' - Tel : '+tel+' - Ville : '+ville),'_blank')}
-function accepterDemandeRev(i){var dem=JSON.parse(localStorage.getItem('loto_demandes_rev')||'[]');var d=dem[i];if(!d)return;var l=getRevendeurs();if(!l.some(x=>x.gmail===d.gmail))l.push({nom:d.nom,gmail:d.gmail,pass:d.pass,tel:d.tel,ville:d.ville,solde:0});setRevendeurs(l);dem.splice(i,1);localStorage.setItem('loto_demandes_rev',JSON.stringify(dem));afficherRevendeurs();afficherRevendeursPublic();alert('✅ Revendeur accepté !')}
-function connecterRevendeur(){var g=document.getElementById('loginRevGmail').value.trim().toLowerCase(),p=document.getElementById('loginRevPass').value.trim();var r=getRev(g);if(!r)return document.getElementById('msgLoginRev').innerHTML='❌ Revendeur pas trouvé.';if(r.pass!==p)return document.getElementById('msgLoginRev').innerHTML='❌ Mot de passe faux.';localStorage.setItem('loto_rev_email',g);ouvrirEspaceRevendeur(g)}
-function ouvrirEspaceRevendeur(g){document.getElementById('monEspaceRevendeur').style.display='block';var r=getRev(g);document.getElementById('emailRevAffiche').textContent=g;document.getElementById('nomRevAffiche').textContent=r?r.nom:'';document.getElementById('soldeRevAffiche').textContent=(r?r.solde:0).toLocaleString()+' FCFA'}
-function deconnecterRevendeur(){localStorage.removeItem('loto_rev_email');document.getElementById('monEspaceRevendeur').style.display='none'}
-function activerCodeRevendeur(){var code=document.getElementById('codeRechargeRev').value.trim().toUpperCase(),m=parseInt(document.getElementById('montantCodeRev').value||'0');var g=currentRevGmail();if(!g)return document.getElementById('msgCodeRev').innerHTML='❌ Connecte-toi d\'abord.';var codes=getCodes();var idx=codes.findIndex(c=>c.code===code&&!c.utilise&&c.type==='revendeur');if(idx<0)return document.getElementById('msgCodeRev').innerHTML='❌ CODE faux ou déjà utilisé.';if(codes[idx].montant!==m)return document.getElementById('msgCodeRev').innerHTML='❌ Montant différent. Mets '+codes[idx].montant+' FCFA.';codes[idx].utilise=true;codes[idx].utilisePar=g;setCodes(codes);var r=getRev(g);setRevSolde(g,(r?r.solde:0)+m);ouvrirEspaceRevendeur(g);document.getElementById('msgCodeRev').innerHTML='✅ CODE accepté ! +'+m.toLocaleString()+' FCFA sur ton SOLDE REVENDEUR.'}
-function revendeurGenererCodeClient(){var gmail=document.getElementById('gmailClientRev').value.trim().toLowerCase(),num=document.getElementById('numeroClientRev').value.trim(),m=parseInt(document.getElementById('montantClientRev').value||'0');var g=currentRevGmail();var r=getRev(g);if(!r)return alert('Connecte-toi revendeur.');if(!gmail||!num||!m)return alert('Remplis Gmail + Numéro + Montant.');if(r.solde<m)return alert('Solde pas assez. Tu as '+r.solde.toLocaleString()+' FCFA.');setRevSolde(g,r.solde-m);var code='LOTO-'+Math.random().toString(36).substring(2,8).toUpperCase();var l=getCodes();l.push({code:code,montant:m,type:'client',gmail:gmail,utilise:false});setCodes(l);ouvrirEspaceRevendeur(g);document.getElementById('codeGenereRev').innerHTML='<div style="background:#dcfce7;padding:12px;border-radius:10px;margin-top:10px;color:#111;">✅ CODE POUR LE CLIENT : <b style="font-size:22px;">'+code+'</b><br>Client : '+gmail+' - '+num+'<br>Montant : '+m.toLocaleString()+' FCFA<br>Dis au client : mets ce CODE dans RECHARGER.</div>';window.open('https://wa.me/229'+num.replace(/\D/g,'').slice(-8)+'?text='+encodeURIComponent('🎫 LOTO 590 - Ton CODE : '+code+' - Montant : '+m+' FCFA - Mets ce CODE dans RECHARGER sur l\'application.'),'_blank')}
-function demanderRechargeAdmin(){var g=currentRevGmail();var r=getRev(g);window.open('https://wa.me/'+ADMIN_WA+'?text='+encodeURIComponent('💰 RECHARGE REVENDEUR - Je suis '+(r?r.nom:g)+' - Gmail : '+g+' - Mon solde est fini, recharge-moi.'),'_blank')}
-function adminGenererCodeRevendeur(){var g=document.getElementById('gmailRevCode').value.trim().toLowerCase(),m=parseInt(document.getElementById('montantRevCode').value||'0');if(!g||!m)return alert('Mets Gmail revendeur + montant.');var code='REV-'+Math.random().toString(36).substring(2,8).toUpperCase();var l=getCodes();l.push({code:code,montant:m,type:'revendeur',gmail:g,utilise:false});setCodes(l);document.getElementById('codeGenereRevAdmin').innerHTML='<div style="background:#dcfce7;padding:12px;border-radius:10px;margin-top:10px;color:#111;">✅ CODE REVENDEUR : <b style="font-size:22px;">'+code+'</b><br>Pour : '+g+' - '+m.toLocaleString()+' FCFA</div>';afficherRecharges()}
-function afficherRetraits(){var l=getRetraits();document.getElementById('listeRetraits').innerHTML=l.length?l.map((r,i)=>'<div style="background:#fff;padding:10px;border-radius:10px;margin-bottom:8px;color:#111;"><b>'+r.gmail+'</b> - MoMo '+r.momo+' - '+r.montant.toLocaleString()+' FCFA<br>'+r.statut+' - '+r.date+' <button onclick="supprimerRetrait('+i+')" style="padding:6px 10px;border:none;border-radius:8px;background:#dc2626;color:#fff;">Supprimer</button></div>').join(''):'Aucune demande de retrait.'}
-function supprimerRetrait(i){var l=getRetraits();l.splice(i,1);setRetraits(l);afficherRetraits()}
-function validerRetraitAdmin(){var g=document.getElementById('gmailRetrait').value.trim().toLowerCase(),momo=document.getElementById('momoRetrait').value.trim(),m=parseInt(document.getElementById('montantRetraitAdmin').value||'0');if(!g||!momo||!m)return alert('Mets Gmail + MoMo + montant.');var c=getCompte(g);if(c.gain<m)return alert('Gain pas assez. Il a '+c.gain+' FCFA.');setCompte(g,c.jeu,c.gain-m);var l=getRetraits();l.unshift({gmail:g,momo:momo,montant:m,date:new Date().toLocaleString(),statut:'✅ PAYÉ'});setRetraits(l);afficherRetraits();maj();window.open('https://wa.me/229'+momo.replace(/\D/g,'').slice(-8)+'?text='+encodeURIComponent('🏆 LOTO 590 - Bravo ! Tu as reçu '+m+' FCFA par MoMo. Merci de jouer.'),'_blank')}
-function afficherClients(){var l=getClients();document.getElementById('listeClients').innerHTML=l.length?l.map(c=>'<div style="background:#fff;padding:10px;border-radius:10px;margin-bottom:8px;color:#111;"><b>'+c.gmail+'</b><br>Jeu : '+c.jeu.toLocaleString()+' FCFA - Gain : '+c.gain.toLocaleString()+' FCFA</div>').join(''):'Aucun client.'}
-function installerApp(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null})}else{alert('Sur iPhone : Partager > Ajouter à l\'écran d\'accueil. Sur Android : Menu > Installer l\'application.')} }
-let deferredPrompt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;var b=document.getElementById('btnInstaller');if(b)b.style.display='block'});
-cacherTicketsSiPasConnecte();maj();
-setTimeout(afficherPays,500);
+
+<div id="compteSection" class="card" style="display:none">
+<h3 id="titreCompte">Connexion Client</h3>
+<input id="gmail" placeholder="Ton Gmail">
+<input id="mdp" type="password" placeholder="Mot de passe">
+<button class="btn vert" onclick="connexionClient()">SE CONNECTER</button>
+<button class="btn jaune" onclick="inscriptionClient()">CRÉER MON COMPTE</button>
+<button class="btn gris" onclick="retourMenu()">⬅ RETOUR</button>
+<div id="msgCompte"></div>
+</div>
+
+<div id="zoneClient" style="display:none">
+<div class="card" style="background:#f97316;color:#000">
+<button class="btn noir" onclick="toggleProfil()">👤 MON PROFIL - Cliquer pour voir</button>
+<div id="profilClient" class="profilCache" style="background:#fff;color:#000;padding:10px;border-radius:10px;margin-top:8px">
+<b>📧 Gmail:</b> <span id="profilGmail"></span><br>
+<b>👤 Nom:</b> <span id="profilNom">Client LOTO 590</span><br>
+<b>📱 Téléphone:</b> <span id="profilTel">-</span><br>
+<b>🆔 ID:</b> <span id="profilId"></span>
+</div>
+<div style="display:flex;gap:8px;margin-top:10px"><div style="flex:1;background:#fff;color:#000;padding:10px;border-radius:10px;text-align:center">🎲 SOLDE JEU<br><b id="soldeJeu">0 FCFA</b></div><div style="flex:1;background:#fff;color:#000;padding:10px;border-radius:10px;text-align:center">🏆 SOLDE GAIN<br><b id="soldeGain">0 FCFA</b></div></div>
+<button class="btn vert" onclick="ouvrirRecharge()">💰 RECHARGER - J'AI UN CODE</button>
+<button class="btn noir" onclick="ouvrirRetrait()">🏦 RETIRER MON GAIN - <span id="gainBtn">0</span> FCFA</button>
+<button class="btn rouge" onclick="deconnecter()">🚪 DÉCONNEXION</button>
+</div>
+
+<div class="card"><h2>🌍 CHOISIS TON PAYS</h2><div class="paysGrid" id="paysGrid"></div>
+<div id="tiragesPaysSection" style="display:none;margin-top:12px"><h3 id="titrePays"></h3><div id="tiragesPaysGrid"></div><button class="btn gris" onclick="retourPays()">⬅ RETOUR AUX PAYS</button></div>
+</div>
+
+<div class="card" id="cardJouer" style="display:none"><h2>🎲 JOUER - <span id="tirageChoisi"></span></h2>
+<div style="display:flex;gap:6px"><button class="btn jaune" onclick="setType('NAP')">NAP</button><button class="btn gris" onclick="setType('PERMUTATION')">PERMUTATION</button><button class="btn gris" onclick="setType('DOUBLE')">DOUBLE</button></div>
+<div class="numGrid" id="numGrid"></div>
+<p>Choisis : <b id="choixTxt">-</b></p>
+<input id="mise" type="number" placeholder="Mise FCFA - Ex: 100">
+<button class="btn vert" onclick="validerTicket()">✅ VALIDER MON TICKET</button>
+<div id="msgJeu"></div>
+</div>
+
+<div class="card"><h2>🎫 MES TICKETS</h2><div id="mesTickets"></div></div>
+</div>
+<!-- FIN PARTIE 1 --><div id="zoneAdmin" style="display:none">
+<div class="card" style="background:#facc15;color:#000"><h2>👑 ADMINISTRATION</h2>
+<p><b>Admin :</b> beninloto590@gmail.com</p>
+<div style="display:flex;gap:8px"><div style="flex:1;background:#fff;padding:10px;border-radius:10px;text-align:center">💰 Total Rechargé<br><b id="adminTotal">0 FCFA</b></div><div style="flex:1;background:#fff;padding:10px;border-radius:10px;text-align:center">🎫 Total Tickets<br><b id="adminTickets">0</b></div></div>
+<button class="btn vert" onclick="creerCode()">+ CRÉER UN CODE RECHARGE</button>
+<input id="montantCode" type="number" placeholder="Montant du code - Ex: 1000">
+<div id="listeCodes"></div>
+<h3>👥 Clients inscrits</h3><div id="listeClients"></div>
+<button class="btn rouge" onclick="deconnecter()">🚪 DÉCONNEXION</button>
+</div>
+</div>
+
+<div id="zoneRevendeur" style="display:none">
+<div class="card"><h2>🏪 REVENDEUR</h2>
+<input id="revGmail" placeholder="Gmail Revendeur">
+<input id="revMdp" type="password" placeholder="Mot de passe">
+<button class="btn vert" onclick="connexionRevendeur()">SE CONNECTER REVENDEUR</button>
+<button class="btn jaune" onclick="inscriptionRevendeur()">CRÉER COMPTE REVENDEUR</button>
+<div id="revZone" style="display:none">
+<h3>Solde Revendeur : <span id="soldeRev">0 FCFA</span></h3>
+<button class="btn vert" onclick="revendreCode()">💰 VENDRE UN CODE</button>
+<div id="revCodes"></div>
+<button class="btn rouge" onclick="deconnecter()">🚪 DÉCONNEXION</button>
+</div>
+</div>
+</div>
+
+<div id="rechargeSection" class="card" style="display:none">
+<h2>💰 RECHARGER</h2>
+<input id="codeRecharge" placeholder="Entre ton code - Ex: LOTO-1234">
+<button class="btn vert" onclick="validerCode()">VALIDER LE CODE</button>
+<button class="btn gris" onclick="fermerRecharge()">⬅ RETOUR</button>
+<div id="msgRecharge"></div>
+</div>
+
+<div id="retraitSection" class="card" style="display:none">
+<h2>🏦 RETIRER MON GAIN</h2>
+<p>Ton gain : <b id="gainRetrait">0 FCFA</b></p>
+<input id="numeroRetrait" placeholder="Ton numéro MTN / MOOV - Ex: 97XXXXXX">
+<input id="montantRetrait" type="number" placeholder="Montant à retirer">
+<button class="btn vert" onclick="demanderRetrait()">DEMANDER LE RETRAIT</button>
+<button class="btn gris" onclick="fermerRetrait()">⬅ RETOUR</button>
+<div id="msgRetrait"></div>
+</div>
+
+<script>
+let currentGmail="";let currentRole="";let paysChoisi="";let tirageChoisiTxt="";let typeJeu="NAP";let numerosChoisis=[];
+let TIRAGES={
+"BENIN":["BENIN 10H","BENIN 11H","BENIN 13H","BENIN 16H","BENIN 19H"],
+"TOGO":["TOGO 10H","TOGO 11H","TOGO 13H","TOGO 16H","TOGO 19H"],
+"NIGERIA":["NIGERIA 10H","NIGERIA 13H","NIGERIA 16H","NIGERIA 19H"],
+"CI":["CI 10H","CI 11H","CI 13H","CI 16H","CI 19H"],
+"GHANA":["GHANA 10H","GHANA 13H","GHANA 16H","GHANA 19H"],
+"CAMEROUN":["CAMEROUN 10H","CAMEROUN 13H","CAMEROUN 16H","CAMEROUN 19H"]
+};
+function getUsers(){try{return JSON.parse(localStorage.getItem("users590")||"{}")}catch(e){return {}}}
+function saveUsers(u){localStorage.setItem("users590",JSON.stringify(u))}
+function getTickets(){try{return JSON.parse(localStorage.getItem("tickets590")||"[]")}catch(e){return []}}
+function saveTickets(t){localStorage.setItem("tickets590",JSON.stringify(t))}
+function getCodes(){try{return JSON.parse(localStorage.getItem("codes590")||"[]")}catch(e){return []}}
+function saveCodes(c){localStorage.setItem("codes590",JSON.stringify(c))}
+function toggleProfil(){document.getElementById("profilClient").classList.toggle("ouvert")}
+function retourMenu(){document.getElementById("compteSection").style.display="none";document.getElementById("menuChoix").style.display="block"}
+function choisirMode(mode){
+document.getElementById("menuChoix").style.display="none";
+document.getElementById("compteSection").style.display="block";
+document.getElementById("titreCompte").innerText=mode==="admin"?"Connexion Admin":mode==="revendeur"?"Connexion Revendeur":"Connexion Client";
+currentRole=mode;
+if(mode==="client"){afficherPays()}
+}
+<!-- FIN PARTIE 2 -->function inscriptionClient(){
+let g=document.getElementById("gmail").value.trim().toLowerCase();let p=document.getElementById("mdp").value.trim();
+if(!g||!p){document.getElementById("msgCompte").innerHTML="❌ Mets Gmail + Mot de passe";return}
+let u=getUsers();if(u[g]){document.getElementById("msgCompte").innerHTML="❌ Gmail déjà inscrit, connecte-toi";return}
+u[g]={mdp:p,soldeJeu:0,soldeGain:0,nom:"Client LOTO 590",tel:"-",role:"client"};saveUsers(u);
+document.getElementById("msgCompte").innerHTML="✅ Compte créé, connecte-toi maintenant";
+}
+function connexionClient(){
+let g=document.getElementById("gmail").value.trim().toLowerCase();let p=document.getElementById("mdp").value.trim();
+if(currentRole==="admin"){if(p==="1234"){currentGmail="beninloto590@gmail.com";ouvrirAdmin();return}else{document.getElementById("msgCompte").innerHTML="❌ Mot de passe Admin faux - Mets 1234";return}}
+if(currentRole==="revendeur"){let u=getUsers();if(!u[g]||u[g].mdp!==p||u[g].role!=="revendeur"){document.getElementById("msgCompte").innerHTML="❌ Revendeur introuvable";return}currentGmail=g;ouvrirRevendeur();return}
+let u=getUsers();if(!u[g]||u[g].mdp!==p){document.getElementById("msgCompte").innerHTML="❌ Gmail ou mot de passe incorrect";return}
+currentGmail=g;ouvrirEspace();
+}
+function inscriptionRevendeur(){
+let g=document.getElementById("gmail").value.trim().toLowerCase();let p=document.getElementById("mdp").value.trim();
+if(!g||!p){document.getElementById("msgCompte").innerHTML="❌ Mets Gmail + Mot de passe";return}
+let u=getUsers();if(u[g]){document.getElementById("msgCompte").innerHTML="❌ Déjà inscrit";return}
+u[g]={mdp:p,soldeJeu:0,soldeGain:0,soldeRev:5000,nom:"Revendeur",tel:"-",role:"revendeur"};saveUsers(u);
+document.getElementById("msgCompte").innerHTML="✅ Compte Revendeur créé, connecte-toi";
+}
+function connexionRevendeur(){connexionClient()}
+function ouvrirEspace(){
+document.getElementById("compteSection").style.display="none";
+document.getElementById("zoneClient").style.display="block";
+document.getElementById("zoneAdmin").style.display="none";
+document.getElementById("zoneRevendeur").style.display="none";
+let u=getUsers()[currentGmail]||{soldeJeu:0,soldeGain:0,nom:"Client LOTO 590",tel:"-"};
+document.getElementById("profilGmail").innerText=currentGmail;
+document.getElementById("profilNom").innerText=u.nom||"Client LOTO 590";
+document.getElementById("profilTel").innerText=u.tel||"-";
+document.getElementById("profilId").innerText="ID-"+currentGmail.split("@")[0].toUpperCase();
+document.getElementById("soldeJeu").innerText=u.soldeJeu+" FCFA";
+document.getElementById("soldeGain").innerText=u.soldeGain+" FCFA";
+document.getElementById("gainBtn").innerText=u.soldeGain;
+document.getElementById("profilClient").classList.remove("ouvert");
+afficherPays();afficherMes();maj();
+}
+function ouvrirAdmin(){
+document.getElementById("compteSection").style.display="none";
+document.getElementById("zoneAdmin").style.display="block";
+afficherAdmin();
+}
+function ouvrirRevendeur(){
+document.getElementById("compteSection").style.display="none";
+document.getElementById("zoneRevendeur").style.display="block";
+document.getElementById("revZone").style.display="block";
+let u=getUsers()[currentGmail]||{};document.getElementById("soldeRev").innerText=(u.soldeRev||0)+" FCFA";
+afficherRevCodes();
+}
+function deconnecter(){currentGmail="";currentRole="";document.getElementById("zoneClient").style.display="none";document.getElementById("zoneAdmin").style.display="none";document.getElementById("zoneRevendeur").style.display="none";document.getElementById("menuChoix").style.display="block"}
+// --- PAYS -> TIRAGES -> JOUER - C'EST ICI QUE TOUT SE JOUE ---
+function afficherPays(){
+let pays=[["🇧🇯","BENIN"],["🇹🇬","TOGO"],["🇳🇬","NIGERIA"],["🇨🇮","CI"],["🇬🇭","GHANA"],["🇨🇲","CAMEROUN"]];
+document.getElementById("paysGrid").innerHTML=pays.map(p=>'<button onclick="ouvrirPays(\''+p[1]+'\')" style="padding:14px 6px;border:none;border-radius:10px;background:#facc15;font-weight:900;font-size:16px">'+p[0]+'<br>'+p[1]+'</button>').join("");
+document.getElementById("tiragesPaysSection").style.display="none";
+document.getElementById("cardJouer").style.display="none";
+}
+function ouvrirPays(pays){
+paysChoisi=pays;
+document.getElementById("titrePays").innerText="🎲 Jeux du "+pays+" - Choisis ton tirage :";
+document.getElementById("tiragesPaysGrid").innerHTML=TIRAGES[pays].map(t=>'<button class="tirageBtn" onclick="ouvrirTirage(\''+t+'\')">🎲 '+t+'</button>').join("");
+document.getElementById("tiragesPaysSection").style.display="block";
+document.getElementById("cardJouer").style.display="none";
+document.getElementById("tiragesPaysSection").scrollIntoView({behavior:"smooth"});
+}
+function retourPays(){
+document.getElementById("tiragesPaysSection").style.display="none";
+document.getElementById("cardJouer").style.display="none";
+afficherPays();
+}
+function ouvrirTirage(t){
+tirageChoisiTxt=t;numerosChoisis=[];
+document.getElementById("tirageChoisi").innerText=paysChoisi+" - "+t;
+document.getElementById("cardJouer").style.display="block";
+afficherNumeros();
+document.getElementById("cardJouer").scrollIntoView({behavior:"smooth"});
+}
+function setType(ty){typeJeu=ty;document.getElementById("choixTxt").innerText=numerosChoisis.join("-")||"-";afficherNumeros()}
+function afficherNumeros(){
+let html="";for(let i=1;i<=90;i++){let sel=numerosChoisis.includes(i)?" sel":"";html+='<div class="num'+sel+'" onclick="choisirNum('+i+')">'+i+'</div>'}
+document.getElementById("numGrid").innerHTML=html;
+}
+function choisirNum(n){
+let max=typeJeu==="NAP"?1:typeJeu==="PERMUTATION"?2:3;
+if(numerosChoisis.includes(n)){numerosChoisis=numerosChoisis.filter(x=>x!==n)}
+else{if(numerosChoisis.length>=max){alert("Pour "+typeJeu+" tu choisis "+max+" numéro(s)");return}numerosChoisis.push(n)}
+document.getElementById("choixTxt").innerText=numerosChoisis.join(" - ")||"-";afficherNumeros();
+}
+<!-- FIN PARTIE 3 -->function validerTicket(){
+if(!currentGmail){alert("Connecte-toi d'abord");return}
+if(!tirageChoisiTxt){alert("Choisis d'abord BENIN puis BENIN 11H");return}
+let max=typeJeu==="NAP"?1:typeJeu==="PERMUTATION"?2:3;
+if(numerosChoisis.length!==max){document.getElementById("msgJeu").innerHTML="❌ Pour "+typeJeu+" choisis "+max+" numéro(s)";return}
+let mise=parseInt(document.getElementById("mise").value||"0");
+if(!mise||mise<50){document.getElementById("msgJeu").innerHTML="❌ Mise minimum 50 FCFA";return}
+let u=getUsers();let me=u[currentGmail];if(!me){alert("Compte introuvable");return}
+if(me.soldeJeu<mise){document.getElementById("msgJeu").innerHTML="❌ Solde insuffisant - Recharge d'abord. Solde: "+me.soldeJeu+" FCFA";return}
+me.soldeJeu-=mise;saveUsers(u);
+let tickets=getTickets();
+tickets.push({id:"TK-"+Date.now(),gmail:currentGmail,pays:paysChoisi,tirage:tirageChoisiTxt,type:typeJeu,numeros:[...numerosChoisis],mise:mise,statut:"EN ATTENTE",date:new Date().toLocaleString()});
+saveTickets(tickets);
+document.getElementById("msgJeu").innerHTML="✅ Ticket validé ! "+typeJeu+" - "+numerosChoisis.join("-")+" - "+mise+" FCFA - "+tirageChoisiTxt;
+numerosChoisis=[];document.getElementById("choixTxt").innerText="-";document.getElementById("mise").value="";
+ouvrirEspace();
+}
+function afficherMes(){
+if(!currentGmail){document.getElementById("mesTickets").innerHTML="<p>Connecte-toi pour voir tes tickets</p>";return}
+let tickets=getTickets().filter(t=>t.gmail===currentGmail).reverse();
+if(!tickets.length){document.getElementById("mesTickets").innerHTML="<p>Aucun ticket pour le moment. Choisis BENIN -> BENIN 11H -> Joue</p>";return}
+document.getElementById("mesTickets").innerHTML=tickets.map(t=>'<div class="ticket"><b>'+t.tirage+'</b> - '+t.type+'<br>Numéros: <b>'+t.numeros.join(" - ")+'</b><br>Mise: '+t.mise+' FCFA - Statut: '+t.statut+'<br><small>'+t.date+'</small><br><small>'+t.id+'</small></div>').join("");
+}
+function maj(){if(currentGmail)ouvrirEspaceSansBoucle()}
+function ouvrirEspaceSansBoucle(){
+let u=getUsers()[currentGmail];if(!u)return;
+document.getElementById("soldeJeu").innerText=u.soldeJeu+" FCFA";
+document.getElementById("soldeGain").innerText=u.soldeGain+" FCFA";
+document.getElementById("gainBtn").innerText=u.soldeGain;
+afficherMes();
+}
+// --- RECHARGE / RETRAIT ---
+function ouvrirRecharge(){document.getElementById("rechargeSection").style.display="block";document.getElementById("rechargeSection").scrollIntoView({behavior:"smooth"})}
+function fermerRecharge(){document.getElementById("rechargeSection").style.display="none"}
+function validerCode(){
+let code=document.getElementById("codeRecharge").value.trim().toUpperCase();if(!code)return;
+let codes=getCodes();let c=codes.find(x=>x.code===code&&!x.utilise);
+if(!c){document.getElementById("msgRecharge").innerHTML="❌ Code invalide ou déjà utilisé";return}
+c.utilise=true;c.utilisePar=currentGmail;saveCodes(codes);
+let u=getUsers();u[currentGmail].soldeJeu+=c.montant;saveUsers(u);
+document.getElementById("msgRecharge").innerHTML="✅ Recharge réussie ! +"+c.montant+" FCFA";
+document.getElementById("codeRecharge").value="";ouvrirEspace();
+}
+function ouvrirRetrait(){let u=getUsers()[currentGmail]||{};document.getElementById("gainRetrait").innerText=(u.soldeGain||0)+" FCFA";document.getElementById("retraitSection").style.display="block"}
+function fermerRetrait(){document.getElementById("retraitSection").style.display="none"}
+function demanderRetrait(){
+let num=document.getElementById("numeroRetrait").value.trim();let mont=parseInt(document.getElementById("montantRetrait").value||"0");
+let u=getUsers();let me=u[currentGmail];if(!me||me.soldeGain<mont||!mont){document.getElementById("msgRetrait").innerHTML="❌ Gain insuffisant ou montant vide";return}
+me.soldeGain-=mont;saveUsers(u);document.getElementById("msgRetrait").innerHTML="✅ Demande envoyée ! "+mont+" FCFA vers "+num+" - L'Admin va te payer";ouvrirEspace();
+}
+// --- ADMIN ---
+function creerCode(){
+let m=parseInt(document.getElementById("montantCode").value||"0");if(!m){alert("Mets un montant");return}
+let codes=getCodes();let code="LOTO-"+Math.floor(1000+Math.random()*9000);codes.push({code:code,montant:m,utilise:false});saveCodes(codes);afficherAdmin();alert("Code créé: "+code+" - "+m+" FCFA");
+}
+function afficherAdmin(){
+let codes=getCodes();let tickets=getTickets();let users=getUsers();
+document.getElementById("adminTotal").innerText=codes.filter(c=>c.utilise).reduce((s,c)=>s+c.montant,0)+" FCFA";
+document.getElementById("adminTickets").innerText=tickets.length;
+document.getElementById("listeCodes").innerHTML=codes.reverse().map(c=>'<div style="background:#fff;color:#000;padding:8px;border-radius:8px;margin:5px 0"><b>'+c.code+'</b> - '+c.montant+' FCFA - '+(c.utilise?"✅ Utilisé par "+c.utilisePar:"⏳ Disponible")+'</div>').join("");
+document.getElementById("listeClients").innerHTML=Object.keys(users).map(g=>'<div style="background:#fff;color:#000;padding:8px;border-radius:8px;margin:5px 0"><b>'+g+'</b><br>Jeu: '+users[g].soldeJeu+' FCFA - Gain: '+users[g].soldeGain+' FCFA<br><button onclick="validerGainClient(\''+g+'\')">🏆 VALIDER GAIN</button></div>').join("");
+}
+function validerGainClient(g){
+let gain=parseInt(prompt("Montant du gain pour "+g+" ?")||"0");if(!gain)return;
+let u=getUsers();u[g].soldeGain+=gain;saveUsers(u);afficherAdmin();alert("Gain ajouté !");
+}
+function revendreCode(){
+let codes=getCodes();let code="LOTO-"+Math.floor(1000+Math.random()*9000);codes.push({code:code,montant:1000,utilise:false});saveCodes(codes);afficherRevCodes();alert("Code à vendre: "+code);
+}
+function afficherRevCodes(){
+let codes=getCodes().filter(c=>!c.utilise);document.getElementById("revCodes").innerHTML=codes.map(c=>'<div style="background:#fff;color:#000;padding:8px;border-radius:8px;margin:5px 0"><b>'+c.code+'</b> - '+c.montant+' FCFA</div>').join("");
+}
+<!-- FIN PARTIE 4 -->// --- AU DÉMARRAGE : ON FORCE LES PAYS À S'AFFICHER ---
+setTimeout(function(){afficherPays()},500);
+let deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e});
 </script></body></html>
-<!-- FIN V9842 -->
+<!-- FIN V9843 -->
