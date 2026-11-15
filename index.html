@@ -8,15 +8,18 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
 body{background:#0b1220;color:#fff;padding-bottom:95px}
 .top{background:#facc15;color:#000;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
-.top b{font-size:19px}.top span{background:#000;color:#facc15;padding:6px 10px;border-radius:20px;font-size:13px;cursor:pointer}
+.top b{font-size:19px}
+.top span{background:#000;color:#facc15;padding:6px 10px;border-radius:20px;font-size:13px;cursor:pointer}
 .sub{padding:12px 15px;color:#facc15;font-weight:bold;font-size:13px}
 .search{margin:0 15px;background:#16213a;border-radius:25px;padding:10px 14px;color:#888;font-size:14px}
 h2{padding:16px 15px 8px;font-size:17px;display:flex;justify-content:space-between;align-items:center}
 h2 a{color:#facc15;font-size:13px;text-decoration:none}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 15px}
 .card{background:#16213a;border-radius:16px;padding:14px;cursor:pointer;border:1px solid #222;overflow:hidden;word-break:break-word}
-.card .flag{font-size:30px}.card b{display:block;margin:6px 0 3px;font-size:15px;line-height:1.2}
-.card p{color:#facc15;font-size:13px}.card small{color:#999}
+.card .flag{font-size:30px}
+.card b{display:block;margin:6px 0 3px;font-size:15px;line-height:1.2}
+.card p{color:#facc15;font-size:13px}
+.card small{color:#999}
 .ferme{display:flex;gap:10px;overflow-x:auto;padding:0 15px}
 .ferme .f{min-width:155px;background:#16213a;border-radius:14px;padding:12px;border:1px solid #facc15;cursor:pointer}
 .f b{font-size:14px}.f p{color:#facc15;font-size:12px;margin:4px 0}.f small{color:#ff5a5a}
@@ -54,149 +57,332 @@ input,select{width:100%;padding:12px;border-radius:10px;border:0;margin:6px 0;ba
 </head>
 <body>
 
-<div class="top" id="topBar"><b>NET LOTO 590</b><span onclick="show('solde')">Solde: <span id="soldeTop">0</span> F</span></div>
+<div class="top"><b>NET LOTO 590</b><span onclick="show('solde')">Solde: <span id="soldeTop">0</span> F</span></div>
 
-<!-- 1-2 : PAGE ACCUEIL STYLE ELOTO -->
+<!-- 1 : ACCUEIL STYLE ELOTO -->
 <div id="page-landing">
-<div class="hero"><h1>Jouez, suivez, gagnez.</h1><p>Tirages tous les jours • Résultats en direct • Gains versés sur votre compte</p>
-<button class="playBtn" onclick="show('register')">👤 Créer un compte</button>
-<button class="whiteBtn" onclick="show('login')">➡️ Connexion</button></div>
+<div class="hero"><h1>Jouez, suivez, gagnez.</h1><p>Tirages tous les jours • Résultats en direct • Gains sur votre compte</p>
+<button class="playBtn" onclick="show('register')">Créer un compte</button>
+<button class="whiteBtn" onclick="show('login')">Connexion</button></div>
 <div class="step"><b>1</b><div><b>Inscrivez-vous</b><br><small>Un identifiant et un e-mail suffisent.</small></div></div>
 <div class="step"><b>2</b><div><b>Rechargez</b><br><small>Auprès d'un revendeur de votre pays.</small></div></div>
 <div class="step"><b>3</b><div><b>Jouez</b><br><small>Choisissez un tirage, vos numéros et votre mise.</small></div></div>
-<div class="box"><h3>❓ Comment jouer ? Lire le guide</h3><p>Loto 5/90 seul. Choisis un pays, un tirage Aujourd'hui, 5 numéros de 1 à 90, mise, valide. Si tirage fini, il part dans À venir / Demain.</p></div>
+<div class="box"><h3>Comment jouer ?</h3><p>Loto 5/90 seul. Choisis un pays, un tirage Aujourd'hui, 5 numéros de 1 à 90, mise, valide.</p></div>
 </div>
 
-<!-- 3 : INSCRIPTION -->
+<!-- 2 : INSCRIPTION -->
 <div id="page-register" class="hidden">
 <div class="box"><h3>Créer un compte</h3><p>Gratuit, en moins d'une minute.</p>
 <p>E-mail</p><input id="regEmail" type="email" placeholder="ton@email.com">
-<p>Identifiant</p><input id="regUser" placeholder="Minuscules, chiffres et tirets">
-<p>Mot de passe</p><input id="regPass" type="password" placeholder="8 caractères minimum">
+<p>Identifiant</p><input id="regUser" placeholder="Ex: koffi123">
+<p>Mot de passe</p><input id="regPass" type="password" placeholder="4 caractères minimum">
 <p>Confirmer le mot de passe</p><input id="regPass2" type="password" placeholder="Confirme">
 <button class="playBtn" onclick="doRegister()">Créer mon compte</button>
 <p id="msgReg" style="color:#facc15;font-weight:bold"></p>
 <p style="text-align:center">Déjà inscrit ? <a href="#" style="color:#facc15" onclick="show('login');return false">Connexion</a></p></div>
 </div>
 
-<!-- 4 : CONNEXION -->
+<!-- 3 : CONNEXION -->
 <div id="page-login" class="hidden">
 <div class="box"><h3>Connexion</h3><p>Accédez à vos jeux et à votre solde.</p>
 <p>Identifiant ou e-mail</p><input id="logUser" placeholder="Identifiant ou e-mail">
 <p>Mot de passe</p><input id="logPass" type="password" placeholder="Mot de passe">
-<p><input type="checkbox" checked style="width:auto"> Rester connecté &nbsp; <a href="#" style="color:#facc15" onclick="alert('Contacte l\'admin pour réinitialiser');return false">Mot de passe oublié ?</a></p>
 <button class="playBtn" onclick="doLogin()">Se connecter</button>
 <p id="msgLog" style="color:#facc15;font-weight:bold"></p>
-<p style="text-align:center">Pas encore de compte ? <a href="#" style="color:#facc15" onclick="show('register');return false">Inscription</a></p></div>
+<p style="text-align:center">Pas encore de compte ? <a href="#" style="color:#facc15" onclick="show('register');return false">Inscription</a></p>
+<p style="text-align:center;color:#aaa;margin-top:10px">Test : admin / 590590<br>revendeur / 1234<br>client / 1234</p></div>
 </div>
 
-<!-- 5 : ACCUEIL APRES CONNEXION -->
+<!-- 4 : ACCUEIL APRES CONNEXION -->
 <div id="page-home" class="hidden">
 <div class="sub">LOTO 5 SUR 90 - SEUL JEU DISPONIBLE</div>
-<div class="search">🔍 Rechercher un tirage...</div>
+<div class="search">Rechercher un tirage...</div>
 <h2>Ferme bientôt <a href="#">Voir tous</a></h2>
 <div class="ferme" id="ferme"></div>
 <h2>Choisir un pays <a href="#" id="totalPays"></a></h2>
 <div class="grid" id="paysGrid"></div>
-<div class="box"><h3>📊 Résultats rapides</h3><p id="resultHome"></p><button class="playBtn" onclick="show('resultats')">Voir tous les résultats</button></div>
-<div class="box"><h3>🔮 Pronostics du jour</h3><p id="pronoHome"></p><button class="playBtn" onclick="show('pronostics')">Voir les pronostics</button></div>
+<div class="box"><h3>Résultats rapides</h3><p id="resultHome"></p><button class="playBtn" onclick="show('resultats')">Voir tous les résultats</button></div>
+<div class="box"><h3>Pronostics du jour</h3><p id="pronoHome"></p><button class="playBtn" onclick="show('pronostics')">Voir les pronostics</button></div>
 </div>
 
 <!-- PAYS DETAIL -->
 <div id="page-pays" class="hidden">
-<button class="back" onclick="show('home')">← Retour</button>
-<h2 id="paysTitle">BÉNIN</h2>
-<div class="tabs"><button id="tabAuj" class="on" onclick="setTab('auj')">Aujourd'hui <span id="cAuj"></span></button><button id="tabDem" onclick="setTab('dem')">À venir <span id="cDem"></span></button></div>
+<button class="back" onclick="show('home')">Retour</button>
+<h2 id="paysTitle">BENIN</h2>
+<div class="tabs"><button id="tabAuj" class="on" onclick="setTab('auj')">Aujourd'hui <span id="cAuj"></span></button><button id="tabDem" onclick="setTab('dem')">A venir <span id="cDem"></span></button></div>
 <div class="draw-grid" id="drawGrid"></div>
 </div>
 
 <!-- JOUER -->
 <div id="page-jouer" class="hidden">
-<button class="back" onclick="show('pays')">← Retour</button>
+<button class="back" onclick="show('pays')">Retour</button>
 <div class="box"><h3 id="jouerTitle">SOIR 18H</h3><p>Choisis 5 numéros de 1 à 90</p>
 <div class="numGrid" id="numGrid"></div>
 <input id="mise" type="number" placeholder="Mise - ex: 100, 200, 500">
-<button class="playBtn" onclick="valider()">VALIDER LE COUPON ✅</button>
+<button class="playBtn" onclick="valider()">VALIDER LE COUPON</button>
 <p id="msg" style="text-align:center;color:#facc15;font-weight:bold"></p></div>
 </div>
 
-<!-- ANCIEN : TICKETS / RESULTATS / PRONOSTICS / SOLDE / PROFIL -->
-<div id="page-tickets" class="hidden"><h2>🧾 Mes Tickets</h2><div class="box" id="ticketsList"></div></div>
-<div id="page-resultats" class="hidden"><h2>📊 Résultats</h2><div class="box" id="resultList"></div></div>
-<div id="page-pronostics" class="hidden"><h2>🔮 Pronostics</h2><div class="box"><h3>Pronostics du jour - Loto 5/90</h3><p id="pronoList"></p><button class="playBtn" onclick="genProno()">Nouveau pronostic 🎲</button></div></div>
-<div id="page-solde" class="hidden"><h2>💰 Mon Solde</h2><div class="box"><h3>Solde: <span id="soldeBox">0</span> F</h3><p>Recharge par Mobile Money</p><select id="operateur"><option>MTN MoMo</option><option>Moov Money</option><option>Celtiis</option></select><input id="montantRecharge" type="number" placeholder="Montant - ex: 1000"><input id="numeroRecharge" type="tel" placeholder="Numéro Mobile Money"><button class="playBtn" onclick="recharger()">RECHARGER</button><p id="msgSolde" style="color:#facc15;font-weight:bold"></p></div><div class="box"><h3>Retrait</h3><input id="montantRetrait" type="number" placeholder="Montant retrait"><button class="playBtn" onclick="retirer()">DEMANDER RETRAIT</button></div></div>
+<div id="page-tickets" class="hidden"><h2>Mes Tickets</h2><div class="box" id="ticketsList"></div></div>
+<div id="page-resultats" class="hidden"><h2>Résultats</h2><div class="box" id="resultList"></div></div>
+<div id="page-pronostics" class="hidden"><h2>Pronostics</h2><div class="box"><h3>Pronostics du jour - Loto 5/90</h3><p id="pronoList"></p><button class="playBtn" onclick="genProno()">Nouveau pronostic</button></div></div>
 
-<div id="page-profil" class="hidden"><h2>👤 Mon Profil</h2>
-<div class="box"><p>Nom:</p><input id="nomProfil" placeholder="Ton nom"><p>Téléphone:</p><input id="telProfil" placeholder="Ton numéro"><button class="playBtn" onclick="saveProfil()">SAUVEGARDER PROFIL</button><p id="msgProfil" style="color:#facc15"></p>
+<div id="page-solde" class="hidden"><h2>Mon Solde</h2><div class="box"><h3>Solde: <span id="soldeBox">0</span> F</h3><p>Recharge par Mobile Money</p><select id="operateur"><option>MTN MoMo</option><option>Moov Money</option><option>Celtiis</option></select><input id="montantRecharge" type="number" placeholder="Montant - ex: 1000"><input id="numeroRecharge" type="tel" placeholder="Numéro Mobile Money"><button class="playBtn" onclick="recharger()">RECHARGER</button><p id="msgSolde" style="color:#facc15;font-weight:bold"></p></div><div class="box"><h3>Retrait</h3><input id="montantRetrait" type="number" placeholder="Montant retrait"><button class="playBtn" onclick="retirer()">DEMANDER RETRAIT</button></div></div>
+
+<div id="page-profil" class="hidden"><h2>Mon Profil</h2>
+<div class="box"><p id="profilInfo" style="color:#facc15;font-weight:bold"></p><p>Nom:</p><input id="nomProfil" placeholder="Ton nom"><p>Téléphone:</p><input id="telProfil" placeholder="Ton numéro"><button class="playBtn" onclick="saveProfil()">SAUVEGARDER PROFIL</button><p id="msgProfil" style="color:#facc15"></p>
 <p style="margin-top:12px">Code Admin (seulement pour le patron):</p><input id="codeAdmin" type="password" placeholder="Code secret"><button class="playBtn" onclick="openAdmin()">OUVRIR ADMIN</button><p id="msgAdminCode" style="color:#ff5a5a"></p></div>
-<div class="box"><button class="menuBtn" onclick="show('aide')">❓ Aide</button><button class="menuBtn" onclick="logout()">🚪 Déconnexion</button></div></div>
+<div class="box"><button class="menuBtn" onclick="show('aide')">Aide</button><button class="menuBtn" onclick="logout()">Déconnexion</button></div></div>
 
-<!-- ADMIN CACHE - INVISIBLE POUR CLIENTS -->
-<div id="page-admin" class="hidden"><h2>⚙️ Admin - Patron seul</h2><div class="box"><p>Publier un résultat:</p><select id="adminPays"></select><input id="adminResult" placeholder="Ex: 5 - 12 - 34 - 56 - 89"><button class="playBtn" onclick="publierResult()">PUBLIER RÉSULTAT</button><p id="msgAdmin"></p></div><div class="box"><h3>Tickets des clients</h3><div id="adminTickets"></div></div><button class="back" onclick="show('profil')">← Retour Profil</button></div>
-<div id="page-aide" class="hidden"><h2>❓ Aide</h2><div class="box"><p>Choisis un pays, un tirage Aujourd'hui, 5 numéros, mise, valide. Si fini, il part dans À venir / Demain.</p></div></div>
+<div id="page-admin" class="hidden"><h2>Admin - Patron seul</h2><div class="box"><p>Publier un résultat:</p><select id="adminPays"></select><input id="adminResult" placeholder="Ex: 5 - 12 - 34 - 56 - 89"><button class="playBtn" onclick="publierResult()">PUBLIER RESULTAT</button><p id="msgAdmin"></p></div><div class="box"><h3>Tickets des clients</h3><div id="adminTickets"></div></div><button class="back" onclick="show('profil')">Retour Profil</button></div>
+<div id="page-aide" class="hidden"><h2>Aide</h2><div class="box"><p>Choisis un pays, un tirage Aujourd'hui, 5 numéros, mise, valide. Si fini, il part dans A venir / Demain.</p></div></div>
 
 <div class="bottom" id="bottomBar" style="display:none">
-<div id="b-home" onclick="show('home')">🏠<br>Accueil</div>
-<div id="b-tickets" onclick="show('tickets')">🧾<br>Tickets</div>
-<div onclick="show('jouer-direct')"><div class="coupon">🎫</div><br>Coupon</div>
-<div id="b-solde" onclick="show('solde')">💰<br>Solde</div>
-<div id="b-profil" onclick="show('profil')">👤<br>Profil</div>
-</div>
-
-<script>
-const PAYS=[
-{id:'BENIN',nom:'BÉNIN',flag:'🇧🇯',tirages:[{n:'MATIN 10H',h:10,m:0},{n:'MIDI 13H',h:13,m:0},{n:'APRÈS-MIDI 15H',h:15,m:0},{n:'SOIR 18H',h:18,m:0},{n:'NUIT 20H',h:20,m:0},{n:'SPÉCIAL 22H',h:22,m:0}]},
-{id:'CIV',nom:"CÔTE D'IVOIRE",flag:'🇨🇮',tirages:[{n:'DIGITAL 7H',h:7,m:0},{n:'RÉVEIL 10H',h:10,m:0},{n:'MIDI 13H',h:13,m:0},{n:'STAR 15H',h:15,m:0},{n:'FORTUNE 17H',h:17,m:0},{n:'PRESTIGE 19H',h:19,m:0},{n:'NUIT 21H',h:21,m:0}]},
-{id:'TOGO',nom:'TOGO',flag:'🇹🇬',tirages:[{n:'MATIN 9H',h:9,m:0},{n:'MIDI 13H',h:13,m:0},{n:'SOIR 18H',h:18,m:0}]},
-{id:'GHANA',nom:'GHANA',flag:'🇬🇭',tirages:[{n:'GHANA 11H',h:11,m:0}]},
-{id:'NIGERIA',nom:'NIGÉRIA',flag:'🇳🇬',tirages:[{n:'LAGOS 10H',h:10,m:0},{n:'ABUJA 14H',h:14,m:0},{n:'LAGOS 18H',h:18,m:0},{n:'NUIT 21H',h:21,m:0}]},
-{id:'FRANCE',nom:'FRANCE',flag:'🇫🇷',tirages:[{n:'FRANCE 20H',h:20,m:0}]},
-{id:'UNIV',nom:'UNIVERSEL',flag:'🌍',tirages:[{n:'UNIVERSEL 8H',h:8,m:0},{n:'UNIVERSEL 16H',h:16,m:0},{n:'UNIVERSEL 22H',h:22,m:0}]},
+<div onclick="show('home')">Accueil</div>
+<div onclick="show('tickets')">Tickets</div>
+<div onclick="show('jouer-direct')"><div class="coupon">+</div><br>Coupon</div>
+<div onclick="show('solde')">Solde</div>
+<div onclick="show('profil')">Profil</div>
+</div><script>
+const PAYS = [
+{id:'BENIN', nom:'BENIN', flag:'🇧🇯', tirages:[{n:'MATIN 10H',h:10,m:0},{n:'MIDI 13H',h:13,m:0},{n:'APRES-MIDI 15H',h:15,m:0},{n:'SOIR 18H',h:18,m:0},{n:'NUIT 20H',h:20,m:0},{n:'SPECIAL 22H',h:22,m:0}]},
+{id:'CIV', nom:"COTE D'IVOIRE", flag:'🇨🇮', tirages:[{n:'DIGITAL 7H',h:7,m:0},{n:'REVEIL 10H',h:10,m:0},{n:'MIDI 13H',h:13,m:0},{n:'STAR 15H',h:15,m:0},{n:'FORTUNE 17H',h:17,m:0},{n:'PRESTIGE 19H',h:19,m:0},{n:'NUIT 21H',h:21,m:0}]},
+{id:'TOGO', nom:'TOGO', flag:'🇹🇬', tirages:[{n:'MATIN 9H',h:9,m:0},{n:'MIDI 13H',h:13,m:0},{n:'SOIR 18H',h:18,m:0}]},
+{id:'GHANA', nom:'GHANA', flag:'🇬🇭', tirages:[{n:'GHANA 11H',h:11,m:0}]},
+{id:'NIGERIA', nom:'NIGERIA', flag:'🇳🇬', tirages:[{n:'LAGOS 10H',h:10,m:0},{n:'ABUJA 14H',h:14,m:0},{n:'LAGOS 18H',h:18,m:0},{n:'NUIT 21H',h:21,m:0}]},
+{id:'FRANCE', nom:'FRANCE', flag:'🇫🇷', tirages:[{n:'FRANCE 20H',h:20,m:0}]},
+{id:'UNIV', nom:'UNIVERSEL', flag:'🌍', tirages:[{n:'UNIVERSEL 8H',h:8,m:0},{n:'UNIVERSEL 16H',h:16,m:0},{n:'UNIVERSEL 22H',h:22,m:0}]},
 ];
-let currentPays=PAYS[0], currentTab='auj', currentDraw='SOIR 18H', selected=[];
-let solde=parseInt(localStorage.getItem('solde590')||'0');
-let tickets=JSON.parse(localStorage.getItem('tickets590')||'[]');
-let resultats=JSON.parse(localStorage.getItem('resultats590')||'[]');
-let isLogged=localStorage.getItem('logged590')=='1';
-function nowMin(){let d=new Date();return d.getHours()*60+d.getMinutes()}
-function reste(h,m){let diff=(h*60+m)-nowMin();if(diff<0)diff+=1440;return Math.floor(diff/60)+'h'+(diff%60<10?'0':'')+diff%60}
-function isFini(t){return nowMin()>=(t.h*60+t.m)}
-function updateSolde(){document.getElementById('soldeTop').innerText=solde;document.getElementById('soldeBox').innerText=solde;localStorage.setItem('solde590',solde)}
+let currentPays = PAYS[0];
+let currentTab = 'auj';
+let currentDraw = 'SOIR 18H';
+let selected = [];
+let solde = parseInt(localStorage.getItem('solde590') || '0');
+let tickets = JSON.parse(localStorage.getItem('tickets590') || '[]');
+let resultats = JSON.parse(localStorage.getItem('resultats590') || '[]');
+let isLogged = localStorage.getItem('logged590') == '1';
+
+function nowMin(){
+  let d = new Date();
+  return d.getHours()*60 + d.getMinutes();
+}
+function reste(h,m){
+  let diff = (h*60+m) - nowMin();
+  if(diff < 0) diff += 1440;
+  let hh = Math.floor(diff/60);
+  let mm = diff % 60;
+  return hh + 'h' + (mm < 10 ? '0' : '') + mm;
+}
+function isFini(t){
+  return nowMin() >= (t.h*60 + t.m);
+}
+function updateSolde(){
+  document.getElementById('soldeTop').innerText = solde;
+  document.getElementById('soldeBox').innerText = solde;
+  localStorage.setItem('solde590', solde);
+}
 function show(page){
-  if(page=='jouer-direct'){openJouer(currentDraw);return}
-  if((page=='home'||page=='tickets'||page=='solde'||page=='profil'||page=='resultats'||page=='pronostics') && !isLogged && page!='landing'){page='landing'}
-  if(page=='home') document.getElementById('bottomBar').style.display='flex'; else if(['landing','register','login'].includes(page)) document.getElementById('bottomBar').style.display='none'; else document.getElementById('bottomBar').style.display='flex';
-  ['landing','register','login','home','pays','jouer','tickets','resultats','pronostics','solde','profil','admin','aide'].forEach(p=>{let el=document.getElementById('page-'+p);if(el)el.classList.add('hidden')});
+  if(page == 'jouer-direct'){
+    openJouer(currentDraw);
+    return;
+  }
+  if((page=='home'||page=='tickets'||page=='solde'||page=='profil'||page=='resultats'||page=='pronostics') && !isLogged){
+    page = 'landing';
+  }
+  if(page=='landing'||page=='register'||page=='login'){
+    document.getElementById('bottomBar').style.display = 'none';
+  } else {
+    document.getElementById('bottomBar').style.display = 'flex';
+  }
+  let pages = ['landing','register','login','home','pays','jouer','tickets','resultats','pronostics','solde','profil','admin','aide'];
+  pages.forEach(p => {
+    let el = document.getElementById('page-'+p);
+    if(el) el.classList.add('hidden');
+  });
   document.getElementById('page-'+page).classList.remove('hidden');
-  if(page=='home')renderHome();
-  if(page=='tickets')renderTickets();
-  if(page=='resultats')renderResultats();
-  if(page=='pronostics')renderProno();
+  if(page=='home') renderHome();
+  if(page=='tickets') renderTickets();
+  if(page=='resultats') renderResultats();
+  if(page=='pronostics') renderProno();
+  if(page=='profil'){
+    let u = localStorage.getItem('currentUser590') || '';
+    let r = localStorage.getItem('currentRole590') || 'client';
+    document.getElementById('profilInfo').innerText = 'Connecté : ' + u + ' | Rôle : ' + r;
+  }
   window.scrollTo(0,0);
 }
-function doRegister(){let u=document.getElementById('regUser').value.trim(),e=document.getElementById('regEmail').value.trim(),p=document.getElementById('regPass').value,p2=document.getElementById('regPass2').value;if(!u||!e||p.length<8){document.getElementById('msgReg').innerText='Remplis tout, mot de passe 8 caractères min.';return}if(p!==p2){document.getElementById('msgReg').innerText='Les mots de passe ne correspondent pas.';return}localStorage.setItem('user590',u);localStorage.setItem('pass590',p);localStorage.setItem('email590',e);document.getElementById('msgReg').innerText='✅ Compte créé ! Connecte-toi.';setTimeout(()=>show('login'),800)}
-function doLogin(){let u=document.getElementById('logUser').value.trim(),p=document.getElementById('logPass').value;let savedU=localStorage.getItem('user590'),savedP=localStorage.getItem('pass590'),savedE=localStorage.getItem('email590');if((u==savedU||u==savedE)&&p==savedP&&savedU){isLogged=true;localStorage.setItem('logged590','1');show('home')}else{document.getElementById('msgLog').innerText='Identifiant ou mot de passe incorrect. Crée un compte d\'abord.'}}
-function logout(){isLogged=false;localStorage.setItem('logged590','0');show('landing')}
-function renderHome(){let total=0,fermeHtml='';PAYS.forEach(p=>{let o=p.tirages.filter(t=>!isFini(t)).length;total+=o;p.tirages.forEach(t=>{if(!isFini(t))fermeHtml+=`<div class="f" onclick="openPays('${p.id}')"><b>${p.flag} ${t.n}</b><p>Auj. ${t.h}:${t.m==0?'00':t.m} - ${reste(t.h,t.m)}</p><small>⏳ Ferme bientôt</small></div>`})});document.getElementById('ferme').innerHTML=fermeHtml||'<p style="padding:0 5px">Tous les tirages du jour sont finis, voir Demain.</p>';document.getElementById('totalPays').innerText=total+' ouverts';document.getElementById('paysGrid').innerHTML=PAYS.map(p=>{let o=p.tirages.filter(t=>!isFini(t)).length;return `<div class="card" onclick="openPays('${p.id}')"><div class="flag">${p.flag}</div><b>${p.nom}</b><p>${o} tirage${o>1?'s':''} ouvert${o>1?'s':''}</p><small>Loto 5/90 • ${p.tirages.length} tirages / jour</small></div>`}).join('');document.getElementById('resultHome').innerText=resultats.length?resultats.slice(-2).map(r=>r.pays+' '+r.nums).join(' | '):'Aucun résultat publié. Ex: BÉNIN SOIR 18H - 5, 12, 34, 56, 89';document.getElementById('pronoHome').innerText=genNums().join(' - ');document.getElementById('adminPays').innerHTML=PAYS.map(p=>`<option value="${p.nom}">${p.nom}</option>`).join('')}
-function openPays(id){currentPays=PAYS.find(p=>p.id==id);currentTab='auj';show('pays');document.getElementById('paysTitle').innerText=currentPays.flag+' '+currentPays.nom;renderDraws()}
-function setTab(t){currentTab=t;document.getElementById('tabAuj').className=t=='auj'?'on':'';document.getElementById('tabDem').className=t=='dem'?'on':'';renderDraws()}
-function renderDraws(){let auj=currentPays.tirages.filter(t=>!isFini(t));let dem=currentPays.tirages.filter(t=>isFini(t));document.getElementById('cAuj').innerText=auj.length;document.getElementById('cDem').innerText=dem.length;let list=currentTab=='auj'?auj:dem;if(!list.length){document.getElementById('drawGrid').innerHTML='<p style="grid-column:1/3;text-align:center;color:#999">Aucun tirage ici. Regarde l\'autre onglet.</p>';return}document.getElementById('drawGrid').innerHTML=list.map(t=>{let label=currentTab=='auj'?`Auj. ${t.h}:${t.m==0?'00':t.m} - ${reste(t.h,t.m)}`:`Dem. ${t.h}:${t.m==0?'00':t.m} - ${reste(t.h,t.m)}`;let btn=currentTab=='auj'?`<button onclick="openJouer('${t.n}')">JOUER</button>`:`<button class="off">DEMAIN</button>`;return `<div class="draw"><div class="flag">${currentPays.flag}</div><b>${t.n}</b><p>${label}</p><small>Loto 5/90</small>${btn}</div>`}).join('')}
-function openJouer(nom){currentDraw=nom;show('jouer');document.getElementById('jouerTitle').innerText=currentPays.flag+' '+nom+' - '+currentPays.nom;selected=[];renderNums();document.getElementById('msg').innerText=''}
-function renderNums(){let h='';for(let i=1;i<=90;i++){h+=`<button class="${selected.includes(i)?'sel':''}" onclick="toggleNum(${i})">${i}</button>`}document.getElementById('numGrid').innerHTML=h}
-function toggleNum(n){if(selected.includes(n))selected=selected.filter(x=>x!==n);else if(selected.length<5)selected.push(n);else alert('5 numéros seulement');renderNums()}
-function valider(){if(selected.length!==5){document.getElementById('msg').innerText='Choisis 5 numéros !';return}let mise=parseInt(document.getElementById('mise').value||'100');if(mise>solde){document.getElementById('msg').innerText='Solde insuffisant. Recharge d\'abord.';return}solde-=mise;updateSolde();let tk={pays:currentPays.nom,draw:currentDraw,nums:selected.slice(),mise:mise,date:new Date().toLocaleString()};tickets.push(tk);localStorage.setItem('tickets590',JSON.stringify(tickets));document.getElementById('msg').innerText='✅ Coupon validé: '+selected.join(' - ')+' | Mise: '+mise+' F | '+currentDraw;selected=[];renderNums()}
-function renderTickets(){document.getElementById('ticketsList').innerHTML=tickets.length?tickets.slice().reverse().map(t=>`<div class="ticket"><b>${t.pays} - ${t.draw}</b><br>${t.nums.join(' - ')}<br><small>Mise: ${t.mise} F • ${t.date}</small></div>`).join(''):'<p>Aucun ticket pour le moment.</p>'}
-function genNums(){let a=[];while(a.length<5){let n=Math.floor(Math.random()*90)+1;if(!a.includes(n))a.push(n)}return a.sort((x,y)=>x-y)}
-function genProno(){document.getElementById('pronoList').innerText='Pronostic: '+genNums().join(' - ')}
-function renderProno(){document.getElementById('pronoList').innerText='Pronostic du jour: '+genNums().join(' - ')}
-function renderResultats(){
-  document.getElementById('resultList').innerHTML = resultats.length ?
-    resultats.slice().reverse().map(r =>
-      `<div class="ticket"><b>${r.pays}</b><br>${r.nums}<br><small>${r.date}</small></div>`
-    ).join('') :
-    '<p>Aucun résultat encore. L\'admin va publier.</p>';
+function getUsers(){
+  let users = JSON.parse(localStorage.getItem('users590') || '[]');
+  if(users.length == 0){
+    users.push({user:'admin', email:'admin@netloto590.com', pass:'590590', role:'admin'});
+    users.push({user:'revendeur', email:'revendeur@netloto590.com', pass:'1234', role:'revendeur'});
+    users.push({user:'client', email:'client@test.com', pass:'1234', role:'client'});
+    localStorage.setItem('users590', JSON.stringify(users));
+  }
+  return users;
 }
-
+function doRegister(){
+  let u = document.getElementById('regUser').value.trim();
+  let e = document.getElementById('regEmail').value.trim();
+  let p = document.getElementById('regPass').value;
+  let p2 = document.getElementById('regPass2').value;
+  if(!u || !e || p.length < 4){
+    document.getElementById('msgReg').innerText = 'Remplis tout, mot de passe 4 caractères min.';
+    return;
+  }
+  if(p !== p2){
+    document.getElementById('msgReg').innerText = 'Les mots de passe ne correspondent pas.';
+    return;
+  }
+  if(!e.includes('@') || !e.includes('.')){
+    document.getElementById('msgReg').innerText = 'Email invalide. Exemple : test@gmail.com';
+    return;
+  }
+  let users = getUsers();
+  if(users.find(x => x.user == u || x.email == e)){
+    document.getElementById('msgReg').innerText = 'Ce compte existe déjà, connecte-toi.';
+    return;
+  }
+  users.push({user:u, email:e, pass:p, role:'client'});
+  localStorage.setItem('users590', JSON.stringify(users));
+  document.getElementById('msgReg').innerText = 'Compte créé ! Connecte-toi maintenant.';
+  setTimeout(()=> show('login'), 800);
+}
+function doLogin(){
+  let u = document.getElementById('logUser').value.trim();
+  let p = document.getElementById('logPass').value;
+  let users = getUsers();
+  let found = users.find(x => (x.user == u || x.email == u) && x.pass == p);
+  if(found){
+    isLogged = true;
+    localStorage.setItem('logged590','1');
+    localStorage.setItem('currentUser590', found.user);
+    localStorage.setItem('currentRole590', found.role);
+    show('home');
+  } else {
+    document.getElementById('msgLog').innerText = 'Identifiant ou mot de passe incorrect. Crée un compte d\'abord.';
+  }
+}
+function logout(){
+  isLogged = false;
+  localStorage.setItem('logged590','0');
+  show('landing');
+}
+function renderHome(){
+  let total = 0;
+  let fermeHtml = '';
+  PAYS.forEach(p => {
+    let o = p.tirages.filter(t => !isFini(t)).length;
+    total += o;
+    p.tirages.forEach(t => {
+      if(!isFini(t)){
+        fermeHtml += '<div class="f" onclick="openPays(\''+p.id+'\')"><b>'+p.flag+' '+t.n+'</b><p>Auj. '+t.h+':'+(t.m==0?'00':t.m)+' - '+reste(t.h,t.m)+'</p><small>Ferme bientôt</small></div>';
+      }
+    });
+  });
+  document.getElementById('ferme').innerHTML = fermeHtml || '<p>Tous les tirages du jour sont finis, voir Demain.</p>';
+  document.getElementById('totalPays').innerText = total + ' ouverts';
+  document.getElementById('paysGrid').innerHTML = PAYS.map(p => {
+    let o = p.tirages.filter(t => !isFini(t)).length;
+    return '<div class="card" onclick="openPays(\''+p.id+'\')"><div class="flag">'+p.flag+'</div><b>'+p.nom+'</b><p>'+o+' tirage(s) ouvert(s)</p><small>Loto 5/90 - '+p.tirages.length+' tirages / jour</small></div>';
+  }).join('');
+  document.getElementById('resultHome').innerText = resultats.length ? resultats.slice(-2).map(r => r.pays+' '+r.nums).join(' | ') : 'Aucun résultat publié. Ex: BENIN SOIR 18H - 5, 12, 34, 56, 89';
+  document.getElementById('pronoHome').innerText = genNums().join(' - ');
+  document.getElementById('adminPays').innerHTML = PAYS.map(p => '<option value="'+p.nom+'">'+p.nom+'</option>').join('');
+}
+function openPays(id){
+  currentPays = PAYS.find(p => p.id == id);
+  currentTab = 'auj';
+  show('pays');
+  document.getElementById('paysTitle').innerText = currentPays.flag + ' ' + currentPays.nom;
+  renderDraws();
+}
+function setTab(t){
+  currentTab = t;
+  document.getElementById('tabAuj').className = t=='auj' ? 'on' : '';
+  document.getElementById('tabDem').className = t=='dem' ? 'on' : '';
+  renderDraws();
+}
+function renderDraws(){
+  let auj = currentPays.tirages.filter(t => !isFini(t));
+  let dem = currentPays.tirages.filter(t => isFini(t));
+  document.getElementById('cAuj').innerText = auj.length;
+  document.getElementById('cDem').innerText = dem.length;
+  let list = currentTab=='auj' ? auj : dem;
+  if(!list.length){
+    document.getElementById('drawGrid').innerHTML = '<p style="grid-column:1/3;text-align:center;color:#999">Aucun tirage ici. Regarde l\'autre onglet.</p>';
+    return;
+  }
+  document.getElementById('drawGrid').innerHTML = list.map(t => {
+    let label = currentTab=='auj' ? 'Auj. '+t.h+':'+(t.m==0?'00':t.m)+' - '+reste(t.h,t.m) : 'Dem. '+t.h+':'+(t.m==0?'00':t.m)+' - '+reste(t.h,t.m);
+    let btn = currentTab=='auj' ? '<button onclick="openJouer(\''+t.n+'\')">JOUER</button>' : '<button class="off">DEMAIN</button>';
+    return '<div class="draw"><div class="flag">'+currentPays.flag+'</div><b>'+t.n+'</b><p>'+label+'</p><small>Loto 5/90</small>'+btn+'</div>';
+  }).join('');
+}
+function openJouer(nom){
+  currentDraw = nom;
+  show('jouer');
+  document.getElementById('jouerTitle').innerText = currentPays.flag + ' ' + nom + ' - ' + currentPays.nom;
+  selected = [];
+  renderNums();
+  document.getElementById('msg').innerText = '';
+}
+function renderNums(){
+  let h = '';
+  for(let i=1;i<=90;i++){
+    h += '<button class="'+(selected.includes(i)?'sel':'')+'" onclick="toggleNum('+i+')">'+i+'</button>';
+  }
+  document.getElementById('numGrid').innerHTML = h;
+}
+function toggleNum(n){
+  if(selected.includes(n)){
+    selected = selected.filter(x => x !== n);
+  } else if(selected.length < 5){
+    selected.push(n);
+  } else {
+    alert('5 numéros seulement');
+  }
+  renderNums();
+}
+function valider(){
+  if(selected.length !== 5){
+    document.getElementById('msg').innerText = 'Choisis 5 numéros !';
+    return;
+  }
+  let mise = parseInt(document.getElementById('mise').value || '100');
+  if(mise > solde){
+    document.getElementById('msg').innerText = 'Solde insuffisant. Recharge d\'abord.';
+    return;
+  }
+  solde -= mise;
+  updateSolde();
+  let tk = {pays:currentPays.nom, draw:currentDraw, nums:selected.slice(), mise:mise, date:new Date().toLocaleString()};
+  tickets.push(tk);
+  localStorage.setItem('tickets590', JSON.stringify(tickets));
+  document.getElementById('msg').innerText = 'Coupon validé: ' + selected.join(' - ') + ' | Mise: ' + mise + ' F | ' + currentDraw;
+  selected = [];
+  renderNums();
+}
+function renderTickets(){
+  document.getElementById('ticketsList').innerHTML = tickets.length ? tickets.slice().reverse().map(t => '<div class="ticket"><b>'+t.pays+' - '+t.draw+'</b><br>'+t.nums.join(' - ')+'<br><small>Mise: '+t.mise+' F - '+t.date+'</small></div>').join('') : '<p>Aucun ticket pour le moment.</p>';
+}
+function genNums(){
+  let a = [];
+  while(a.length < 5){
+    let n = Math.floor(Math.random()*90)+1;
+    if(!a.includes(n)) a.push(n);
+  }
+  return a.sort((x,y)=>x-y);
+}
+function genProno(){
+  document.getElementById('pronoList').innerText = 'Pronostic: ' + genNums().join(' - ');
+}
+function renderProno(){
+  document.getElementById('pronoList').innerText = 'Pronostic du jour: ' + genNums().join(' - ');
+}
+function renderResultats(){
+  document.getElementById('resultList').innerHTML = resultats.length ? resultats.slice().reverse().map(r => '<div class="ticket"><b>'+r.pays+'</b><br>'+r.nums+'<br><small>'+r.date+'</small></div>').join('') : '<p>Aucun résultat encore. L\'admin va publier.</p>';
+}
 function recharger(){
   let m = parseInt(document.getElementById('montantRecharge').value || '0');
   if(m <= 0){
@@ -205,40 +391,29 @@ function recharger(){
   }
   solde += m;
   updateSolde();
-  document.getElementById('msgSolde').innerText = '✅ Recharge de ' + m + ' F réussie. Solde: ' + solde + ' F';
+  document.getElementById('msgSolde').innerText = 'Recharge de ' + m + ' F réussie. Solde: ' + solde + ' F';
 }
-
 function retirer(){
   let m = parseInt(document.getElementById('montantRetrait').value || '0');
-  if(m > solde){
-    alert('Solde insuffisant');
-    return;
-  }
+  if(m > solde){ alert('Solde insuffisant'); return; }
   solde -= m;
   updateSolde();
   alert('Demande de retrait ' + m + ' F envoyée.');
 }
-
 function saveProfil(){
   localStorage.setItem('nom590', document.getElementById('nomProfil').value);
   localStorage.setItem('tel590', document.getElementById('telProfil').value);
-  document.getElementById('msgProfil').innerText = '✅ Profil sauvegardé';
+  document.getElementById('msgProfil').innerText = 'Profil sauvegardé';
 }
-
 function openAdmin(){
   let c = document.getElementById('codeAdmin').value;
   if(c == '590590'){
     show('admin');
-    document.getElementById('adminTickets').innerHTML = tickets.length ?
-      tickets.slice().reverse().map(t =>
-        `<div class="ticket"><b>${t.pays} - ${t.draw}</b> ${t.nums.join(' - ')} - ${t.mise} F</div>`
-      ).join('') :
-      'Aucun ticket';
+    document.getElementById('adminTickets').innerHTML = tickets.length ? tickets.slice().reverse().map(t => '<div class="ticket"><b>'+t.pays+' - '+t.draw+'</b> '+t.nums.join(' - ')+' - '+t.mise+' F</div>').join('') : 'Aucun ticket';
   } else {
     document.getElementById('msgAdminCode').innerText = 'Code incorrect.';
   }
 }
-
 function publierResult(){
   let pays = document.getElementById('adminPays').value;
   let nums = document.getElementById('adminResult').value;
@@ -248,9 +423,8 @@ function publierResult(){
   }
   resultats.push({pays:pays, nums:nums, date:new Date().toLocaleString()});
   localStorage.setItem('resultats590', JSON.stringify(resultats));
-  document.getElementById('msgAdmin').innerText = '✅ Résultat publié: ' + pays + ' - ' + nums;
+  document.getElementById('msgAdmin').innerText = 'Résultat publié: ' + pays + ' - ' + nums;
 }
-
 updateSolde();
 document.getElementById('nomProfil').value = localStorage.getItem('nom590') || '';
 document.getElementById('telProfil').value = localStorage.getItem('tel590') || '';
