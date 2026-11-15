@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LOTO 590 - TOUT EN UN</title>
-<style>body{margin:0;background:#0f172a;color:#fff;font-family:Arial}header{background:#facc15;color:#000;padding:14px;text-align:center;font-weight:900;font-size:22px}.card{background:#1e293b;margin:12px;border-radius:14px;padding:14px}.btnJaune{width:100%;padding:13px;border:none;border-radius:10px;background:#facc15;font-weight:900;margin-top:10px}input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;margin-top:8px;color:#000}.numGrid{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;margin:10px 0}.numBtn{padding:10px 0;border:1px solid #ddd;border-radius:8px;background:#fff;font-weight:bold}.numBtn.sel{background:#facc15}.paysGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.paysBtn{padding:12px;border-radius:10px;border:none;background:#334155;color:#fff;font-weight:bold}.tirageGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.tirageBtn{padding:14px;border-radius:10px;border:none;background:#facc15;font-weight:900}.jeuBtn{padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;font-weight:bold}.jeuBtn.sel{background:#facc15;border-color:#facc15}.tabBtn{flex:1;padding:11px;border:none;border-radius:20px;background:#334155;color:#fff;font-weight:bold}.tabBtn.actif{background:#facc15;color:#000}.box{background:#fff;color:#111;border-radius:12px;padding:12px;margin-top:10px}</style>
+<style>body{margin:0;background:#0f172a;color:#fff;font-family:Arial}header{background:#facc15;color:#000;padding:14px;text-align:center;font-weight:900;font-size:22px}.card{background:#1e293b;margin:12px;border-radius:14px;padding:14px}.btnJaune{width:100%;padding:13px;border:none;border-radius:10px;background:#facc15;font-weight:900;margin-top:10px}input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;margin-top:8px;color:#000}.numGrid{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;margin:10px 0}.numBtn{padding:10px 0;border:1px solid #ddd;border-radius:8px;background:#fff;font-weight:bold}.numBtn.sel{background:#facc15}.paysGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.paysBtn{padding:12px;border-radius:10px;border:none;background:#334155;color:#fff;font-weight:bold}.tirageGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.tirageBtn{padding:14px;border-radius:10px;border:none;background:#facc15;font-weight:900}.jeuBtn{padding:10px 14px;border-radius:20px;border:2px solid #ddd;background:#fff;font-weight:bold}.jeuBtn.sel{background:#facc15;border-color:#facc15}.modeBtn{flex:1;padding:14px;border:3px solid #ddd;border-radius:12px;background:#fff;font-weight:900;color:#000}.modeBtn.sel{background:#facc15;border-color:#facc15}.tabBtn{flex:1;padding:11px;border:2px solid #ddd;border-radius:20px;background:#334155;color:#fff;font-weight:bold}.tabBtn.sel{background:#facc15;color:#000;border-color:#facc15}.box{background:#fff;color:#111;border-radius:12px;padding:12px;margin-top:10px}</style>
 </head><body>
-<header>⭐ LOTO 590 - TOUT EN UN ⭐<div style="font-size:12px;font-weight:normal;">CLIENT + REVENDEUR + ADMIN sur le même téléphone = Les tickets se voient tout de suite</div></header>
+<header>⭐ LOTO 590 - TOUT EN UN ⭐<div style="font-size:12px;font-weight:normal;">CLIENT + REVENDEUR + ADMIN - Même téléphone, même site</div></header>
 <div class="card" style="text-align:center;">
-<h2 style="margin:0;">👤 TU ES QUI ?</h2>
+<h2 style="margin:0;">👤 TU ES QUI ? CLIQUE, LE JAUNE BOUGE</h2>
 <div style="display:flex;gap:8px;margin-top:10px;">
-<button id="modeClientBtn" onclick="choisirMode('CLIENT')" style="flex:1;padding:14px;border:none;border-radius:12px;background:#facc15;font-weight:900;">🎲 CLIENT<br><span style="font-size:11px;">Je joue</span></button>
-<button id="modeRevBtn" onclick="choisirMode('VENDEUR')" style="flex:1;padding:14px;border:none;border-radius:12px;background:#fff;font-weight:900;">👥 REVENDEUR<br><span style="font-size:11px;">Je recharge</span></button>
-<button id="modeAdminBtn" onclick="choisirMode('ADMIN')" style="flex:1;padding:14px;border:none;border-radius:12px;background:#fff;font-weight:900;">🔐 ADMIN<br><span style="font-size:11px;">Je gère tout</span></button>
+<button class="modeBtn sel" data-mode="CLIENT" onclick="choisirMode('CLIENT')">🎲 CLIENT<br><span style="font-size:11px;">Je joue</span></button>
+<button class="modeBtn" data-mode="VENDEUR" onclick="choisirMode('VENDEUR')">👥 REVENDEUR<br><span style="font-size:11px;">Je recharge</span></button>
+<button class="modeBtn" data-mode="ADMIN" onclick="choisirMode('ADMIN')">🔐 ADMIN<br><span style="font-size:11px;">Je gère tout</span></button>
 </div>
-<p id="modeTexte" style="font-size:13px;color:#cbd5e1;">Mode : CLIENT - Tu joues, tes tickets vont direct chez l'Admin sur ce même téléphone.</p>
+<p id="modeTexte" style="font-size:13px;color:#cbd5e1;">Mode : CLIENT - Tu joues, tes tickets vont direct chez l'Admin.</p>
 </div>
 <div class="card" id="compteSection">
 <h2>👤 MON COMPTE</h2>
@@ -62,7 +62,7 @@
 <b id="titreJeu">Choisis tes numéros</b>
 <div style="background:#fef3c7;padding:10px;border-radius:10px;font-size:13px;margin-top:8px;"><b>NAP :</b> EXACTEMENT 1,2,3,4,5 numéros.<br><b>PERM P2/P3/P4/P5 :</b> Jusqu'à 10 numéros, tu veux 2,3,4,5 dedans. Ex : 8 numéros + P2 = 2 dans tes 8.</div>
 <p id="titreChoix" style="font-weight:bold;">1. CHOISIS TES NUMÉROS POUR NAP 2</p>
-<p><b>2. QUEL JEU ?</b></p>
+<p><b>2. QUEL JEU ? CLIQUE, LE JAUNE BOUGE</b></p>
 <div style="display:flex;gap:6px;flex-wrap:wrap;">
 <button class="jeuBtn sel" data-jeu="NAP2" onclick="choisirJeu('NAP2')">NAP 2</button>
 <button class="jeuBtn" data-jeu="NAP1" onclick="choisirJeu('NAP1')">NAP 1</button>
@@ -88,12 +88,12 @@
 <input id="caisseInput" type="number" value="100000">
 <button class="btnJaune" onclick="ajouterCaisseTest()">AJOUTER A MA CAISSE</button>
 </div>
-<div class="card"><div style="display:flex;gap:6px;flex-wrap:wrap;">
-<button class="tabBtn actif" id="tab1" onclick="showTab('revendeurs')">👥 REVENDEURS</button>
-<button class="tabBtn" id="tab2" onclick="showTab('recharge')">💰 RECHARGER</button>
-<button class="tabBtn" id="tab3" onclick="showTab('retrait')">🏦 RETRAIT</button>
-<button class="tabBtn" id="tab4" onclick="showTab('resultats')">🎲 RÉSULTATS</button>
-<button class="tabBtn" id="tab5" onclick="showTab('tickets')">🎫 TICKETS</button>
+<div class="card"><h2>👇 CLIQUE UN ONGLET, ÇA ENTRE</h2><div style="display:flex;gap:6px;flex-wrap:wrap;">
+<button class="tabBtn sel" data-tab="revendeurs" onclick="showTab('revendeurs')">👥 REVENDEURS</button>
+<button class="tabBtn" data-tab="recharge" onclick="showTab('recharge')">💰 RECHARGER</button>
+<button class="tabBtn" data-tab="retrait" onclick="showTab('retrait')">🏦 RETRAIT</button>
+<button class="tabBtn" data-tab="resultats" onclick="showTab('resultats')">🎲 RÉSULTATS</button>
+<button class="tabBtn" data-tab="tickets" onclick="showTab('tickets')">🎫 TICKETS</button>
 </div></div>
 <div class="card" id="boxRevendeurs">
 <h2>👥 AJOUTER UN REVENDEUR</h2>
@@ -119,13 +119,35 @@
 </div>
 <div class="card" id="boxTickets" style="display:none;">
 <h2>🎫 TOUS LES TICKETS - SUR CE MÊME TÉLÉPHONE</h2>
-<p style="font-size:13px;background:#dcfce7;color:#111;padding:10px;border-radius:10px;">✅ Maintenant CLIENT et ADMIN sont sur le même site, donc les tickets joués par le CLIENT apparaissent ici tout de suite, sans copier, sans WhatsApp.</p>
+<p style="font-size:13px;background:#dcfce7;color:#111;padding:10px;border-radius:10px;">✅ CLIENT et ADMIN sur le même site, les tickets joués apparaissent ici tout de suite.</p>
 <div id="listeTousTickets"></div>
 </div>
 </div><script>
 var modeCompte='ins';var modeActuel='CLIENT';var paysActuel='BENIN';var tirageActuel='19H';
 var CAISSE=0;try{CAISSE=parseInt(localStorage.getItem('caisse_test')||'0',10)||0}catch(e){CAISSE=0}
-function choisirMode(m){modeActuel=m;localStorage.setItem('loto_type',m==='VENDEUR'?'VENDEUR':m);document.getElementById('modeClientBtn').style.background=m==='CLIENT'?'#facc15':'#fff';document.getElementById('modeRevBtn').style.background=m==='VENDEUR'?'#facc15':'#fff';document.getElementById('modeAdminBtn').style.background=m==='ADMIN'?'#facc15':'#fff';document.getElementById('modeTexte').textContent=m==='ADMIN'?'Mode : ADMIN - Tu vois tous les tickets, tu publies les résultats, tu paies les retraits.':'Mode : '+m+' - Tu joues, tes tickets vont direct chez l Admin sur ce même téléphone.';if(m==='ADMIN'){document.getElementById('zoneClient').style.display='none';document.getElementById('zoneAdmin').style.display='block';document.getElementById('compteSection').style.display='none';document.getElementById('monEspace').style.display='none';afficherToutAdmin();}else{document.getElementById('zoneClient').style.display='block';document.getElementById('zoneAdmin').style.display='none';document.getElementById('compteSection').style.display='block';}window.scrollTo(0,0);}
+function choisirMode(m){
+modeActuel=m;
+try{localStorage.setItem('loto_type',m);}catch(e){}
+var btns=document.querySelectorAll('.modeBtn');
+btns.forEach(function(b){if(b.getAttribute('data-mode')===m){b.classList.add('sel');}else{b.classList.remove('sel');}});
+document.getElementById('modeTexte').textContent=m==='ADMIN'?'Mode : ADMIN - Tu vois tous les tickets, tu publies les résultats.':m==='VENDEUR'?'Mode : REVENDEUR - Tu recharges les clients, tu ne joues PAS.':'Mode : CLIENT - Tu joues, tes tickets vont direct chez l Admin.';
+if(m==='ADMIN'){document.getElementById('zoneClient').style.display='none';document.getElementById('zoneAdmin').style.display='block';showTab('tickets');afficherToutAdmin();}
+else{document.getElementById('zoneClient').style.display='block';document.getElementById('zoneAdmin').style.display='none';}
+document.getElementById('texteRevendeur').style.display=m==='VENDEUR'?'block':'none';
+window.scrollTo(0,0);
+}
+function showTab(t){
+var boxes=['revendeurs','recharge','retrait','resultats','tickets'];
+boxes.forEach(function(x){
+var el=document.getElementById('box'+x.charAt(0).toUpperCase()+x.slice(1));
+if(el){el.style.display=(x===t?'block':'none');}
+});
+var btns=document.querySelectorAll('.tabBtn');
+btns.forEach(function(b){if(b.getAttribute('data-tab')===t){b.classList.add('sel');}else{b.classList.remove('sel');}});
+if(t==='tickets'||t==='resultats'){afficherToutAdmin();}
+var z=document.getElementById('box'+t.charAt(0).toUpperCase()+t.slice(1));
+if(z){z.scrollIntoView();}
+}
 function getSoldeJeu(){return parseInt(localStorage.getItem('loto_solde_jeu')||localStorage.getItem('loto_solde')||'0',10)||0}
 function getSoldeGain(){return parseInt(localStorage.getItem('loto_solde_gain')||'0',10)||0}
 function majSoldes(){var j=getSoldeJeu();var g=getSoldeGain();if(document.getElementById('soldeJeuAffiche'))document.getElementById('soldeJeuAffiche').textContent=j+' FCFA';if(document.getElementById('soldeGainAffiche'))document.getElementById('soldeGainAffiche').textContent=g+' FCFA';if(document.getElementById('gainRetraitAffiche'))document.getElementById('gainRetraitAffiche').textContent=g+' FCFA';if(document.getElementById('caisseAffiche'))document.getElementById('caisseAffiche').textContent=CAISSE+'F';}
@@ -160,8 +182,7 @@ function majTexteJeu(){document.getElementById('texteJeuChoisi').textContent='Ch
 function dessinerNumeros(){var h='';for(var i=1;i<=90;i++){h+='<button class="numBtn'+(sel.includes(i)?' sel':'')+'" onclick="toggleNum('+i+')">'+i+'</button>';}document.getElementById('numGrid').innerHTML=h;majTexteJeu();}
 function ouvrirJeu(nom){tirageActuel=nom;document.getElementById('jeuZone').style.display='block';document.getElementById('titreJeu').textContent=paysActuel+' - Tirage '+nom;sel=[];choisirJeu('NAP2');document.getElementById('jeuZone').scrollIntoView();}
 function toggleNum(n){var idx=sel.indexOf(n);if(idx>=0){sel.splice(idx,1);}else{if(sel.length>=10){alert('Plafond 10');return;}sel.push(n);}dessinerNumeros();}
-function validerJeu(){var mn=getMinJeu(jeuChoisi);if(sel.length<mn){alert('Pour '+jeuChoisi+' il faut au moins '+mn);return;}if(jeuChoisi.indexOf('NAP')===0 && sel.length!==mn){alert('Pour '+jeuChoisi+' il faut EXACTEMENT '+mn);return;}var mise=parseInt(document.getElementById('miseInput').value||'0');if(!mise||mise<100){alert('Mise minimum 100');return;}var j=getSoldeJeu();if(mise>j){alert('SOLDE JEU insuffisant : '+j+' - Recharge d abord avec un CODE Admin');return;}j-=mise;localStorage.setItem('loto_solde_jeu',''+j);localStorage.setItem('loto_solde',''+j);majSoldes();var code='LOTO'+Math.floor(100000+Math.random()*899999);var tickets=getTickets();var numero=String(tickets.length+1).padStart(3,'0');var maintenant=new Date();var ticket={numero:numero,code:code,pays:paysActuel,tirage:tirageActuel,jeu:jeuChoisi,nums:sel.slice(),mise:mise,statut:'EN ATTENTE',gain:0,gmail:localStorage.getItem('loto_email')||'',date:maintenant.toLocaleString(),dateISO:maintenant.toISOString()};tickets.unshift(ticket);setTickets(tickets);document.getElementById('ticketZone').innerHTML=htmlTicket(ticket);alert('Ticket validé !\nN° '+numero+' - '+code+'\nIl est déjà chez l Admin sur ce même téléphone. Va en haut, appuie ADMIN -> TICKETS, tu vas le voir.');sel=[];dessinerNumeros();afficherMesTickets();}
-function showTab(t){['revendeurs','recharge','retrait','resultats','tickets'].forEach(function(x){document.getElementById('box'+x.charAt(0).toUpperCase()+x.slice(1)).style.display=x===t?'block':'none';var ids={revendeurs:1,recharge:2,retrait:3,resultats:4,tickets:5};document.getElementById('tab'+ids[x]).classList.toggle('actif',x===t);});if(t==='tickets'||t==='resultats')afficherToutAdmin();}
+function validerJeu(){var mn=getMinJeu(jeuChoisi);if(sel.length<mn){alert('Pour '+jeuChoisi+' il faut au moins '+mn);return;}if(jeuChoisi.indexOf('NAP')===0 && sel.length!==mn){alert('Pour '+jeuChoisi+' il faut EXACTEMENT '+mn);return;}var mise=parseInt(document.getElementById('miseInput').value||'0');if(!mise||mise<100){alert('Mise minimum 100');return;}var j=getSoldeJeu();if(mise>j){alert('SOLDE JEU insuffisant : '+j+' - Recharge d abord avec un CODE Admin');return;}j-=mise;localStorage.setItem('loto_solde_jeu',''+j);localStorage.setItem('loto_solde',''+j);majSoldes();var code='LOTO'+Math.floor(100000+Math.random()*899999);var tickets=getTickets();var numero=String(tickets.length+1).padStart(3,'0');var maintenant=new Date();var ticket={numero:numero,code:code,pays:paysActuel,tirage:tirageActuel,jeu:jeuChoisi,nums:sel.slice(),mise:mise,statut:'EN ATTENTE',gain:0,gmail:localStorage.getItem('loto_email')||'',date:maintenant.toLocaleString(),dateISO:maintenant.toISOString()};tickets.unshift(ticket);setTickets(tickets);document.getElementById('ticketZone').innerHTML=htmlTicket(ticket);alert('Ticket validé ! N° '+numero+' - '+code);sel=[];dessinerNumeros();afficherMesTickets();}
 function ajouterCaisseTest(){var m=parseInt(document.getElementById('caisseInput').value||'0',10);if(!m||m<=0){alert('Mets un montant');return;}CAISSE+=m;try{localStorage.setItem('caisse_test',String(CAISSE))}catch(e){}majSoldes();alert('✅ CAISSE : '+CAISSE+'F');afficherToutAdmin();}
 function ajouterRevendeur(){var nom=document.getElementById('nomRev').value;var gmail=document.getElementById('gmailRev').value;var tel=document.getElementById('telRev').value;var pass=document.getElementById('passRev').value;if(!nom||!gmail||!tel){alert('Mets Nom + Gmail + Téléphone');return;}var l=getList('admin_revendeurs');l.unshift({nom:nom,gmail:gmail,tel:tel,pass:pass||'1234',date:new Date().toLocaleString()});setList('admin_revendeurs',l);alert('✅ REVENDEUR AJOUTÉ');afficherToutAdmin();}
 function supprimerRevendeur(i){if(!confirm('Supprimer ?'))return;var l=getList('admin_revendeurs');l.splice(i,1);setList('admin_revendeurs',l);afficherToutAdmin();}
@@ -171,4 +192,5 @@ function validerRetraitAdmin(){var g=document.getElementById('gmailRetrait').val
 function getMult(jeu){if(jeu==='NAP1')return 6;if(jeu==='NAP2'||jeu==='P2')return 300;if(jeu==='NAP3'||jeu==='P3')return 3000;if(jeu==='NAP4'||jeu==='P4')return 8000;if(jeu==='NAP5'||jeu==='P5')return 50000;return 0;}
 function estGagnant(ticket,gagnants){var inter=ticket.nums.filter(function(n){return gagnants.indexOf(n)>=0});if(ticket.jeu.indexOf('NAP')===0){return inter.length>=parseInt(ticket.jeu.replace('NAP',''),10);}if(ticket.jeu.indexOf('P')===0){return inter.length>=parseInt(ticket.jeu.replace('P',''),10);}return false;}
 function publierResultat(){var t=document.getElementById('tirageNom').value;var n=document.getElementById('numsGagnants').value;if(!t||!n){alert('Mets tirage + 5 numéros');return;}var gagnants=n.split('-').map(function(x){return parseInt(x.trim(),10)}).filter(function(x){return !isNaN(x)});if(gagnants.length!==5){alert('Il faut EXACTEMENT 5 numéros');return;}var tickets=getTickets();var total=0;var gagnes=0;var perdus=0;var totalGain=0;var totalMise=0;var details='';tickets.forEach(function(tk){if(tk.statut!=='EN ATTENTE')return;total++;totalMise+=tk.mise;if(estGagnant(tk,gagnants)){var gain=tk.mise*getMult(tk.jeu);tk.statut='GAGNÉ';tk.gain=gain;gagnes++;totalGain+=gain;details+=htmlTicket(tk);}else{tk.statut='PERDU';tk.gain=0;perdus++;details+=htmlTicket(tk);}});setTickets(tickets);var l=getList('admin_resultats');l.unshift({tirage:t,nums:n,total:total,gagnes:gagnes,perdus:perdus,totalGain:totalGain,totalMise:totalMise,date:new Date().toLocaleString()});setList('admin_resultats',l);if(total===0){document.getElementById('statsResultat').innerHTML='<div style="background:#fef3c7;color:#111;padding:14px;border-radius:12px;margin-top:10px;text-align:center;"><b>⚠️ Aucun ticket en attente.</b><br>Joue d abord un ticket en mode CLIENT.</div>';}else{document.getElementById('statsResultat').innerHTML='<div style="background:#fff;color:#111;padding:14px;border-radius:12px;margin-top:10px;"><h3 style="text-align:center;margin:0;">📊 RÉSULTAT - '+t+' = '+n+'</h3><div style="display:flex;gap:8px;margin-top:10px;text-align:center;"><div style="flex:1;background:#fef3c7;border-radius:10px;padding:10px;"><div>🎫 JOUÉS</div><div style="font-size:26px;font-weight:900;">'+total+'</div></div><div style="flex:1;background:#dcfce7;border-radius:10px;padding:10px;"><div>✅ GAGNÉS</div><div style="font-size:26px;font-weight:900;color:#16a34a;">'+gagnes+'</div></div><div style="flex:1;background:#fee2e2;border-radius:10px;padding:10px;"><div>❌ PERDUS</div><div style="font-size:26px;font-weight:900;color:#dc2626;">'+perdus+'</div></div></div><div style="text-align:center;margin-top:10px;">Mises : <b>'+totalMise+' FCFA</b> - Gains à payer : <b>'+totalGain+' FCFA</b></div></div>'+details;}alert('✅ RÉSULTAT PUBLIÉ !\nJoués : '+total+'\nGagnés : '+gagnes+'\nPerdus : '+perdus+'\nGains : '+totalGain+' FCFA');afficherToutAdmin();}
-function publierDoubleChance(){var t=document.getElementById('tirageNomDouble').value;var n=document.getElementById('numsGagnantsDouble').value;if(!t||!n){alert('Mets Double Chance + numéros');return;}var l=getList('admin_double');l.unshift({tirage:t,nums:n,date:new Date().toLocaleString()});setList('admin_double',l);alert('✅ DOUBLE CHANCE publié');afficherToutAdmin(
+function publierDoubleChance(){var t=document.getElementById('tirageNomDouble').value;var n=document.getElementById('numsGagnantsDouble').value;if(!t||!n){alert('Mets Double Chance + numéros');return;}var l=getList('admin_double');l.unshift({tirage:t,nums:n,date:new Date().toLocaleString()});setList('admin_double',l);alert('✅ DOUBLE CHANCE publié');afficherToutAdmin();}
+function afficherToutAdmin(){majSoldes();var h='';getList('ad
