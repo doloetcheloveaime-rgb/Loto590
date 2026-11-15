@@ -1,287 +1,119 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BENIN LOTO 590</title><style>*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#0f172a;color:#fff;padding-bottom:80px}header{background:linear-gradient(90deg,#facc15,#f97316);color:#000;padding:14px;text-align:center;font-weight:900;font-size:22px;position:sticky;top:0;z-index:10}.card{background:#1e293b;margin:12px;padding:14px;border-radius:14px}button{cursor:pointer}input,select{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:none;font-size:16px}.btn{width:100%;padding:13px;border:none;border-radius:10px;font-weight:900;margin:6px 0;font-size:16px}.vert{background:#16a34a;color:#fff}.jaune{background:#facc15}.rouge{background:#dc2626;color:#fff}.noir{background:#000;color:#facc15}.gris{background:#334155;color:#fff}.paysGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.numGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.num{padding:13px 0;text-align:center;background:#334155;border-radius:10px;font-weight:900;font-size:18px}.num.sel{background:#facc15;color:#000}.tirageBtn{padding:12px;border:none;border-radius:10px;background:#fff;color:#000;font-weight:900;margin:5px;width:48%}.ticket{background:#fff;color:#000;padding:10px;border-radius:10px;margin:8px 0}.profilCache{display:none}.profilCache.ouvert{display:block}</style></head><body>
-<header>🎲 BENIN LOTO 590</header>
-
-<div id="menuChoix" class="card" style="text-align:center">
-<h2>Bienvenue 👋</h2>
-<button class="btn jaune" onclick="choisirMode('client')">🎲 JE SUIS CLIENT</button>
-<button class="btn noir" onclick="choisirMode('admin')">👑 ADMIN</button>
-<button class="btn gris" onclick="choisirMode('revendeur')">🏪 REVENDEUR</button>
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NET LOTO 590</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#0b1220;color:#fff}
+header{background:#facc15;color:#000;padding:12px;text-align:center;font-weight:900;font-size:22px;position:relative}
+#adBtn{position:absolute;right:8px;top:8px;background:#000;color:#facc15;border:0;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:900}
+.box{padding:14px}.card{background:#16213a;padding:14px;border-radius:14px;margin-bottom:12px}
+button{width:100%;padding:13px;border:0;border-radius:12px;font-weight:900;margin-top:8px;font-size:15px}
+.b1{background:#facc15;color:#000}.b2{background:#22c55e;color:#fff}.b3{background:#3b82f6;color:#fff}
+.b4{background:#ef4444;color:#fff}.b5{background:#a855f7;color:#fff}
+input,select,textarea{width:100%;padding:11px;border-radius:10px;border:0;margin-top:7px;color:#000}
+.hide{display:none}.num{display:inline-block;width:42px;height:42px;line-height:42px;text-align:center;background:#fff;color:#000;border-radius:50%;margin:3px;font-weight:900}
+.sel{background:#facc15!important}.ticket{background:#fff;color:#000;padding:10px;border-radius:12px;margin-top:8px}
+.small{font-size:12px;opacity:.8}
+</style></head><body>
+<header>NET LOTO 590<button id="adBtn" onclick="ouvrirAD()">AD</button></header>
+<div class="box">
+<div id="accueil" class="card">
+<h2>Bienvenue sur NET LOTO 590</h2>
+<p class="small">Choisis ton profil pour continuer</p>
+<button class="b1" onclick="aller('client')">🎟️ JE SUIS CLIENT</button>
+<button class="b2" onclick="aller('revendeur')">🤝 JE SUIS REVENDEUR</button>
+<button class="b3" onclick="aller('reclamation')">📩 RÉCLAMATION</button>
+<p class="small" style="text-align:center;margin-top:10px">NET LOTO 590 - Joue responsable</p>
+</div>
+<!-- FIN PARTIE 1 --><div id="client" class="card hide">
+<h3>🎟️ ESPACE CLIENT</h3>
+<p class="small">Choisis ton pays</p>
+<button class="b1" onclick="choisirPays('BENIN')">🇧🇯 BENIN</button>
+<button class="b1" onclick="choisirPays('TOGO')">🇹🇬 TOGO</button>
+<button class="b1" onclick="choisirPays('GHANA')">🇬🇭 GHANA</button>
+<button class="b1" onclick="choisirPays('NIGERIA')">🇳🇬 NIGERIA</button>
+<div id="tirages"></div>
+<div id="jeu" class="hide">
+<h4 id="titreTirage"></h4>
+<div id="nums"></div>
+<select id="typeJeu"><option value="NAP">NAP</option><option value="PERMUTATION">PERMUTATION</option></select>
+<input id="mise" type="number" placeholder="Ta mise ex: 500">
+<button class="b2" onclick="validerTicket()">✅ VALIDER MON TICKET</button>
+</div>
+<button class="b4" onclick="aller('accueil')">⬅️ RETOUR</button>
 </div>
 
-<div id="compteSection" class="card" style="display:none">
-<h3 id="titreCompte">Connexion Client</h3>
-<input id="gmail" placeholder="Ton Gmail">
-<input id="mdp" type="password" placeholder="Mot de passe">
-<button class="btn vert" onclick="connexionClient()">SE CONNECTER</button>
-<button class="btn jaune" onclick="inscriptionClient()">CRÉER MON COMPTE</button>
-<button class="btn gris" onclick="retourMenu()">⬅ RETOUR</button>
-<div id="msgCompte"></div>
+<div id="mesTickets" class="card hide">
+<h3>🎫 MES TICKETS</h3>
+<div id="listeTickets"><p class="small">Aucun ticket pour le moment</p></div>
+<button class="b4" onclick="aller('accueil')">⬅️ RETOUR</button>
+</div>
+<!-- FIN PARTIE 2 --><div id="revendeur" class="card hide">
+<h3>🤝 ESPACE REVENDEUR</h3>
+<input id="codeRev" placeholder="Ton code revendeur">
+<button class="b2" onclick="entrerRevendeur()">ENTRER</button>
+<div id="zoneRev" class="hide">
+<p class="small">Bienvenue Revendeur. Tu peux vendre et voir tes ventes.</p>
+<div id="ventesRev"></div>
+</div>
+<button class="b4" onclick="aller('accueil')">⬅️ RETOUR</button>
 </div>
 
-<div id="zoneClient" style="display:none">
-<div class="card" style="background:#f97316;color:#000">
-<button class="btn noir" onclick="toggleProfil()">👤 MON PROFIL - Cliquer pour voir</button>
-<div id="profilClient" class="profilCache" style="background:#fff;color:#000;padding:10px;border-radius:10px;margin-top:8px">
-<b>📧 Gmail:</b> <span id="profilGmail"></span><br>
-<b>👤 Nom:</b> <span id="profilNom">Client LOTO 590</span><br>
-<b>📱 Téléphone:</b> <span id="profilTel">-</span><br>
-<b>🆔 ID:</b> <span id="profilId"></span>
-</div>
-<div style="display:flex;gap:8px;margin-top:10px"><div style="flex:1;background:#fff;color:#000;padding:10px;border-radius:10px;text-align:center">🎲 SOLDE JEU<br><b id="soldeJeu">0 FCFA</b></div><div style="flex:1;background:#fff;color:#000;padding:10px;border-radius:10px;text-align:center">🏆 SOLDE GAIN<br><b id="soldeGain">0 FCFA</b></div></div>
-<button class="btn vert" onclick="ouvrirRecharge()">💰 RECHARGER - J'AI UN CODE</button>
-<button class="btn noir" onclick="ouvrirRetrait()">🏦 RETIRER MON GAIN - <span id="gainBtn">0</span> FCFA</button>
-<button class="btn rouge" onclick="deconnecter()">🚪 DÉCONNEXION</button>
+<div id="reclamation" class="card hide">
+<h3>📩 RÉCLAMATION</h3>
+<p class="small">Tu as validé un coupon et tu n'as pas reçu tes gains ? Écris ici.</p>
+<input id="nomRec" placeholder="Ton nom">
+<input id="telRec" placeholder="Ton numéro / WhatsApp">
+<input id="codeTicketRec" placeholder="Code du ticket">
+<textarea id="msgRec" placeholder="Explique ton problème..."></textarea>
+<button class="b1" onclick="envoyerReclamation()">📤 ENVOYER MA RÉCLAMATION</button>
+<p id="okRec" class="small"></p>
+<button class="b4" onclick="aller('accueil')">⬅️ RETOUR</button>
 </div>
 
-<div class="card"><h2>🌍 CHOISIS TON PAYS</h2><div class="paysGrid" id="paysGrid"></div>
-<div id="tiragesPaysSection" style="display:none;margin-top:12px"><h3 id="titrePays"></h3><div id="tiragesPaysGrid"></div><button class="btn gris" onclick="retourPays()">⬅ RETOUR AUX PAYS</button></div>
+<div id="loginAD" class="card hide">
+<h3>🔐 AD - ADMINISTRATION</h3>
+<input id="codeAD" type="password" placeholder="Code Admin">
+<button class="b1" onclick="verifierAD()">ENTRER</button>
+<button class="b4" onclick="aller('accueil')">⬅️ RETOUR</button>
+</div>
+<!-- FIN PARTIE 3 --><div id="admin" class="card hide">
+<h3>👑 ADMINISTRATION - NET LOTO 590</h3>
+<button class="b1" onclick="voirOnglet('adminTickets')">🎫 TOUS LES TICKETS</button>
+<button class="b5" onclick="voirOnglet('adminRec')">📩 RÉCLAMATIONS <span id="nbRec">0</span></button>
+<button class="b2" onclick="voirOnglet('adminResult')">🏆 RÉSULTATS</button>
+<div id="adminTickets" style="margin-top:10px"></div>
+<div id="adminRec" class="hide" style="margin-top:10px"></div>
+<div id="adminResult" class="hide" style="margin-top:10px">
+<input id="resTirage" placeholder="Ex: BENIN 11H">
+<input id="resNums" placeholder="Numéros gagnants ex: 12-45-78">
+<button class="b2" onclick="publierResultat()">PUBLIER RÉSULTAT</button>
+<div id="listeResultats"></div>
+</div>
+<button class="b4" onclick="aller('accueil')">⬅️ QUITTER ADMIN</button>
 </div>
 
-<div class="card" id="cardJouer" style="display:none"><h2>🎲 JOUER - <span id="tirageChoisi"></span></h2>
-<div style="display:flex;gap:6px"><button class="btn jaune" onclick="setType('NAP')">NAP</button><button class="btn gris" onclick="setType('PERMUTATION')">PERMUTATION</button><button class="btn gris" onclick="setType('DOUBLE')">DOUBLE</button></div>
-<div class="numGrid" id="numGrid"></div>
-<p>Choisis : <b id="choixTxt">-</b></p>
-<input id="mise" type="number" placeholder="Mise FCFA - Ex: 100">
-<button class="btn vert" onclick="validerTicket()">✅ VALIDER MON TICKET</button>
-<div id="msgJeu"></div>
-</div>
-
-<div class="card"><h2>🎫 MES TICKETS</h2><div id="mesTickets"></div></div>
-</div>
-<!-- FIN PARTIE 1 --><div id="zoneAdmin" style="display:none">
-<div class="card" style="background:#facc15;color:#000"><h2>👑 ADMINISTRATION</h2>
-<p><b>Admin :</b> beninloto590@gmail.com</p>
-<div style="display:flex;gap:8px"><div style="flex:1;background:#fff;padding:10px;border-radius:10px;text-align:center">💰 Total Rechargé<br><b id="adminTotal">0 FCFA</b></div><div style="flex:1;background:#fff;padding:10px;border-radius:10px;text-align:center">🎫 Total Tickets<br><b id="adminTickets">0</b></div></div>
-<button class="btn vert" onclick="creerCode()">+ CRÉER UN CODE RECHARGE</button>
-<input id="montantCode" type="number" placeholder="Montant du code - Ex: 1000">
-<div id="listeCodes"></div>
-<h3>👥 Clients inscrits</h3><div id="listeClients"></div>
-<button class="btn rouge" onclick="deconnecter()">🚪 DÉCONNEXION</button>
+<div class="card">
+<button class="b1" onclick="aller('mesTickets')">🎫 VOIR MES TICKETS</button>
 </div>
 </div>
-
-<div id="zoneRevendeur" style="display:none">
-<div class="card"><h2>🏪 REVENDEUR</h2>
-<input id="revGmail" placeholder="Gmail Revendeur">
-<input id="revMdp" type="password" placeholder="Mot de passe">
-<button class="btn vert" onclick="connexionRevendeur()">SE CONNECTER REVENDEUR</button>
-<button class="btn jaune" onclick="inscriptionRevendeur()">CRÉER COMPTE REVENDEUR</button>
-<div id="revZone" style="display:none">
-<h3>Solde Revendeur : <span id="soldeRev">0 FCFA</span></h3>
-<button class="btn vert" onclick="revendreCode()">💰 VENDRE UN CODE</button>
-<div id="revCodes"></div>
-<button class="btn rouge" onclick="deconnecter()">🚪 DÉCONNEXION</button>
-</div>
-</div>
-</div>
-
-<div id="rechargeSection" class="card" style="display:none">
-<h2>💰 RECHARGER</h2>
-<input id="codeRecharge" placeholder="Entre ton code - Ex: LOTO-1234">
-<button class="btn vert" onclick="validerCode()">VALIDER LE CODE</button>
-<button class="btn gris" onclick="fermerRecharge()">⬅ RETOUR</button>
-<div id="msgRecharge"></div>
-</div>
-
-<div id="retraitSection" class="card" style="display:none">
-<h2>🏦 RETIRER MON GAIN</h2>
-<p>Ton gain : <b id="gainRetrait">0 FCFA</b></p>
-<input id="numeroRetrait" placeholder="Ton numéro MTN / MOOV - Ex: 97XXXXXX">
-<input id="montantRetrait" type="number" placeholder="Montant à retirer">
-<button class="btn vert" onclick="demanderRetrait()">DEMANDER LE RETRAIT</button>
-<button class="btn gris" onclick="fermerRetrait()">⬅ RETOUR</button>
-<div id="msgRetrait"></div>
-</div>
-
-<script>
-let currentGmail="";let currentRole="";let paysChoisi="";let tirageChoisiTxt="";let typeJeu="NAP";let numerosChoisis=[];
-let TIRAGES={
-"BENIN":["BENIN 10H","BENIN 11H","BENIN 13H","BENIN 16H","BENIN 19H"],
-"TOGO":["TOGO 10H","TOGO 11H","TOGO 13H","TOGO 16H","TOGO 19H"],
-"NIGERIA":["NIGERIA 10H","NIGERIA 13H","NIGERIA 16H","NIGERIA 19H"],
-"CI":["CI 10H","CI 11H","CI 13H","CI 16H","CI 19H"],
-"GHANA":["GHANA 10H","GHANA 13H","GHANA 16H","GHANA 19H"],
-"CAMEROUN":["CAMEROUN 10H","CAMEROUN 13H","CAMEROUN 16H","CAMEROUN 19H"]
-};
-function getUsers(){try{return JSON.parse(localStorage.getItem("users590")||"{}")}catch(e){return {}}}
-function saveUsers(u){localStorage.setItem("users590",JSON.stringify(u))}
-function getTickets(){try{return JSON.parse(localStorage.getItem("tickets590")||"[]")}catch(e){return []}}
-function saveTickets(t){localStorage.setItem("tickets590",JSON.stringify(t))}
-function getCodes(){try{return JSON.parse(localStorage.getItem("codes590")||"[]")}catch(e){return []}}
-function saveCodes(c){localStorage.setItem("codes590",JSON.stringify(c))}
-function toggleProfil(){document.getElementById("profilClient").classList.toggle("ouvert")}
-function retourMenu(){document.getElementById("compteSection").style.display="none";document.getElementById("menuChoix").style.display="block"}
-function choisirMode(mode){
-document.getElementById("menuChoix").style.display="none";
-document.getElementById("compteSection").style.display="block";
-document.getElementById("titreCompte").innerText=mode==="admin"?"Connexion Admin":mode==="revendeur"?"Connexion Revendeur":"Connexion Client";
-currentRole=mode;
-if(mode==="client"){afficherPays()}
-}
-<!-- FIN PARTIE 2 -->function inscriptionClient(){
-let g=document.getElementById("gmail").value.trim().toLowerCase();let p=document.getElementById("mdp").value.trim();
-if(!g||!p){document.getElementById("msgCompte").innerHTML="❌ Mets Gmail + Mot de passe";return}
-let u=getUsers();if(u[g]){document.getElementById("msgCompte").innerHTML="❌ Gmail déjà inscrit, connecte-toi";return}
-u[g]={mdp:p,soldeJeu:0,soldeGain:0,nom:"Client LOTO 590",tel:"-",role:"client"};saveUsers(u);
-document.getElementById("msgCompte").innerHTML="✅ Compte créé, connecte-toi maintenant";
-}
-function connexionClient(){
-let g=document.getElementById("gmail").value.trim().toLowerCase();let p=document.getElementById("mdp").value.trim();
-if(currentRole==="admin"){if(p==="1234"){currentGmail="beninloto590@gmail.com";ouvrirAdmin();return}else{document.getElementById("msgCompte").innerHTML="❌ Mot de passe Admin faux - Mets 1234";return}}
-if(currentRole==="revendeur"){let u=getUsers();if(!u[g]||u[g].mdp!==p||u[g].role!=="revendeur"){document.getElementById("msgCompte").innerHTML="❌ Revendeur introuvable";return}currentGmail=g;ouvrirRevendeur();return}
-let u=getUsers();if(!u[g]||u[g].mdp!==p){document.getElementById("msgCompte").innerHTML="❌ Gmail ou mot de passe incorrect";return}
-currentGmail=g;ouvrirEspace();
-}
-function inscriptionRevendeur(){
-let g=document.getElementById("gmail").value.trim().toLowerCase();let p=document.getElementById("mdp").value.trim();
-if(!g||!p){document.getElementById("msgCompte").innerHTML="❌ Mets Gmail + Mot de passe";return}
-let u=getUsers();if(u[g]){document.getElementById("msgCompte").innerHTML="❌ Déjà inscrit";return}
-u[g]={mdp:p,soldeJeu:0,soldeGain:0,soldeRev:5000,nom:"Revendeur",tel:"-",role:"revendeur"};saveUsers(u);
-document.getElementById("msgCompte").innerHTML="✅ Compte Revendeur créé, connecte-toi";
-}
-function connexionRevendeur(){connexionClient()}
-function ouvrirEspace(){
-document.getElementById("compteSection").style.display="none";
-document.getElementById("zoneClient").style.display="block";
-document.getElementById("zoneAdmin").style.display="none";
-document.getElementById("zoneRevendeur").style.display="none";
-let u=getUsers()[currentGmail]||{soldeJeu:0,soldeGain:0,nom:"Client LOTO 590",tel:"-"};
-document.getElementById("profilGmail").innerText=currentGmail;
-document.getElementById("profilNom").innerText=u.nom||"Client LOTO 590";
-document.getElementById("profilTel").innerText=u.tel||"-";
-document.getElementById("profilId").innerText="ID-"+currentGmail.split("@")[0].toUpperCase();
-document.getElementById("soldeJeu").innerText=u.soldeJeu+" FCFA";
-document.getElementById("soldeGain").innerText=u.soldeGain+" FCFA";
-document.getElementById("gainBtn").innerText=u.soldeGain;
-document.getElementById("profilClient").classList.remove("ouvert");
-afficherPays();afficherMes();maj();
-}
-function ouvrirAdmin(){
-document.getElementById("compteSection").style.display="none";
-document.getElementById("zoneAdmin").style.display="block";
-afficherAdmin();
-}
-function ouvrirRevendeur(){
-document.getElementById("compteSection").style.display="none";
-document.getElementById("zoneRevendeur").style.display="block";
-document.getElementById("revZone").style.display="block";
-let u=getUsers()[currentGmail]||{};document.getElementById("soldeRev").innerText=(u.soldeRev||0)+" FCFA";
-afficherRevCodes();
-}
-function deconnecter(){currentGmail="";currentRole="";document.getElementById("zoneClient").style.display="none";document.getElementById("zoneAdmin").style.display="none";document.getElementById("zoneRevendeur").style.display="none";document.getElementById("menuChoix").style.display="block"}
-// --- PAYS -> TIRAGES -> JOUER - C'EST ICI QUE TOUT SE JOUE ---
-function afficherPays(){
-let pays=[["🇧🇯","BENIN"],["🇹🇬","TOGO"],["🇳🇬","NIGERIA"],["🇨🇮","CI"],["🇬🇭","GHANA"],["🇨🇲","CAMEROUN"]];
-document.getElementById("paysGrid").innerHTML=pays.map(p=>'<button onclick="ouvrirPays(\''+p[1]+'\')" style="padding:14px 6px;border:none;border-radius:10px;background:#facc15;font-weight:900;font-size:16px">'+p[0]+'<br>'+p[1]+'</button>').join("");
-document.getElementById("tiragesPaysSection").style.display="none";
-document.getElementById("cardJouer").style.display="none";
-}
-function ouvrirPays(pays){
-paysChoisi=pays;
-document.getElementById("titrePays").innerText="🎲 Jeux du "+pays+" - Choisis ton tirage :";
-document.getElementById("tiragesPaysGrid").innerHTML=TIRAGES[pays].map(t=>'<button class="tirageBtn" onclick="ouvrirTirage(\''+t+'\')">🎲 '+t+'</button>').join("");
-document.getElementById("tiragesPaysSection").style.display="block";
-document.getElementById("cardJouer").style.display="none";
-document.getElementById("tiragesPaysSection").scrollIntoView({behavior:"smooth"});
-}
-function retourPays(){
-document.getElementById("tiragesPaysSection").style.display="none";
-document.getElementById("cardJouer").style.display="none";
-afficherPays();
-}
-function ouvrirTirage(t){
-tirageChoisiTxt=t;numerosChoisis=[];
-document.getElementById("tirageChoisi").innerText=paysChoisi+" - "+t;
-document.getElementById("cardJouer").style.display="block";
-afficherNumeros();
-document.getElementById("cardJouer").scrollIntoView({behavior:"smooth"});
-}
-function setType(ty){typeJeu=ty;document.getElementById("choixTxt").innerText=numerosChoisis.join("-")||"-";afficherNumeros()}
-function afficherNumeros(){
-let html="";for(let i=1;i<=90;i++){let sel=numerosChoisis.includes(i)?" sel":"";html+='<div class="num'+sel+'" onclick="choisirNum('+i+')">'+i+'</div>'}
-document.getElementById("numGrid").innerHTML=html;
-}
-function choisirNum(n){
-let max=typeJeu==="NAP"?1:typeJeu==="PERMUTATION"?2:3;
-if(numerosChoisis.includes(n)){numerosChoisis=numerosChoisis.filter(x=>x!==n)}
-else{if(numerosChoisis.length>=max){alert("Pour "+typeJeu+" tu choisis "+max+" numéro(s)");return}numerosChoisis.push(n)}
-document.getElementById("choixTxt").innerText=numerosChoisis.join(" - ")||"-";afficherNumeros();
-}
-<!-- FIN PARTIE 3 -->function validerTicket(){
-if(!currentGmail){alert("Connecte-toi d'abord");return}
-if(!tirageChoisiTxt){alert("Choisis d'abord BENIN puis BENIN 11H");return}
-let max=typeJeu==="NAP"?1:typeJeu==="PERMUTATION"?2:3;
-if(numerosChoisis.length!==max){document.getElementById("msgJeu").innerHTML="❌ Pour "+typeJeu+" choisis "+max+" numéro(s)";return}
-let mise=parseInt(document.getElementById("mise").value||"0");
-if(!mise||mise<50){document.getElementById("msgJeu").innerHTML="❌ Mise minimum 50 FCFA";return}
-let u=getUsers();let me=u[currentGmail];if(!me){alert("Compte introuvable");return}
-if(me.soldeJeu<mise){document.getElementById("msgJeu").innerHTML="❌ Solde insuffisant - Recharge d'abord. Solde: "+me.soldeJeu+" FCFA";return}
-me.soldeJeu-=mise;saveUsers(u);
-let tickets=getTickets();
-tickets.push({id:"TK-"+Date.now(),gmail:currentGmail,pays:paysChoisi,tirage:tirageChoisiTxt,type:typeJeu,numeros:[...numerosChoisis],mise:mise,statut:"EN ATTENTE",date:new Date().toLocaleString()});
-saveTickets(tickets);
-document.getElementById("msgJeu").innerHTML="✅ Ticket validé ! "+typeJeu+" - "+numerosChoisis.join("-")+" - "+mise+" FCFA - "+tirageChoisiTxt;
-numerosChoisis=[];document.getElementById("choixTxt").innerText="-";document.getElementById("mise").value="";
-ouvrirEspace();
-}
-function afficherMes(){
-if(!currentGmail){document.getElementById("mesTickets").innerHTML="<p>Connecte-toi pour voir tes tickets</p>";return}
-let tickets=getTickets().filter(t=>t.gmail===currentGmail).reverse();
-if(!tickets.length){document.getElementById("mesTickets").innerHTML="<p>Aucun ticket pour le moment. Choisis BENIN -> BENIN 11H -> Joue</p>";return}
-document.getElementById("mesTickets").innerHTML=tickets.map(t=>'<div class="ticket"><b>'+t.tirage+'</b> - '+t.type+'<br>Numéros: <b>'+t.numeros.join(" - ")+'</b><br>Mise: '+t.mise+' FCFA - Statut: '+t.statut+'<br><small>'+t.date+'</small><br><small>'+t.id+'</small></div>').join("");
-}
-function maj(){if(currentGmail)ouvrirEspaceSansBoucle()}
-function ouvrirEspaceSansBoucle(){
-let u=getUsers()[currentGmail];if(!u)return;
-document.getElementById("soldeJeu").innerText=u.soldeJeu+" FCFA";
-document.getElementById("soldeGain").innerText=u.soldeGain+" FCFA";
-document.getElementById("gainBtn").innerText=u.soldeGain;
-afficherMes();
-}
-// --- RECHARGE / RETRAIT ---
-function ouvrirRecharge(){document.getElementById("rechargeSection").style.display="block";document.getElementById("rechargeSection").scrollIntoView({behavior:"smooth"})}
-function fermerRecharge(){document.getElementById("rechargeSection").style.display="none"}
-function validerCode(){
-let code=document.getElementById("codeRecharge").value.trim().toUpperCase();if(!code)return;
-let codes=getCodes();let c=codes.find(x=>x.code===code&&!x.utilise);
-if(!c){document.getElementById("msgRecharge").innerHTML="❌ Code invalide ou déjà utilisé";return}
-c.utilise=true;c.utilisePar=currentGmail;saveCodes(codes);
-let u=getUsers();u[currentGmail].soldeJeu+=c.montant;saveUsers(u);
-document.getElementById("msgRecharge").innerHTML="✅ Recharge réussie ! +"+c.montant+" FCFA";
-document.getElementById("codeRecharge").value="";ouvrirEspace();
-}
-function ouvrirRetrait(){let u=getUsers()[currentGmail]||{};document.getElementById("gainRetrait").innerText=(u.soldeGain||0)+" FCFA";document.getElementById("retraitSection").style.display="block"}
-function fermerRetrait(){document.getElementById("retraitSection").style.display="none"}
-function demanderRetrait(){
-let num=document.getElementById("numeroRetrait").value.trim();let mont=parseInt(document.getElementById("montantRetrait").value||"0");
-let u=getUsers();let me=u[currentGmail];if(!me||me.soldeGain<mont||!mont){document.getElementById("msgRetrait").innerHTML="❌ Gain insuffisant ou montant vide";return}
-me.soldeGain-=mont;saveUsers(u);document.getElementById("msgRetrait").innerHTML="✅ Demande envoyée ! "+mont+" FCFA vers "+num+" - L'Admin va te payer";ouvrirEspace();
-}
-// --- ADMIN ---
-function creerCode(){
-let m=parseInt(document.getElementById("montantCode").value||"0");if(!m){alert("Mets un montant");return}
-let codes=getCodes();let code="LOTO-"+Math.floor(1000+Math.random()*9000);codes.push({code:code,montant:m,utilise:false});saveCodes(codes);afficherAdmin();alert("Code créé: "+code+" - "+m+" FCFA");
-}
-function afficherAdmin(){
-let codes=getCodes();let tickets=getTickets();let users=getUsers();
-document.getElementById("adminTotal").innerText=codes.filter(c=>c.utilise).reduce((s,c)=>s+c.montant,0)+" FCFA";
-document.getElementById("adminTickets").innerText=tickets.length;
-document.getElementById("listeCodes").innerHTML=codes.reverse().map(c=>'<div style="background:#fff;color:#000;padding:8px;border-radius:8px;margin:5px 0"><b>'+c.code+'</b> - '+c.montant+' FCFA - '+(c.utilise?"✅ Utilisé par "+c.utilisePar:"⏳ Disponible")+'</div>').join("");
-document.getElementById("listeClients").innerHTML=Object.keys(users).map(g=>'<div style="background:#fff;color:#000;padding:8px;border-radius:8px;margin:5px 0"><b>'+g+'</b><br>Jeu: '+users[g].soldeJeu+' FCFA - Gain: '+users[g].soldeGain+' FCFA<br><button onclick="validerGainClient(\''+g+'\')">🏆 VALIDER GAIN</button></div>').join("");
-}
-function validerGainClient(g){
-let gain=parseInt(prompt("Montant du gain pour "+g+" ?")||"0");if(!gain)return;
-let u=getUsers();u[g].soldeGain+=gain;saveUsers(u);afficherAdmin();alert("Gain ajouté !");
-}
-function revendreCode(){
-let codes=getCodes();let code="LOTO-"+Math.floor(1000+Math.random()*9000);codes.push({code:code,montant:1000,utilise:false});saveCodes(codes);afficherRevCodes();alert("Code à vendre: "+code);
-}
-function afficherRevCodes(){
-let codes=getCodes().filter(c=>!c.utilise);document.getElementById("revCodes").innerHTML=codes.map(c=>'<div style="background:#fff;color:#000;padding:8px;border-radius:8px;margin:5px 0"><b>'+c.code+'</b> - '+c.montant+' FCFA</div>').join("");
-}
-<!-- FIN PARTIE 4 -->// --- AU DÉMARRAGE : ON FORCE LES PAYS À S'AFFICHER ---
-setTimeout(function(){afficherPays()},500);
-let deferredPrompt=null;
-window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e});
+<!-- FIN PARTIE 4 --><script>
+let paysActuel="",tirageActuel="",numChoisi="",tickets=JSON.parse(localStorage.getItem("tickets9901")||"[]");
+let recs=JSON.parse(localStorage.getItem("recs9901")||"[]");
+let resultats=JSON.parse(localStorage.getItem("res9901")||"[]");
+function aller(id){["accueil","client","revendeur","reclamation","loginAD","admin","mesTickets"].forEach(x=>{let e=document.getElementById(x);if(e)e.classList.add("hide")});let c=document.getElementById(id);if(c)c.classList.remove("hide");if(id=="mesTickets")afficherTickets();if(id=="admin")afficherAdmin();window.scrollTo(0,0)}
+function ouvrirAD(){aller("loginAD")}
+function verifierAD(){if(document.getElementById("codeAD").value=="1234"){aller("admin")}else{alert("Code incorrect")}}
+function choisirPays(p){paysActuel=p;let t=document.getElementById("tirages");t.innerHTML="<h4>"+p+"</h4>";["10H","11H","13H","16H","19H"].forEach(h=>{t.innerHTML+='<button class="b3" onclick="choisirTirage(\''+p+" "+h+'\')">'+p+" "+h+'</button>'})}
+function choisirTirage(t){tirageActuel=t;document.getElementById("titreTirage").innerText=t;document.getElementById("jeu").classList.remove("hide");let n=document.getElementById("nums");n.innerHTML="";for(let i=1;i<=90;i++){n.innerHTML+='<span class="num" onclick="choisirNum(this,'+i+')">'+i+'</span>'}}
+function choisirNum(el,i){document.querySelectorAll(".num").forEach(x=>x.classList.remove("sel"));el.classList.add("sel");numChoisi=i}
+<!-- FIN PARTIE 5 -->function validerTicket(){let mise=document.getElementById("mise").value;let type=document.getElementById("typeJeu").value;if(!numChoisi||!mise){alert("Choisis un numéro et ta mise");return}let code="N590-"+Math.floor(1000+Math.random()*9000);let tk={code,tirage:tirageActuel,num:numChoisi,type,mise,pays:paysActuel,date:new Date().toLocaleString()};tickets.push(tk);localStorage.setItem("tickets9901",JSON.stringify(tickets));alert("Ticket validé ! Code: "+code);aller("mesTickets")}
+function afficherTickets(){let d=document.getElementById("listeTickets");if(!tickets.length){d.innerHTML="<p class=small>Aucun ticket</p>";return}d.innerHTML=tickets.map(t=>'<div class=ticket><b>'+t.code+'</b><br>'+t.tirage+' - N°'+t.num+' - '+t.type+' - Mise: '+t.mise+'<br><span class=small>'+t.date+'</span></div>').join("")}
+function entrerRevendeur(){let c=document.getElementById("codeRev").value;if(!c){alert("Mets ton code");return}document.getElementById("zoneRev").classList.remove("hide");document.getElementById("ventesRev").innerHTML="<p class=small>Total ventes: "+tickets.length+" tickets</p>"}
+function envoyerReclamation(){let nom=document.getElementById("nomRec").value;let tel=document.getElementById("telRec").value;let code=document.getElementById("codeTicketRec").value;let msg=document.getElementById("msgRec").value;if(!nom||!msg){alert("Mets ton nom et ton message");return}recs.push({nom,tel,code,msg,date:new Date().toLocaleString()});localStorage.setItem("recs9901",JSON.stringify(recs));document.getElementById("okRec").innerText="✅ Réclamation envoyée ! L'Admin va te répondre."}
+function voirOnglet(id){["adminTickets","adminRec","adminResult"].forEach(x=>document.getElementById(x).classList.add("hide"));document.getElementById(id).classList.remove("hide");afficherAdmin()}
+function afficherAdmin(){document.getElementById("nbRec").innerText=recs.length;document.getElementById("adminTickets").innerHTML=tickets.length?tickets.map(t=>'<div class=ticket>'+t.code+' - '+t.tirage+' - N°'+t.num+' - '+t.mise+'</div>').join(""):"<p class=small>Aucun ticket</p>";document.getElementById("adminRec").innerHTML=recs.length?recs.map(r=>'<div class=ticket><b>'+r.nom+' - '+r.tel+'</b><br>Ticket: '+r.code+'<br>'+r.msg+'<br><span class=small>'+r.date+'</span></div>').join(""):"<p class=small>Aucune réclamation</p>";document.getElementById("listeResultats").innerHTML=resultats.map(r=>'<div class=ticket>'+r.tirage+' : <b>'+r.nums+'</b></div>').join("")}
+function publierResultat(){let t=document.getElementById("resTirage").value;let n=document.getElementById("resNums").value;if(!t||!n){alert("Remplis tout");return}resultats.push({tirage:t,nums:n});localStorage.setItem("res9901",JSON.stringify(resultats));afficherAdmin();alert("Résultat publié")}
+afficherTickets();
 </script></body></html>
-<!-- FIN V9843 -->
+<!-- FIN PARTIE 6 -->
+<!-- FIN DU CODE COMPLET - V9901 -->
