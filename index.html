@@ -56,24 +56,21 @@ input,select{width:100%;padding:12px;border-radius:10px;border:0;margin:6px 0;ba
 </style>
 </head>
 <body>
-
 <div class="top"><b>NET LOTO 590</b><span onclick="show('solde')">Solde: <span id="soldeTop">0</span> F</span></div>
 
-<!-- 1 : ACCUEIL STYLE ELOTO -->
 <div id="page-landing">
-<div class="hero"><h1>Jouez, suivez, gagnez.</h1><p>Tirages tous les jours • Résultats en direct • Gains sur votre compte</p>
+<div class="hero"><h1>Jouez, suivez, gagnez.</h1><p>Tirages tous les jours - Résultats en direct - Gains sur votre compte</p>
 <button class="playBtn" onclick="show('register')">Créer un compte</button>
 <button class="whiteBtn" onclick="show('login')">Connexion</button></div>
 <div class="step"><b>1</b><div><b>Inscrivez-vous</b><br><small>Un identifiant et un e-mail suffisent.</small></div></div>
-<div class="step"><b>2</b><div><b>Rechargez</b><br><small>Auprès d'un revendeur de votre pays.</small></div></div>
+<div class="step"><b>2</b><div><b>Rechargez</b><br><small>Par Gmail auprès de votre revendeur.</small></div></div>
 <div class="step"><b>3</b><div><b>Jouez</b><br><small>Choisissez un tirage, vos numéros et votre mise.</small></div></div>
 <div class="box"><h3>Comment jouer ?</h3><p>Loto 5/90 seul. Choisis un pays, un tirage Aujourd'hui, 5 numéros de 1 à 90, mise, valide.</p></div>
 </div>
 
-<!-- 2 : INSCRIPTION -->
 <div id="page-register" class="hidden">
 <div class="box"><h3>Créer un compte</h3><p>Gratuit, en moins d'une minute.</p>
-<p>E-mail</p><input id="regEmail" type="email" placeholder="ton@email.com">
+<p>E-mail (Gmail)</p><input id="regEmail" type="email" placeholder="ton@gmail.com">
 <p>Identifiant</p><input id="regUser" placeholder="Ex: koffi123">
 <p>Mot de passe</p><input id="regPass" type="password" placeholder="4 caractères minimum">
 <p>Confirmer le mot de passe</p><input id="regPass2" type="password" placeholder="Confirme">
@@ -82,7 +79,6 @@ input,select{width:100%;padding:12px;border-radius:10px;border:0;margin:6px 0;ba
 <p style="text-align:center">Déjà inscrit ? <a href="#" style="color:#facc15" onclick="show('login');return false">Connexion</a></p></div>
 </div>
 
-<!-- 3 : CONNEXION -->
 <div id="page-login" class="hidden">
 <div class="box"><h3>Connexion</h3><p>Accédez à vos jeux et à votre solde.</p>
 <p>Identifiant ou e-mail</p><input id="logUser" placeholder="Identifiant ou e-mail">
@@ -93,7 +89,6 @@ input,select{width:100%;padding:12px;border-radius:10px;border:0;margin:6px 0;ba
 <p style="text-align:center;color:#aaa;margin-top:10px">Test : admin / 590590<br>revendeur / 1234<br>client / 1234</p></div>
 </div>
 
-<!-- 4 : ACCUEIL APRES CONNEXION -->
 <div id="page-home" class="hidden">
 <div class="sub">LOTO 5 SUR 90 - SEUL JEU DISPONIBLE</div>
 <div class="search">Rechercher un tirage...</div>
@@ -105,7 +100,6 @@ input,select{width:100%;padding:12px;border-radius:10px;border:0;margin:6px 0;ba
 <div class="box"><h3>Pronostics du jour</h3><p id="pronoHome"></p><button class="playBtn" onclick="show('pronostics')">Voir les pronostics</button></div>
 </div>
 
-<!-- PAYS DETAIL -->
 <div id="page-pays" class="hidden">
 <button class="back" onclick="show('home')">Retour</button>
 <h2 id="paysTitle">BENIN</h2>
@@ -113,7 +107,6 @@ input,select{width:100%;padding:12px;border-radius:10px;border:0;margin:6px 0;ba
 <div class="draw-grid" id="drawGrid"></div>
 </div>
 
-<!-- JOUER -->
 <div id="page-jouer" class="hidden">
 <button class="back" onclick="show('pays')">Retour</button>
 <div class="box"><h3 id="jouerTitle">SOIR 18H</h3><p>Choisis 5 numéros de 1 à 90</p>
@@ -127,14 +120,41 @@ input,select{width:100%;padding:12px;border-radius:10px;border:0;margin:6px 0;ba
 <div id="page-resultats" class="hidden"><h2>Résultats</h2><div class="box" id="resultList"></div></div>
 <div id="page-pronostics" class="hidden"><h2>Pronostics</h2><div class="box"><h3>Pronostics du jour - Loto 5/90</h3><p id="pronoList"></p><button class="playBtn" onclick="genProno()">Nouveau pronostic</button></div></div>
 
-<div id="page-solde" class="hidden"><h2>Mon Solde</h2><div class="box"><h3>Solde: <span id="soldeBox">0</span> F</h3><p>Recharge par Mobile Money</p><select id="operateur"><option>MTN MoMo</option><option>Moov Money</option><option>Celtiis</option></select><input id="montantRecharge" type="number" placeholder="Montant - ex: 1000"><input id="numeroRecharge" type="tel" placeholder="Numéro Mobile Money"><button class="playBtn" onclick="recharger()">RECHARGER</button><p id="msgSolde" style="color:#facc15;font-weight:bold"></p></div><div class="box"><h3>Retrait</h3><input id="montantRetrait" type="number" placeholder="Montant retrait"><button class="playBtn" onclick="retirer()">DEMANDER RETRAIT</button></div></div>
+<div id="page-solde" class="hidden"><h2>Mon Solde</h2><div class="box"><h3>Solde: <span id="soldeBox">0</span> F</h3><p>Recharge par Gmail uniquement.</p><p>Demande à ton Revendeur de te recharger par ton Gmail.</p><p id="msgSolde" style="color:#facc15;font-weight:bold"></p></div><div class="box"><h3>Retrait</h3><input id="montantRetrait" type="number" placeholder="Montant retrait"><button class="playBtn" onclick="retirer()">DEMANDER RETRAIT</button></div></div>
 
 <div id="page-profil" class="hidden"><h2>Mon Profil</h2>
 <div class="box"><p id="profilInfo" style="color:#facc15;font-weight:bold"></p><p>Nom:</p><input id="nomProfil" placeholder="Ton nom"><p>Téléphone:</p><input id="telProfil" placeholder="Ton numéro"><button class="playBtn" onclick="saveProfil()">SAUVEGARDER PROFIL</button><p id="msgProfil" style="color:#facc15"></p>
 <p style="margin-top:12px">Code Admin (seulement pour le patron):</p><input id="codeAdmin" type="password" placeholder="Code secret"><button class="playBtn" onclick="openAdmin()">OUVRIR ADMIN</button><p id="msgAdminCode" style="color:#ff5a5a"></p></div>
 <div class="box"><button class="menuBtn" onclick="show('aide')">Aide</button><button class="menuBtn" onclick="logout()">Déconnexion</button></div></div>
 
-<div id="page-admin" class="hidden"><h2>Admin - Patron seul</h2><div class="box"><p>Publier un résultat:</p><select id="adminPays"></select><input id="adminResult" placeholder="Ex: 5 - 12 - 34 - 56 - 89"><button class="playBtn" onclick="publierResult()">PUBLIER RESULTAT</button><p id="msgAdmin"></p></div><div class="box"><h3>Tickets des clients</h3><div id="adminTickets"></div></div><button class="back" onclick="show('profil')">Retour Profil</button></div>
+<div id="page-revendeur" class="hidden">
+<h2>Compte Revendeur</h2>
+<div class="box"><h3>Mon Solde Revendeur: <span id="soldeRevendeur">0</span> F</h3><p>Tu recharges tes clients avec ton solde.</p></div>
+<div class="box"><h3>Recharger un Client par Gmail</h3>
+<p>Gmail du client</p><input id="revEmail" placeholder="Ex: client@gmail.com">
+<p>Montant</p><input id="revMontant" type="number" placeholder="Ex: 1000">
+<button class="playBtn" onclick="revendeurRecharge()">RECHARGER CLIENT</button>
+<p id="msgRev" style="color:#facc15;font-weight:bold"></p></div>
+<div class="box"><h3>Mes Clients</h3><div id="revClients"></div></div>
+</div>
+
+<div id="page-admin" class="hidden"><h2>Administration</h2>
+<div class="box"><h3>Mon Solde Admin: <span id="soldeAdminBox">0</span> F</h3></div>
+<div class="box"><h3>Recharger par Gmail</h3>
+<p>Gmail à recharger</p><input id="adminEmail" placeholder="Ex: revendeur@gmail.com">
+<p>Montant</p><input id="adminMontant" type="number" placeholder="Ex: 5000">
+<button class="playBtn" onclick="adminRechargeParGmail()">RECHARGER</button>
+<p id="msgAdminRecharge" style="color:#facc15;font-weight:bold"></p></div>
+<div class="box"><h3>Créer un Revendeur</h3>
+<input id="newRevUser" placeholder="Identifiant revendeur">
+<input id="newRevEmail" placeholder="Gmail revendeur">
+<input id="newRevPass" placeholder="Mot de passe">
+<button class="playBtn" onclick="creerRevendeur()">CREER REVENDEUR</button><p id="msgNewRev"></p></div>
+<div class="box"><h3>Publier un résultat</h3><select id="adminPays"></select><input id="adminResult" placeholder="Ex: 5 - 12 - 34 - 56 - 89"><button class="playBtn" onclick="publierResult()">PUBLIER RESULTAT</button><p id="msgAdmin"></p></div>
+<div class="box"><h3>Tous les comptes</h3><div id="adminUsers"></div></div>
+<div class="box"><h3>Tickets des clients</h3><div id="adminTickets"></div></div>
+<button class="back" onclick="show('profil')">Retour Profil</button></div>
+
 <div id="page-aide" class="hidden"><h2>Aide</h2><div class="box"><p>Choisis un pays, un tirage Aujourd'hui, 5 numéros, mise, valide. Si fini, il part dans A venir / Demain.</p></div></div>
 
 <div class="bottom" id="bottomBar" style="display:none">
@@ -143,7 +163,7 @@ input,select{width:100%;padding:12px;border-radius:10px;border:0;margin:6px 0;ba
 <div onclick="show('jouer-direct')"><div class="coupon">+</div><br>Coupon</div>
 <div onclick="show('solde')">Solde</div>
 <div onclick="show('profil')">Profil</div>
-</div><script>
+  </div><script>
 const PAYS = [
 {id:'BENIN', nom:'BENIN', flag:'🇧🇯', tirages:[{n:'MATIN 10H',h:10,m:0},{n:'MIDI 13H',h:13,m:0},{n:'APRES-MIDI 15H',h:15,m:0},{n:'SOIR 18H',h:18,m:0},{n:'NUIT 20H',h:20,m:0},{n:'SPECIAL 22H',h:22,m:0}]},
 {id:'CIV', nom:"COTE D'IVOIRE", flag:'🇨🇮', tirages:[{n:'DIGITAL 7H',h:7,m:0},{n:'REVEIL 10H',h:10,m:0},{n:'MIDI 13H',h:13,m:0},{n:'STAR 15H',h:15,m:0},{n:'FORTUNE 17H',h:17,m:0},{n:'PRESTIGE 19H',h:19,m:0},{n:'NUIT 21H',h:21,m:0}]},
@@ -157,278 +177,233 @@ let currentPays = PAYS[0];
 let currentTab = 'auj';
 let currentDraw = 'SOIR 18H';
 let selected = [];
-let solde = parseInt(localStorage.getItem('solde590') || '0');
 let tickets = JSON.parse(localStorage.getItem('tickets590') || '[]');
 let resultats = JSON.parse(localStorage.getItem('resultats590') || '[]');
 let isLogged = localStorage.getItem('logged590') == '1';
+let currentUser = localStorage.getItem('currentUser590') || '';
+let currentRole = localStorage.getItem('currentRole590') || 'client';
 
-function nowMin(){
-  let d = new Date();
-  return d.getHours()*60 + d.getMinutes();
+function getUsers(){
+  let users = JSON.parse(localStorage.getItem('users590') || '[]');
+  if(users.length == 0){
+    users.push({user:'admin', email:'admin@netloto590.com', pass:'590590', role:'admin', solde:100000});
+    users.push({user:'revendeur', email:'revendeur@netloto590.com', pass:'1234', role:'revendeur', solde:20000});
+    users.push({user:'client', email:'client@test.com', pass:'1234', role:'client', solde:0});
+    localStorage.setItem('users590', JSON.stringify(users));
+  }
+  return users;
 }
-function reste(h,m){
-  let diff = (h*60+m) - nowMin();
-  if(diff < 0) diff += 1440;
-  let hh = Math.floor(diff/60);
-  let mm = diff % 60;
-  return hh + 'h' + (mm < 10 ? '0' : '') + mm;
+function saveUsers(u){ localStorage.setItem('users590', JSON.stringify(u)); }
+function getMySolde(){
+  let users = getUsers();
+  let me = users.find(x => x.user == currentUser);
+  return me ? (me.solde || 0) : 0;
 }
-function isFini(t){
-  return nowMin() >= (t.h*60 + t.m);
+function setMySolde(v){
+  let users = getUsers();
+  let me = users.find(x => x.user == currentUser);
+  if(me){ me.solde = v; saveUsers(users); }
+  updateSolde();
 }
 function updateSolde(){
-  document.getElementById('soldeTop').innerText = solde;
-  document.getElementById('soldeBox').innerText = solde;
-  localStorage.setItem('solde590', solde);
+  let s = getMySolde();
+  document.getElementById('soldeTop').innerText = s;
+  let b = document.getElementById('soldeBox'); if(b) b.innerText = s;
+  let rb = document.getElementById('soldeRevendeur'); if(rb) rb.innerText = s;
+  let ab = document.getElementById('soldeAdminBox'); if(ab) ab.innerText = s;
 }
+function nowMin(){ let d=new Date(); return d.getHours()*60+d.getMinutes(); }
+function reste(h,m){ let diff=(h*60+m)-nowMin(); if(diff<0) diff+=1440; return Math.floor(diff/60)+'h'+((diff%60)<10?'0':'')+(diff%60); }
+function isFini(t){ return nowMin() >= (t.h*60+t.m); }
+
 function show(page){
-  if(page == 'jouer-direct'){
-    openJouer(currentDraw);
-    return;
+  if(page=='jouer-direct'){
+    if(currentRole != 'client'){ alert('Seul le Client peut jouer. Admin et Revendeur ne jouent pas.'); return; }
+    openJouer(currentDraw); return;
   }
-  if((page=='home'||page=='tickets'||page=='solde'||page=='profil'||page=='resultats'||page=='pronostics') && !isLogged){
-    page = 'landing';
-  }
-  if(page=='landing'||page=='register'||page=='login'){
-    document.getElementById('bottomBar').style.display = 'none';
-  } else {
-    document.getElementById('bottomBar').style.display = 'flex';
-  }
-  let pages = ['landing','register','login','home','pays','jouer','tickets','resultats','pronostics','solde','profil','admin','aide'];
-  pages.forEach(p => {
-    let el = document.getElementById('page-'+p);
-    if(el) el.classList.add('hidden');
-  });
+  if(page=='home' && currentRole=='admin'){ page='admin'; }
+  if(page=='home' && currentRole=='revendeur'){ page='revendeur'; }
+  if((page=='tickets'||page=='solde'||page=='pronostics') && currentRole!='client'){ alert('Seul le Client peut voir ça.'); return; }
+  if((page=='home'||page=='tickets'||page=='solde'||page=='profil'||page=='resultats'||page=='pronostics'||page=='admin'||page=='revendeur') && !isLogged){ page='landing'; }
+  if(page=='landing'||page=='register'||page=='login'){ document.getElementById('bottomBar').style.display='none'; }
+  else { document.getElementById('bottomBar').style.display='flex'; }
+  let pages=['landing','register','login','home','pays','jouer','tickets','resultats','pronostics','solde','profil','admin','revendeur','aide'];
+  pages.forEach(p=>{ let el=document.getElementById('page-'+p); if(el) el.classList.add('hidden'); });
   document.getElementById('page-'+page).classList.remove('hidden');
   if(page=='home') renderHome();
   if(page=='tickets') renderTickets();
   if(page=='resultats') renderResultats();
   if(page=='pronostics') renderProno();
+  if(page=='admin') renderAdmin();
+  if(page=='revendeur') renderRevendeur();
   if(page=='profil'){
-    let u = localStorage.getItem('currentUser590') || '';
-    let r = localStorage.getItem('currentRole590') || 'client';
-    document.getElementById('profilInfo').innerText = 'Connecté : ' + u + ' | Rôle : ' + r;
+    let u=localStorage.getItem('currentUser590')||''; let r=localStorage.getItem('currentRole590')||'client';
+    document.getElementById('profilInfo').innerText='Connecté : '+u+' | Rôle : '+r+' | Solde : '+getMySolde()+' F';
   }
   window.scrollTo(0,0);
 }
-function getUsers(){
-  let users = JSON.parse(localStorage.getItem('users590') || '[]');
-  if(users.length == 0){
-    users.push({user:'admin', email:'admin@netloto590.com', pass:'590590', role:'admin'});
-    users.push({user:'revendeur', email:'revendeur@netloto590.com', pass:'1234', role:'revendeur'});
-    users.push({user:'client', email:'client@test.com', pass:'1234', role:'client'});
-    localStorage.setItem('users590', JSON.stringify(users));
-  }
-  return users;
-}
 function doRegister(){
-  let u = document.getElementById('regUser').value.trim();
-  let e = document.getElementById('regEmail').value.trim();
-  let p = document.getElementById('regPass').value;
-  let p2 = document.getElementById('regPass2').value;
-  if(!u || !e || p.length < 4){
-    document.getElementById('msgReg').innerText = 'Remplis tout, mot de passe 4 caractères min.';
-    return;
-  }
-  if(p !== p2){
-    document.getElementById('msgReg').innerText = 'Les mots de passe ne correspondent pas.';
-    return;
-  }
-  if(!e.includes('@') || !e.includes('.')){
-    document.getElementById('msgReg').innerText = 'Email invalide. Exemple : test@gmail.com';
-    return;
-  }
-  let users = getUsers();
-  if(users.find(x => x.user == u || x.email == e)){
-    document.getElementById('msgReg').innerText = 'Ce compte existe déjà, connecte-toi.';
-    return;
-  }
-  users.push({user:u, email:e, pass:p, role:'client'});
-  localStorage.setItem('users590', JSON.stringify(users));
-  document.getElementById('msgReg').innerText = 'Compte créé ! Connecte-toi maintenant.';
-  setTimeout(()=> show('login'), 800);
+  let u=document.getElementById('regUser').value.trim();
+  let e=document.getElementById('regEmail').value.trim();
+  let p=document.getElementById('regPass').value;
+  let p2=document.getElementById('regPass2').value;
+  if(!u||!e||p.length<4){ document.getElementById('msgReg').innerText='Remplis tout, mot de passe 4 caractères min.'; return; }
+  if(p!==p2){ document.getElementById('msgReg').innerText='Les mots de passe ne correspondent pas.'; return; }
+  if(!e.includes('@')||!e.includes('.')){ document.getElementById('msgReg').innerText='Email invalide. Exemple : test@gmail.com'; return; }
+  let users=getUsers();
+  if(users.find(x=>x.user==u||x.email==e)){ document.getElementById('msgReg').innerText='Ce compte existe déjà, connecte-toi.'; return; }
+  users.push({user:u,email:e,pass:p,role:'client',solde:0});
+  saveUsers(users);
+  document.getElementById('msgReg').innerText='Compte Client créé ! Connecte-toi.';
+  setTimeout(()=>show('login'),800);
 }
 function doLogin(){
-  let u = document.getElementById('logUser').value.trim();
-  let p = document.getElementById('logPass').value;
-  let users = getUsers();
-  let found = users.find(x => (x.user == u || x.email == u) && x.pass == p);
+  let u=document.getElementById('logUser').value.trim();
+  let p=document.getElementById('logPass').value;
+  let users=getUsers();
+  let found=users.find(x=>(x.user==u||x.email==u)&&x.pass==p);
   if(found){
-    isLogged = true;
+    isLogged=true; currentUser=found.user; currentRole=found.role;
     localStorage.setItem('logged590','1');
-    localStorage.setItem('currentUser590', found.user);
-    localStorage.setItem('currentRole590', found.role);
-    show('home');
+    localStorage.setItem('currentUser590',found.user);
+    localStorage.setItem('currentRole590',found.role);
+    updateSolde();
+    if(found.role=='admin') show('admin');
+    else if(found.role=='revendeur') show('revendeur');
+    else show('home');
   } else {
-    document.getElementById('msgLog').innerText = 'Identifiant ou mot de passe incorrect. Crée un compte d\'abord.';
+    document.getElementById('msgLog').innerText='Identifiant ou mot de passe incorrect.';
   }
 }
-function logout(){
-  isLogged = false;
-  localStorage.setItem('logged590','0');
-  show('landing');
+function logout(){ isLogged=false; localStorage.setItem('logged590','0'); show('landing'); }
+function adminRechargeParGmail(){
+  let email=document.getElementById('adminEmail').value.trim();
+  let montant=parseInt(document.getElementById('adminMontant').value||'0');
+  if(!email||montant<=0){ document.getElementById('msgAdminRecharge').innerText='Mets Gmail + montant'; return; }
+  let users=getUsers();
+  let cible=users.find(x=>x.email==email||x.user==email);
+  if(!cible){ document.getElementById('msgAdminRecharge').innerText='Ce Gmail n\'existe pas. Crée le compte d\'abord.'; return; }
+  let admin=users.find(x=>x.user==currentUser);
+  if(admin.solde < montant){ document.getElementById('msgAdminRecharge').innerText='Solde Admin insuffisant.'; return; }
+  admin.solde-=montant; cible.solde=(cible.solde||0)+montant;
+  saveUsers(users); updateSolde();
+  document.getElementById('msgAdminRecharge').innerText='✅ '+montant+' F envoyé à '+cible.email+' ('+cible.role+'). Nouveau solde : '+cible.solde+' F';
+  renderAdmin();
+}
+function creerRevendeur(){
+  let u=document.getElementById('newRevUser').value.trim();
+  let e=document.getElementById('newRevEmail').value.trim();
+  let p=document.getElementById('newRevPass').value;
+  if(!u||!e||!p){ document.getElementById('msgNewRev').innerText='Remplis tout.'; return; }
+  let users=getUsers();
+  if(users.find(x=>x.user==u||x.email==e)){ document.getElementById('msgNewRev').innerText='Déjà existant.'; return; }
+  users.push({user:u,email:e,pass:p,role:'revendeur',solde:0});
+  saveUsers(users);
+  document.getElementById('msgNewRev').innerText='✅ Revendeur créé : '+u+' / '+e;
+  renderAdmin();
+}
+function renderAdmin(){
+  updateSolde();
+  let users=getUsers();
+  document.getElementById('adminUsers').innerHTML=users.map(x=>'<div class="ticket"><b>'+x.user+' ('+x.role+')</b><br>'+x.email+'<br>Solde : '+(x.solde||0)+' F</div>').join('');
+  document.getElementById('adminTickets').innerHTML=tickets.length?tickets.slice().reverse().map(t=>'<div class="ticket"><b>'+t.pays+' - '+t.draw+'</b> '+t.nums.join(' - ')+' - '+t.mise+' F - '+t.user+'</div>').join(''):'Aucun ticket';
+  document.getElementById('adminPays').innerHTML=PAYS.map(p=>'<option value="'+p.nom+'">'+p.nom+'</option>').join('');
+}
+function revendeurRecharge(){
+  let email=document.getElementById('revEmail').value.trim();
+  let montant=parseInt(document.getElementById('revMontant').value||'0');
+  if(!email||montant<=0){ document.getElementById('msgRev').innerText='Mets Gmail + montant'; return; }
+  let users=getUsers();
+  let cible=users.find(x=>(x.email==email||x.user==email)&&x.role=='client');
+  if(!cible){ document.getElementById('msgRev').innerText='Client introuvable. Vérifie son Gmail.'; return; }
+  let moi=users.find(x=>x.user==currentUser);
+  if(moi.solde < montant){ document.getElementById('msgRev').innerText='Ton solde Revendeur est insuffisant. Demande à Admin de te recharger.'; return; }
+  moi.solde-=montant; cible.solde=(cible.solde||0)+montant;
+  saveUsers(users); updateSolde();
+  document.getElementById('msgRev').innerText='✅ '+montant+' F envoyé à '+cible.email+'. Il a maintenant '+cible.solde+' F';
+  renderRevendeur();
+}
+function renderRevendeur(){
+  updateSolde();
+  let users=getUsers();
+  let clients=users.filter(x=>x.role=='client');
+  document.getElementById('revClients').innerHTML=clients.map(x=>'<div class="ticket"><b>'+x.user+'</b><br>'+x.email+'<br>Solde : '+(x.solde||0)+' F</div>').join('')||'Aucun client';
 }
 function renderHome(){
-  let total = 0;
-  let fermeHtml = '';
-  PAYS.forEach(p => {
-    let o = p.tirages.filter(t => !isFini(t)).length;
-    total += o;
-    p.tirages.forEach(t => {
-      if(!isFini(t)){
-        fermeHtml += '<div class="f" onclick="openPays(\''+p.id+'\')"><b>'+p.flag+' '+t.n+'</b><p>Auj. '+t.h+':'+(t.m==0?'00':t.m)+' - '+reste(t.h,t.m)+'</p><small>Ferme bientôt</small></div>';
-      }
-    });
+  let total=0; let fermeHtml='';
+  PAYS.forEach(p=>{
+    let o=p.tirages.filter(t=>!isFini(t)).length; total+=o;
+    p.tirages.forEach(t=>{ if(!isFini(t)){ fermeHtml+='<div class="f" onclick="openPays(\''+p.id+'\')"><b>'+p.flag+' '+t.n+'</b><p>Auj. '+t.h+':'+(t.m==0?'00':t.m)+' - '+reste(t.h,t.m)+'</p><small>Ferme bientôt</small></div>'; } });
   });
-  document.getElementById('ferme').innerHTML = fermeHtml || '<p>Tous les tirages du jour sont finis, voir Demain.</p>';
-  document.getElementById('totalPays').innerText = total + ' ouverts';
-  document.getElementById('paysGrid').innerHTML = PAYS.map(p => {
-    let o = p.tirages.filter(t => !isFini(t)).length;
-    return '<div class="card" onclick="openPays(\''+p.id+'\')"><div class="flag">'+p.flag+'</div><b>'+p.nom+'</b><p>'+o+' tirage(s) ouvert(s)</p><small>Loto 5/90 - '+p.tirages.length+' tirages / jour</small></div>';
-  }).join('');
-  document.getElementById('resultHome').innerText = resultats.length ? resultats.slice(-2).map(r => r.pays+' '+r.nums).join(' | ') : 'Aucun résultat publié. Ex: BENIN SOIR 18H - 5, 12, 34, 56, 89';
-  document.getElementById('pronoHome').innerText = genNums().join(' - ');
-  document.getElementById('adminPays').innerHTML = PAYS.map(p => '<option value="'+p.nom+'">'+p.nom+'</option>').join('');
+  document.getElementById('ferme').innerHTML=fermeHtml||'<p>Tous les tirages du jour sont finis, voir Demain.</p>';
+  document.getElementById('totalPays').innerText=total+' ouverts';
+  document.getElementById('paysGrid').innerHTML=PAYS.map(p=>{ let o=p.tirages.filter(t=>!isFini(t)).length; return '<div class="card" onclick="openPays(\''+p.id+'\')"><div class="flag">'+p.flag+'</div><b>'+p.nom+'</b><p>'+o+' tirage(s) ouvert(s)</p><small>Loto 5/90</small></div>'; }).join('');
+  document.getElementById('resultHome').innerText=resultats.length?resultats.slice(-2).map(r=>r.pays+' '+r.nums).join(' | '):'Aucun résultat publié.';
+  document.getElementById('pronoHome').innerText=genNums().join(' - ');
 }
-function openPays(id){
-  currentPays = PAYS.find(p => p.id == id);
-  currentTab = 'auj';
-  show('pays');
-  document.getElementById('paysTitle').innerText = currentPays.flag + ' ' + currentPays.nom;
-  renderDraws();
-}
-function setTab(t){
-  currentTab = t;
-  document.getElementById('tabAuj').className = t=='auj' ? 'on' : '';
-  document.getElementById('tabDem').className = t=='dem' ? 'on' : '';
-  renderDraws();
-}
+function openPays(id){ currentPays=PAYS.find(p=>p.id==id); currentTab='auj'; show('pays'); document.getElementById('paysTitle').innerText=currentPays.flag+' '+currentPays.nom; renderDraws(); }
+function setTab(t){ currentTab=t; document.getElementById('tabAuj').className=t=='auj'?'on':''; document.getElementById('tabDem').className=t=='dem'?'on':''; renderDraws(); }
 function renderDraws(){
-  let auj = currentPays.tirages.filter(t => !isFini(t));
-  let dem = currentPays.tirages.filter(t => isFini(t));
-  document.getElementById('cAuj').innerText = auj.length;
-  document.getElementById('cDem').innerText = dem.length;
-  let list = currentTab=='auj' ? auj : dem;
-  if(!list.length){
-    document.getElementById('drawGrid').innerHTML = '<p style="grid-column:1/3;text-align:center;color:#999">Aucun tirage ici. Regarde l\'autre onglet.</p>';
-    return;
-  }
-  document.getElementById('drawGrid').innerHTML = list.map(t => {
-    let label = currentTab=='auj' ? 'Auj. '+t.h+':'+(t.m==0?'00':t.m)+' - '+reste(t.h,t.m) : 'Dem. '+t.h+':'+(t.m==0?'00':t.m)+' - '+reste(t.h,t.m);
-    let btn = currentTab=='auj' ? '<button onclick="openJouer(\''+t.n+'\')">JOUER</button>' : '<button class="off">DEMAIN</button>';
+  let auj=currentPays.tirages.filter(t=>!isFini(t));
+  let dem=currentPays.tirages.filter(t=>isFini(t));
+  document.getElementById('cAuj').innerText=auj.length; document.getElementById('cDem').innerText=dem.length;
+  let list=currentTab=='auj'?auj:dem;
+  if(!list.length){ document.getElementById('drawGrid').innerHTML='<p style="grid-column:1/3;text-align:center;color:#999">Aucun tirage ici.</p>'; return; }
+  document.getElementById('drawGrid').innerHTML=list.map(t=>{
+    let label=currentTab=='auj'?'Auj. '+t.h+':'+(t.m==0?'00':t.m)+' - '+reste(t.h,t.m):'Dem. '+t.h+':'+(t.m==0?'00':t.m)+' - '+reste(t.h,t.m);
+    let btn=currentTab=='auj'?'<button onclick="openJouer(\''+t.n+'\')">JOUER</button>':'<button class="off">DEMAIN</button>';
     return '<div class="draw"><div class="flag">'+currentPays.flag+'</div><b>'+t.n+'</b><p>'+label+'</p><small>Loto 5/90</small>'+btn+'</div>';
   }).join('');
 }
 function openJouer(nom){
-  currentDraw = nom;
-  show('jouer');
-  document.getElementById('jouerTitle').innerText = currentPays.flag + ' ' + nom + ' - ' + currentPays.nom;
-  selected = [];
-  renderNums();
-  document.getElementById('msg').innerText = '';
+  if(currentRole!='client'){ alert('Seul le Client peut jouer.'); return; }
+  currentDraw=nom; show('jouer');
+  document.getElementById('jouerTitle').innerText=currentPays.flag+' '+nom+' - '+currentPays.nom;
+  selected=[]; renderNums(); document.getElementById('msg').innerText='';
 }
-function renderNums(){
-  let h = '';
-  for(let i=1;i<=90;i++){
-    h += '<button class="'+(selected.includes(i)?'sel':'')+'" onclick="toggleNum('+i+')">'+i+'</button>';
-  }
-  document.getElementById('numGrid').innerHTML = h;
-}
-function toggleNum(n){
-  if(selected.includes(n)){
-    selected = selected.filter(x => x !== n);
-  } else if(selected.length < 5){
-    selected.push(n);
-  } else {
-    alert('5 numéros seulement');
-  }
-  renderNums();
-}
+function renderNums(){ let h=''; for(let i=1;i<=90;i++){ h+='<button class="'+(selected.includes(i)?'sel':'')+'" onclick="toggleNum('+i+')">'+i+'</button>'; } document.getElementById('numGrid').innerHTML=h; }
+function toggleNum(n){ if(selected.includes(n)){ selected=selected.filter(x=>x!==n); } else if(selected.length<5){ selected.push(n); } else { alert('5 numéros seulement'); } renderNums(); }
 function valider(){
-  if(selected.length !== 5){
-    document.getElementById('msg').innerText = 'Choisis 5 numéros !';
-    return;
-  }
-  let mise = parseInt(document.getElementById('mise').value || '100');
-  if(mise > solde){
-    document.getElementById('msg').innerText = 'Solde insuffisant. Recharge d\'abord.';
-    return;
-  }
-  solde -= mise;
-  updateSolde();
-  let tk = {pays:currentPays.nom, draw:currentDraw, nums:selected.slice(), mise:mise, date:new Date().toLocaleString()};
-  tickets.push(tk);
-  localStorage.setItem('tickets590', JSON.stringify(tickets));
-  document.getElementById('msg').innerText = 'Coupon validé: ' + selected.join(' - ') + ' | Mise: ' + mise + ' F | ' + currentDraw;
-  selected = [];
-  renderNums();
+  if(currentRole!='client'){ alert('Seul le Client peut jouer.'); return; }
+  if(selected.length!==5){ document.getElementById('msg').innerText='Choisis 5 numéros !'; return; }
+  let mise=parseInt(document.getElementById('mise').value||'100');
+  let s=getMySolde();
+  if(mise>s){ document.getElementById('msg').innerText='Solde insuffisant. Demande recharge à ton revendeur.'; return; }
+  setMySolde(s-mise);
+  let tk={user:currentUser,pays:currentPays.nom,draw:currentDraw,nums:selected.slice(),mise:mise,date:new Date().toLocaleString()};
+  tickets.push(tk); localStorage.setItem('tickets590',JSON.stringify(tickets));
+  document.getElementById('msg').innerText='Coupon validé: '+selected.join(' - ')+' | Mise: '+mise+' F';
+  selected=[]; renderNums();
 }
-function renderTickets(){
-  document.getElementById('ticketsList').innerHTML = tickets.length ? tickets.slice().reverse().map(t => '<div class="ticket"><b>'+t.pays+' - '+t.draw+'</b><br>'+t.nums.join(' - ')+'<br><small>Mise: '+t.mise+' F - '+t.date+'</small></div>').join('') : '<p>Aucun ticket pour le moment.</p>';
-}
-function genNums(){
-  let a = [];
-  while(a.length < 5){
-    let n = Math.floor(Math.random()*90)+1;
-    if(!a.includes(n)) a.push(n);
-  }
-  return a.sort((x,y)=>x-y);
-}
-function genProno(){
-  document.getElementById('pronoList').innerText = 'Pronostic: ' + genNums().join(' - ');
-}
-function renderProno(){
-  document.getElementById('pronoList').innerText = 'Pronostic du jour: ' + genNums().join(' - ');
-}
-function renderResultats(){
-  document.getElementById('resultList').innerHTML = resultats.length ? resultats.slice().reverse().map(r => '<div class="ticket"><b>'+r.pays+'</b><br>'+r.nums+'<br><small>'+r.date+'</small></div>').join('') : '<p>Aucun résultat encore. L\'admin va publier.</p>';
-}
-function recharger(){
-  let m = parseInt(document.getElementById('montantRecharge').value || '0');
-  if(m <= 0){
-    document.getElementById('msgSolde').innerText = 'Mets un montant';
-    return;
-  }
-  solde += m;
-  updateSolde();
-  document.getElementById('msgSolde').innerText = 'Recharge de ' + m + ' F réussie. Solde: ' + solde + ' F';
-}
-function retirer(){
-  let m = parseInt(document.getElementById('montantRetrait').value || '0');
-  if(m > solde){ alert('Solde insuffisant'); return; }
-  solde -= m;
-  updateSolde();
-  alert('Demande de retrait ' + m + ' F envoyée.');
-}
-function saveProfil(){
-  localStorage.setItem('nom590', document.getElementById('nomProfil').value);
-  localStorage.setItem('tel590', document.getElementById('telProfil').value);
-  document.getElementById('msgProfil').innerText = 'Profil sauvegardé';
-}
+function renderTickets(){ document.getElementById('ticketsList').innerHTML=tickets.filter(t=>t.user==currentUser).length?tickets.filter(t=>t.user==currentUser).slice().reverse().map(t=>'<div class="ticket"><b>'+t.pays+' - '+t.draw+'</b><br>'+t.nums.join(' - ')+'<br><small>Mise: '+t.mise+' F - '+t.date+'</small></div>').join(''):'<p>Aucun ticket.</p>'; }
+function genNums(){ let a=[]; while(a.length<5){ let n=Math.floor(Math.random()*90)+1; if(!a.includes(n)) a.push(n); } return a.sort((x,y)=>x-y); }
+function genProno(){ document.getElementById('pronoList').innerText='Pronostic: '+genNums().join(' - '); }
+function renderProno(){ document.getElementById('pronoList').innerText='Pronostic du jour: '+genNums().join(' - '); }
+function renderResultats(){ document.getElementById('resultList').innerHTML=resultats.length?resultats.slice().reverse().map(r=>'<div class="ticket"><b>'+r.pays+'</b><br>'+r.nums+'<br><small>'+r.date+'</small></div>').join(''):'<p>Aucun résultat encore.</p>'; }
+function recharger(){ document.getElementById('msgSolde').innerText='Demande à ton Revendeur de te recharger par Gmail.'; }
+function retirer(){ let m=parseInt(document.getElementById('montantRetrait').value||'0'); let s=getMySolde(); if(m>s){ alert('Solde insuffisant'); return; } setMySolde(s-m); alert('Demande de retrait '+m+' F envoyée.'); }
+function saveProfil(){ localStorage.setItem('nom590',document.getElementById('nomProfil').value); localStorage.setItem('tel590',document.getElementById('telProfil').value); document.getElementById('msgProfil').innerText='Profil sauvegardé'; }
 function openAdmin(){
-  let c = document.getElementById('codeAdmin').value;
-  if(c == '590590'){
-    show('admin');
-    document.getElementById('adminTickets').innerHTML = tickets.length ? tickets.slice().reverse().map(t => '<div class="ticket"><b>'+t.pays+' - '+t.draw+'</b> '+t.nums.join(' - ')+' - '+t.mise+' F</div>').join('') : 'Aucun ticket';
-  } else {
-    document.getElementById('msgAdminCode').innerText = 'Code incorrect.';
-  }
+  let c=document.getElementById('codeAdmin').value;
+  if(c=='590590' && currentRole=='admin'){ show('admin'); }
+  else { document.getElementById('msgAdminCode').innerText='Code incorrect ou tu n\'es pas Admin.'; }
 }
 function publierResult(){
-  let pays = document.getElementById('adminPays').value;
-  let nums = document.getElementById('adminResult').value;
-  if(!nums){
-    document.getElementById('msgAdmin').innerText = 'Mets les 5 numéros';
-    return;
-  }
-  resultats.push({pays:pays, nums:nums, date:new Date().toLocaleString()});
-  localStorage.setItem('resultats590', JSON.stringify(resultats));
-  document.getElementById('msgAdmin').innerText = 'Résultat publié: ' + pays + ' - ' + nums;
+  let pays=document.getElementById('adminPays').value;
+  let nums=document.getElementById('adminResult').value;
+  if(!nums){ document.getElementById('msgAdmin').innerText='Mets les 5 numéros'; return; }
+  resultats.push({pays:pays,nums:nums,date:new Date().toLocaleString()});
+  localStorage.setItem('resultats590',JSON.stringify(resultats));
+  document.getElementById('msgAdmin').innerText='Résultat publié: '+pays+' - '+nums;
 }
 updateSolde();
-document.getElementById('nomProfil').value = localStorage.getItem('nom590') || '';
-document.getElementById('telProfil').value = localStorage.getItem('tel590') || '';
-if(isLogged) show('home'); else show('landing');
+document.getElementById('nomProfil').value=localStorage.getItem('nom590')||'';
+document.getElementById('telProfil').value=localStorage.getItem('tel590')||'';
+if(isLogged){
+  if(currentRole=='admin') show('admin');
+  else if(currentRole=='revendeur') show('revendeur');
+  else show('home');
+} else show('landing');
 </script>
 </body>
 </html>
