@@ -1,36 +1,260 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NET LOTO 590 - 5/90</title><style>*{box-sizing:border-box}body{margin:0;background:#000;color:#fff;font-family:Arial;padding-bottom:80px}input,select,button{width:100%;padding:12px;margin:6px 0;border-radius:12px;border:none;font-size:16px}button{background:#f5c518;color:#000;font-weight:900;cursor:pointer}.box{background:#151515;margin:10px;padding:14px;border-radius:16px;border:1px solid #2a2a2a}.hide{display:none!important}.top{display:flex;justify-content:space-between;align-items:center;padding:12px}.small{font-size:13px;opacity:.75}.yellow{color:#f5c518}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.country{background:#1a1a1a;border:1px solid #333;border-radius:16px;padding:14px;text-align:center;cursor:pointer}.country b{font-size:16px}.tirage{background:#1a1a1a;border:1px solid #333;border-radius:16px;padding:12px;cursor:pointer}.tirage b{color:#f5c518}.ferme{background:#f5c518;color:#000;padding:10px;margin:10px;border-radius:12px;font-weight:900;text-align:center}.tabs{display:flex;gap:8px}.tabs button{background:#222;color:#fff}.tabs button.active{background:#f5c518;color:#000}.bottom{position:fixed;bottom:0;left:0;right:0;background:#111;display:flex;justify-content:space-around;padding:8px 4px;border-top:2px solid #f5c518;z-index:99}.bottom button{background:none;color:#aaa;font-size:11px;padding:6px;width:auto}.bottom button.active{color:#f5c518}.couponMid{background:#e11d2e!important;color:#fff!important;border-radius:50%!important;width:56px!important;height:56px!important;margin-top:-28px!important;font-size:20px!important;border:3px solid #000!important}</style></head><body>
-<div id="authPage" class="box"><h2 style="text-align:center;color:#f5c518">🎰 NET LOTO 590 - 5/90</h2><p class="small" style="text-align:center">Connexion / Inscription</p><input id="loginCode" placeholder="Code ex: ADMIN590 / REV001 / CLI001"><input id="loginPass" type="password" placeholder="Mot de passe ex: 1234"><button onclick="login()">SE CONNECTER</button><hr><h3>Inscription Client</h3><input id="regName" placeholder="Nom complet"><input id="regPass" type="password" placeholder="Mot de passe"><button onclick="registerClient()">CRÉER COMPTE CLIENT</button><p class="small">Admin: ADMIN590 / 1234 - Revendeur: REV001 / 1234 - Client: CLI001 / 1234</p></div>
-<div id="app" class="hide"><div class="top"><b id="userTxt">Utilisateur</b><button onclick="logout()" style="width:auto;padding:8px 14px;background:#222;color:#fff">Déconnexion</button></div>
-<div id="pAccueil"><div class="ferme">⏰ FERME BIENTÔT - <span id="fermeTxt">BÉNIN DIMANCHE 18H - Ferme dans 1h10</span></div><div class="box"><h3>🌍 Choisir un pays - <span class="yellow">28 ouverts</span> - <span style="text-decoration:underline;cursor:pointer" onclick="showPays()">Voir tous</span></h3><div class="grid2"><div class="country" onclick="openPays('BENIN')">🇧🇯<br><b>BÉNIN</b><br><span class="small">6 tirages ouverts</span></div><div class="country" onclick="openPays('CIV')">🇨🇮<br><b>CÔTE D'IVOIRE</b><br><span class="small">10 tirages ouverts</span></div><div class="country" onclick="openPays('FRANCE')">🇫🇷<br><b>FRANCE</b><br><span class="small">1 tirage ouvert</span></div><div class="country" onclick="openPays('GHANA')">🇬🇭<br><b>GHANA</b><br><span class="small">1 tirage ouvert</span></div><div class="country" onclick="openPays('NIGERIA')">🇳🇬<br><b>NIGÉRIA</b><br><span class="small">4 tirages ouverts</span></div><div class="country" onclick="openPays('TOGO')">🇹🇬<br><b>TOGO</b><br><span class="small">3 tirages ouverts</span></div><div class="country" onclick="openPays('UNIVERSEL')">🌍<br><b>UNIVERSEL</b><br><span class="small">3 tirages ouverts</span></div><div class="country" onclick="openPays('NAMS')">🎮<br><b>NAMS</b><br><span class="small">E-game</span></div></div></div><div class="box"><h3>🔥 Pronostic du jour</h3><p id="pronoTxt">12 - 25 - 33 - 41 - 58 (Nappe 2 forte)</p><p class="small">Nappe = numéros sûrs. Nappe 5 = il faut les 5, si 4 sortent tu n'as pas gagné.</p><p>Mon Solde Jeu : <b class="yellow" id="soldeJeuTxt">0</b> F | Solde Gain : <b class="yellow" id="soldeGainTxt">0</b> F</p></div></div>
-<div id="pPays" class="hide"><div class="box"><button onclick="showPage('pAccueil')" style="background:#222;color:#fff;width:auto">← Retour Pays</button><h3 id="paysTitre">🇧🇯 BÉNIN</h3><div class="tabs"><button id="tabAuj" class="active" onclick="showTirages('auj')">Aujourd'hui 3</button><button id="tabDem" onclick="showTirages('dem')">À venir 3</button></div><div id="tiragesList" class="grid2" style="margin-top:10px"></div></div></div>
-<div id="pJouer" class="hide"><div class="box"><h3>🎲 Jouer - <span id="jouerTirageTxt" style="color:#f5c518">BÉNIN DIMANCHE 18H</span></h3><p class="small" id="jouerPaysTxt">Pays : BÉNIN - Tirage : Aujourd'hui</p><label>Type de jeu</label><select id="jeuType"><option value="nappe1">NAPPE 1 - 1 numéro sûr - Min 100 F</option><option value="nappe2">NAPPE 2 - 2 numéros sûrs</option><option value="nappe3">NAPPE 3 - 3 numéros sûrs</option><option value="nappe4">NAPPE 4 - 4 numéros sûrs</option><option value="nappe5">NAPPE 5 - 5 numéros sûrs</option></select><input id="jeuNums" placeholder="Numéros ex: 12,25,33"><input id="jeuMise" type="number" placeholder="Mise par ticket ex: 100"><button onclick="jouer()">VALIDER TICKET NAPPE</button><hr><h3>🔁 PERMUTATION</h3><p class="small">Tu prends beaucoup de numéros, tu dis je veux K dedans. Ex: 3 numéros, je veux 2 dedans = 3 couples. Coût = Nombre de couples x 25 F.</p><input id="permNums" placeholder="Numéros permutation ex: 12,25,33,41"><select id="permK"><option value="2">Je veux 2 dedans</option><option value="3">Je veux 3 dedans</option><option value="4">Je veux 4 dedans</option><option value="5">Je veux 5 dedans</option></select><input id="permMise" type="number" value="25" placeholder="Mise par couple ex: 25"><button onclick="calculPerm()">CALCULER COUPLES</button><p id="permInfo" class="small" style="color:#f5c518"></p><button onclick="jouerPerm()">VALIDER PERMUTATION</button></div></div>
-<div id="pSolde" class="hide"><div class="box"><h3>💰 Mon Solde</h3><p>Solde Jeu : <b id="soldeJeuTxt2" style="color:#f5c518">0</b> F</p><p>Solde Gain : <b id="soldeGainTxt2" style="color:#f5c518">0</b> F</p><p class="small">Demande de retrait (Client / Revendeur)</p><input id="retraitMontant" type="number" placeholder="Montant retrait"><button onclick="demandeRetrait()">DEMANDER RETRAIT</button></div></div>
-<div id="pTickets" class="hide"><div class="box"><h3>🎫 Mes Tickets</h3><div id="ticketsList"></div></div></div>
-<div id="pResult" class="hide"><div class="box"><h3>🏆 Résultats</h3><div id="resultList"></div></div></div>
-<div id="pAdmin" class="hide"><div class="box"><h3>🎛️ PLATEFORME ADMIN</h3><div id="caisseBox" class="box" style="border:1px solid #f5c518"><h3>MA CAISSE (ADMIN SEUL)</h3><p>Caisse : <b id="caisseTxt" style="color:#f5c518">0</b> F</p><input id="caisseMontant" type="number" placeholder="Montant caisse"><button onclick="rechargerCaisse()">RECHARGER CAISSE</button></div><div class="box"><h3>Créer un Revendeur</h3><input id="newRevName" placeholder="Nom revendeur"><input id="newRevCode" placeholder="Code ex: REV002"><input id="newRevPass" type="password" placeholder="Mot de passe"><button onclick="creerRevendeur()">CRÉER REVENDEUR</button></div><div class="box"><h3>Recharger Solde Client / Revendeur</h3><input id="rechCode" placeholder="Code à recharger ex: CLI001"><input id="rechMontant" type="number" placeholder="Montant"><select id="rechType"><option value="jeu">Vers Solde Jeu</option><option value="gain">Vers Solde Gain</option></select><button onclick="adminRecharger()">RECHARGER SOLDE</button></div><div class="box"><h3>Publier Résultat</h3><input id="resNums" placeholder="Numéros gagnants ex: 12,25,33,41,58"><button onclick="publierResult()">PUBLIER + CALCULER GAINS</button><button onclick="payerGains()">💰 PAYER pour distribuer</button></div><div class="box"><h3>Demandes de Retrait</h3><div id="retraitsList"></div></div><div class="box"><h3>Messages / Pronostics</h3><div id="adminMsgList">Pronostic actuel : 12 - 25 - 33 - 41 - 58</div></div></div></div>
-<div id="pMenu" class="hide"><div class="box"><h3>☰ Menu</h3><button onclick="showPage('pAccueil')" style="background:#222;color:#fff">🏠 Accueil</button><button onclick="showPage('pPays')" style="background:#222;color:#fff">🌍 Tirages</button><button onclick="showPage('pJouer')" style="background:#222;color:#fff">🎲 Jouer</button><button onclick="showPage('pTickets')" style="background:#222;color:#fff">🎫 Mes Tickets</button><button onclick="showPage('pResult')" style="background:#222;color:#fff">🏆 Résultats</button><button onclick="showPage('pSolde')" style="background:#222;color:#fff">💰 Solde</button><button onclick="showPage('pAdmin')" style="background:#222;color:#fff">🎛️ Admin</button></div></div>
-<div class="bottom"><button onclick="showPage('pAccueil')" id="bAccueil" class="active">🏠<br>Accueil</button><button onclick="showPage('pPays')" id="bPays">🌍<br>Tirages</button><button onclick="showPage('pJouer')" class="couponMid">🎫</button><button onclick="showPage('pTickets')" id="bTickets">🎫<br>Tickets</button><button onclick="showPage('pSolde')" id="bSolde">💰<br>Solde</button></div></div>
-<script>let DB=JSON.parse(localStorage.getItem('netloto590')||'null')||{caisse:0,users:{ADMIN590:{code:'ADMIN590',name:'Admin',pass:'1234',role:'admin',soldeJeu:0,soldeGain:0},REV001:{code:'REV001',name:'Revendeur Test',pass:'1234',role:'revendeur',soldeJeu:0,soldeGain:0},CLI001:{code:'CLI001',name:'Client Test',pass:'1234',role:'client',soldeJeu:0,soldeGain:0}},tickets:[],results:[],retraits:[]};let cur=null;let paysActuel='BENIN';let tirageActuel='BÉNIN DIMANCHE 18H';let periodeActuelle='auj';
-let TIRAGES={BENIN:{nom:'🇧🇯 BÉNIN',auj:[{t:'DIMANCHE 18H',h:'Auj. 16:50 - 1h10'},{t:'DIMANCHE 20H',h:'Auj. 18:50 - 3h10'},{t:'NUIT 22H',h:'Auj. 20:50 - 5h10'}],dem:[{t:'LUNDI 10H',h:'Dem. 09:50 - 15h10'},{t:'LUNDI 13H',h:'Dem. 12:50 - 18h15'},{t:'LUNDI 18H',h:'Dem. 17:50 - 23h10'}]},CIV:{nom:'🇨🇮 CÔTE D\'IVOIRE',auj:[{t:'DIGITAL 7H',h:'Auj. 06:50 - 1h10'},{t:'REVEIL 10H',h:'Auj. 09:55 - 2h15'},{t:'MIDI 13H',h:'Auj. 12:50 - 5h10'}],dem:[{t:'DIGITAL 7H',h:'Dem. 06:50 - 15h10'},{t:'REVEIL 10H',h:'Dem. 09:55 - 18h15'},{t:'MIDI 13H',h:'Dem. 12:50 - 20h10'}]},FRANCE:{nom:'🇫🇷 FRANCE',auj:[{t:'FRANCE 20H',h:'Auj. 19:50 - 3h10'}],dem:[{t:'FRANCE 20H',h:'Dem. 19:50 - 27h10'}]},GHANA:{nom:'🇬🇭 GHANA',auj:[{t:'GHANA 18H',h:'Auj. 17:50 - 1h10'}],dem:[{t:'GHANA 18H',h:'Dem. 17:50 - 25h10'}]},NIGERIA:{nom:'🇳🇬 NIGÉRIA',auj:[{t:'LAGOS 12H',h:'Auj. 11:50 - 2h10'},{t:'ABUJA 18H',h:'Auj. 17:50 - 4h10'}],dem:[{t:'LAGOS 12H',h:'Dem. 11:50 - 26h10'},{t:'ABUJA 18H',h:'Dem. 17:50 - 28h10'}]},TOGO:{nom:'🇹🇬 TOGO',auj:[{t:'LOME 18H',h:'Auj. 17:50 - 1h10'}],dem:[{t:'LOME 18H',h:'Dem. 17:50 - 25h10'}]},UNIVERSEL:{nom:'🌍 UNIVERSEL',auj:[{t:'UNIVERSEL 14H',h:'Auj. 13:50 - 2h10'}],dem:[{t:'UNIVERSEL 14H',h:'Dem. 13:50 - 26h10'}]},NAMS:{nom:'🎮 NAMS',auj:[{t:'NAMS E-GAME',h:'En ligne - Joue maintenant'}],dem:[{t:'NAMS E-GAME',h:'Dem. - En ligne'}]}};
-function save(){localStorage.setItem('netloto590',JSON.stringify(DB));}
-function combin(n,k){if(k>n)return 0;let r=1;for(let i=0;i<k;i++){r=r*(n-i)/(i+1);}return Math.round(r);}
-function showPage(id){['pAccueil','pPays','pJouer','pSolde','pTickets','pResult','pAdmin','pMenu'].forEach(p=>{let e=document.getElementById(p);if(e)e.classList.toggle('hide',p!==id);});document.querySelectorAll('.bottom button').forEach(b=>b.classList.remove('active'));}
-function showPays(){showPage('pAccueil');}
-function openPays(p){paysActuel=p;periodeActuelle='auj';document.getElementById('paysTitre').innerText=(TIRAGES[p]?TIRAGES[p].nom:p);showPage('pPays');showTirages('auj');}
-function showTirages(per){periodeActuelle=per;document.getElementById('tabAuj').classList.toggle('active',per=='auj');document.getElementById('tabDem').classList.toggle('active',per=='dem');let list=TIRAGES[paysActuel]?TIRAGES[paysActuel][per=='auj'?'auj':'dem']:[];document.getElementById('tiragesList').innerHTML=list.map(t=>'<div class="tirage" onclick="choisirTirage(\''+t.t+'\')"><b>'+(TIRAGES[paysActuel]?TIRAGES[paysActuel].nom:'')+'</b><br><b>'+t.t+'</b><br><span class="small">'+t.h+'</span><br><button style="margin-top:8px">JOUER</button></div>').join('');}
-function choisirTirage(t){tirageActuel=paysActuel+' - '+t;document.getElementById('jouerTirageTxt').innerText=tirageActuel;document.getElementById('jouerPaysTxt').innerText='Pays : '+paysActuel+' - Tirage : '+(periodeActuelle=='auj'?'Aujourd\'hui - On peut jouer':'À venir - Demain');showPage('pJouer');}
-function appliquerRole(){let isAdmin=cur&&cur.role=='admin';let isRev=cur&&cur.role=='revendeur';if(document.getElementById('caisseBox'))document.getElementById('caisseBox').style.display=isAdmin?'block':'none';}
-function refreshAll(){if(!cur)return;let u=DB.users[cur.code];if(!u)return;cur=u;document.getElementById('userTxt').innerText=u.name+' ('+u.code+') - '+u.role;['soldeJeuTxt','soldeJeuTxt2'].forEach(id=>{let e=document.getElementById(id);if(e)e.innerText=u.soldeJeu;});['soldeGainTxt','soldeGainTxt2'].forEach(id=>{let e=document.getElementById(id);if(e)e.innerText=u.soldeGain;});let c=document.getElementById('caisseTxt');if(c)c.innerText=DB.caisse;let tl=document.getElementById('ticketsList');if(tl)tl.innerHTML=DB.tickets.filter(t=>t.code==cur.code||cur.role=='admin').map(t=>'<p>'+t.type+' | '+t.nums+' | '+t.tirage+' | Mise:'+t.mise+' F | '+t.statut+'</p>').join('')||'Aucun ticket';let rl=document.getElementById('resultList');if(rl)rl.innerHTML=DB.results.map(r=>'<p>'+r.nums+' - '+r.date+'</p>').join('')||'Aucun résultat';let rwl=document.getElementById('retraitsList');if(rwl)rwl.innerHTML=DB.retraits.map((r,i)=>'<p>'+r.code+' demande '+r.montant+' F - '+r.statut+' <button onclick="validerRetrait('+i+')">VALIDER</button></p>').join('')||'Aucune demande';}
-function login(){let c=document.getElementById('loginCode').value.trim().toUpperCase();let p=document.getElementById('loginPass').value;let u=DB.users[c];if(!u||u.pass!==p)return alert('Code ou mot de passe incorrect');cur=u;document.getElementById('authPage').classList.add('hide');document.getElementById('app').classList.remove('hide');appliquerRole();if(u.role=='admin')showPage('pAdmin');else showPage('pAccueil');refreshAll();}
-function registerClient(){let n=document.getElementById('regName').value.trim();let p=document.getElementById('regPass').value;if(!n||!p)return alert('Nom et mot de passe');let code='CLI'+Math.floor(100+Math.random()*900);DB.users[code]={code:code,name:n,pass:p,role:'client',soldeJeu:0,soldeGain:0};save();alert('Compte créé ! Ton code est : '+code+' - Retiens-le pour te connecter');}
-function logout(){cur=null;document.getElementById('app').classList.add('hide');document.getElementById('authPage').classList.remove('hide');}
-function creerRevendeur(){let n=document.getElementById('newRevName').value.trim();let c=document.getElementById('newRevCode').value.trim().toUpperCase();let p=document.getElementById('newRevPass').value;if(!n||!c||!p)return alert('Remplis tout');DB.users[c]={code:c,name:n,pass:p,role:'revendeur',soldeJeu:0,soldeGain:0};save();refreshAll();alert('Revendeur créé : '+c);}
-function rechargerCaisse(){let m=parseInt(document.getElementById('caisseMontant').value||0);if(m<=0)return alert('Mets un montant');DB.caisse=(DB.caisse||0)+m;save();refreshAll();appliquerRole();alert('Caisse rechargée : '+m+' F. Nouvelle caisse : '+DB.caisse+' F');}
-function adminRecharger(){let g=document.getElementById('rechCode').value.trim().toUpperCase();let m=parseInt(document.getElementById('rechMontant').value||0);let t=document.getElementById('rechType').value;if(!DB.users[g])return alert('Code introuvable');if(m<=0)return alert('Mets un montant');if(t=='jeu')DB.users[g].soldeJeu=(DB.users[g].soldeJeu||0)+m;else DB.users[g].soldeGain=(DB.users[g].soldeGain||0)+m;save();refreshAll();alert('Recharge réussie : '+m+' F pour '+g+'. Nouveau solde Jeu : '+DB.users[g].soldeJeu+' F, Gain : '+DB.users[g].soldeGain+' F');}
-function jouer(){let type=document.getElementById('jeuType').value;let nums=document.getElementById('jeuNums').value.split(',').map(s=>parseInt(s.trim())).filter(n=>!isNaN(n));let mise=parseInt(document.getElementById('jeuMise').value||0);let need=parseInt(type.replace('nappe',''));if(nums.length!==need)return alert('Pour '+type.toUpperCase()+' tu dois mettre exactement '+need+' numéro(s) précis');if(mise<=0)return alert('Mets une mise');if(cur.soldeJeu<mise)return alert('Solde insuffisant');cur.soldeJeu-=mise;DB.tickets.push({code:cur.code,type:type.toUpperCase(),nums:nums.join(','),tirage:tirageActuel,mise:mise,statut:'En attente'});save();refreshAll();alert('Ticket validé : '+type.toUpperCase()+' '+nums.join('-')+' sur '+tirageActuel+' Mise '+mise+' F');}
-function calculPerm(){let nums=document.getElementById('permNums').value.split(',').map(s=>parseInt(s.trim())).filter(n=>!isNaN(n));let k=parseInt(document.getElementById('permK').value);let mise=parseInt(document.getElementById('permMise').value||25);let c=combin(nums.length,k);let total=c*mise;document.getElementById('permInfo').innerText='Tu as '+nums.length+' numéros, tu veux '+k+' dedans = '+c+' couples x '+mise+' F = '+total+' F à payer. Si un couple sort, tu gagnes.';}
-function jouerPerm(){let nums=document.getElementById('permNums').value.split(',').map(s=>parseInt(s.trim())).filter(n=>!isNaN(n));let k=parseInt(document.getElementById('permK').value);let mise=parseInt(document.getElementById('permMise').value||25);let c=combin(nums.length,k);let total=c*mise;if(nums.length<k)return alert('Mets plus de numéros que K');if(cur.soldeJeu<total)return alert('Solde insuffisant. Il faut '+total+' F');cur.soldeJeu-=total;DB.tickets.push({code:cur.code,type:'PERMUTATION Nappe '+k+' dans '+nums.length,nums:nums.join(','),tirage:tirageActuel,mise:total,statut:'En attente'});save();refreshAll();alert('Permutation validée : '+c+' couples, total '+total+' F sur '+tirageActuel);}
-function demandeRetrait(){let m=parseInt(document.getElementById('retraitMontant').value||0);if(m<=0)return alert('Mets un montant');if(cur.soldeGain<m)return alert('Solde Gain insuffisant');DB.retraits.push({code:cur.code,montant:m,statut:'En attente'});save();refreshAll();alert('Demande envoyée');}
-function validerRetrait(i){let r=DB.retraits[i];let u=DB.users[r.code];if(u.soldeGain<r.montant)return alert('Solde insuffisant');u.soldeGain-=r.montant;r.statut='Validé';save();refreshAll();alert('Retrait validé');}
-function publierResult(){let nums=document.getElementById('resNums').value.trim();if(!nums)return alert('Mets les numéros gagnants');let arr=nums.split(',').map(s=>parseInt(s.trim()));DB.results.push({nums:nums,date:new Date().toLocaleString()});DB.tickets.forEach(t=>{if(t.statut!=='En attente')return;let tn=t.nums.split(',').map(s=>parseInt(s.trim()));let hit=tn.filter(n=>arr.includes(n)).length;let need=0;if(t.type.includes('NAPPE'))need=parseInt(t.type.replace(/[^0-9]/g,''))||0;if(t.type.includes('PERMUTATION'))need=parseInt(t.type.split('Nappe ')[1])||0;if(need>0&&hit>=need){let gain=t.mise*50;t.statut='GAGNÉ +'+gain+' F';let u=DB.users[t.code];if(u)u.soldeGain+=gain;}});save();refreshAll();alert('Résultat publié et gains calculés');}
-function payerGains(){save();refreshAll();alert('Gains distribués dans Solde Gain');}</script></body></html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NET LOTO AT 590 - BÉNIN</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0a1a3a;color:#fff;padding-bottom:120px}
+.top{background:#0a1a3a;padding:12px;text-align:center;border-bottom:3px solid #ffcc00}
+.top h1{font-size:22px;color:#ffcc00;letter-spacing:1px}
+.top h1 span{color:#fff}
+.top p{font-size:13px;color:#ddd;margin-top:4px}
+.top .time{background:#ffcc00;color:#0a1a3a;display:inline-block;padding:4px 14px;border-radius:20px;font-weight:bold;margin-top:8px;font-size:13px}
+.tabs{display:flex;gap:8px;justify-content:center;margin:12px}
+.tabs button{flex:1;max-width:120px;padding:10px;border:none;border-radius:10px;font-weight:bold;cursor:pointer;background:#1a2f5e;color:#fff}
+.tabs button.active{background:#ffcc00;color:#0a1a3a}
+.mode3d{background:#000}
+.modeClassic{background:#f2f2f2;color:#000}
+.modeClassic .card{background:#fff;color:#000;border:1px solid #ddd}
+.login{background:#fff;color:#000;margin:10px;border-radius:14px;padding:14px}
+.login h3{color:#0a1a3a;text-align:center}
+.login input{width:100%;padding:11px;margin-top:8px;border:1px solid #ccc;border-radius:10px}
+.login button{width:100%;padding:12px;margin-top:10px;background:#0a4bd6;color:#fff;border:none;border-radius:10px;font-weight:bold;cursor:pointer}
+.login .info{font-size:12px;text-align:center;margin-top:8px;color:#555}
+.badges{display:flex;gap:8px;justify-content:center;margin:10px}
+.badges button{padding:10px 18px;border:none;border-radius:20px;font-weight:bold;cursor:pointer}
+.btn-normal{background:#0a4bd6;color:#fff}
+.btn-chance{background:#ffcc00;color:#000}
+.formules{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:0 10px}
+.formules button{padding:9px 12px;border-radius:20px;border:1px solid #ffcc00;background:#142a5e;color:#fff;cursor:pointer;font-size:12px;font-weight:bold}
+.formules button.active{background:#ffcc00;color:#0a1a3a}
+.card{background:#132a5e;margin:12px;border-radius:16px;padding:14px}
+.card h2{font-size:16px;color:#ffcc00;margin-bottom:6px}
+.pari{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.pari button{padding:8px 12px;border-radius:20px;border:1px solid #ccc;background:#fff;color:#000;font-size:12px;cursor:pointer}
+.pari button.active{background:#0a4bd6;color:#fff;border-color:#0a4bd6}
+.nums{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.num{width:52px;height:52px;border-radius:50%;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;cursor:pointer;border:3px solid #ffcc00}
+.num.sel{background:#0a4bd6;color:#fff;border-color:#fff}
+.num.base{background:#ffcc00;color:#000}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0;max-height:220px;overflow:auto;background:#0a1a3a;padding:10px;border-radius:12px}
+.grid button{padding:10px;border:none;border-radius:8px;background:#fff;font-weight:bold;cursor:pointer}
+.grid button.sel{background:#ffcc00}
+.mises{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.mises button{padding:10px 14px;border-radius:10px;border:none;background:#ffcc00;font-weight:bold;cursor:pointer}
+.total{background:#ffcc00;color:#000;border-radius:12px;padding:12px;text-align:center;font-weight:bold;margin-top:10px}
+.total span{font-size:20px}
+.btn-coupon{width:100%;padding:14px;background:#0a4bd6;color:#fff;border:2px solid #ffcc00;border-radius:12px;font-weight:bold;font-size:16px;cursor:pointer;margin-top:10px}
+.btn-coupon:disabled{background:#777;color:#ccc;cursor:not-allowed;border-color:#555}
+.coupon{background:#fff;color:#000;margin:12px;border-radius:16px;padding:14px}
+.coupon h3{color:#0a4bd6}
+.coupon-item{border-bottom:1px dashed #ccc;padding:8px 0;font-size:13px;display:flex;justify-content:space-between}
+.hidden{display:none}
+.admin-bar{background:#ffcc00;color:#000;text-align:center;padding:8px;font-weight:bold;font-size:13px}
+.rev-bar{background:#ff4444;color:#fff;text-align:center;padding:8px;font-weight:bold;font-size:13px}
+</style>
+</head>
+<body id="body">
+<div class="top">
+<h1>NET LOTO <span>AT 590</span></h1>
+<p>🇧🇯 BÉNIN - LUNDI 00H</p>
+<div class="time">Aujourd'hui 22:50</div>
+</div>
+
+<div id="loginBox" class="login">
+<h3>PAGE MÈRE - CONNEXION</h3>
+<input id="user" placeholder="Nom d'utilisateur - ex: admin ou revendeur1">
+<input id="pass" type="password" placeholder="Mot de passe">
+<button onclick="login()">SE CONNECTER</button>
+<p class="info">Test : <b>admin / 1234</b> = Débloqué | <b>revendeur / 1234</b> = Bouton Jouer BLOQUÉ<br><button onclick="demoAdmin()" style="width:auto;padding:6px 12px;background:#0a4bd6;color:#fff;border:none;border-radius:8px">Démo Admin</button> <button onclick="demoRev()" style="width:auto;padding:6px 12px;background:#ffcc00;border:none;border-radius:8px">Démo Revendeur</button></p>
+</div>
+
+<div id="app" class="hidden">
+<div id="roleBar"></div>
+<div class="tabs">
+<button class="active" onclick="setMode('basic',this)">Basic</button>
+<button onclick="setMode('3d',this)">3D</button>
+<button onclick="setMode('classic',this)">Classic</button>
+</div>
+<div class="badges">
+<button class="btn-normal">NORMAL</button>
+<button class="btn-chance">MA CHANCE</button>
+</div><div class="formules" id="formules">
+<button class="active" onclick="setFormule('twosure',this)">Two sure</button>
+<button onclick="setFormule('permutation',this)">Permutation</button>
+<button onclick="setFormule('nappe',this)">PN (1N) / Nappe</button>
+<button onclick="setFormule('nap',this)">NAP</button>
+<button onclick="setFormule('against',this)">Against</button>
+<button onclick="setFormule('anagramme',this)">Anagramme</button>
+<button onclick="setFormule('chance',this)">Chance +</button>
+</div>
+
+<div class="card">
+<h2 id="titreFormule">TWO SURE - DIRECT / TURBO2 / TURBO3 / TURBO4</h2>
+<div class="pari" id="pariBox">
+<button class="active" onclick="setPari('DIRECT',this)">DIRECT</button>
+<button onclick="setPari('TURBO2',this)">TURBO2</button>
+<button onclick="setPari('TURBO3',this)">TURBO3</button>
+<button onclick="setPari('TURBO4',this)">TURBO4</button>
+</div>
+
+<div id="nappeBox" class="hidden">
+<div class="pari">
+<button onclick="setNappe(1,this)">Nappe 1</button>
+<button class="active" onclick="setNappe(2,this)">Nappe 2</button>
+<button onclick="setNappe(3,this)">Nappe 3</button>
+<button onclick="setNappe(4,this)">Nappe 4</button>
+<button onclick="setNappe(5,this)">Nappe 5</button>
+</div>
+<p style="font-size:12px">Nappe = Nombre de numéros sûrs (1 à 5)</p>
+</div>
+
+<div id="anagrammeBox" class="hidden">
+<div class="pari">
+<button class="active">Simple</button><button>Complet</button><button>Canta</button><button>37 couples</button>
+</div>
+<p style="font-size:12px">Anagramme : 01-10, 02-20, 03-30 ... = 37 couples</p>
+</div>
+
+<p>NUMÉROS : <b id="count">0/2</b> <span id="baseInfo"></span></p>
+<div class="nums" id="selected"></div>
+<p style="font-size:12px" id="help">Choisis 2 numéros en bas. Clique sur un numéro pour le mettre en BASE (NAP / AGAINST).</p>
+<div class="grid" id="grid"></div>
+
+<p>MISE DE BASE :</p>
+<div class="mises">
+<button onclick="setMise(25)">25</button>
+<button onclick="setMise(100)">100</button>
+<button onclick="setMise(200)">200</button>
+<button onclick="setMise(500)">500</button>
+<button onclick="setMise(1000)">1 000</button>
+<button onclick="setMise(2000)">2 000</button>
+</div>
+<p>MISE : <input id="miseInput" value="25" type="number" style="padding:8px;width:90px;border-radius:8px;border:none" oninput="calc()"> F</p>
+<div class="total">MISE TOTALE : <span id="miseTot">25 XOF</span> - <span id="comb">1 combinaison</span><br>GAIN : <span id="gain">325 XOF</span> <button onclick="showGain()" style="padding:4px 10px;border:none;border-radius:8px;background:#0a4bd6;color:#fff">DÉTAILS</button></div>
+<div id="gainDetail" class="hidden" style="background:#fff;color:#000;padding:10px;border-radius:10px;margin-top:8px;font-size:13px">
+<b>Détail des gains - 2 lignes</b><br>2 bons = 2 000 XOF<br>3 bons = 43 750 XOF<br><b>Meilleur cas = 43 750 XOF</b>
+</div>
+<button id="btnCoupon" class="btn-coupon" onclick="addCoupon()">⚡ Ajouter au coupon</button>
+<p id="blockedMsg" class="hidden" style="text-align:center;color:#ffcc00;font-size:12px;margin-top:6px">⛔ Bouton JOUER bloqué pour REVENDEUR - Seul ADMIN peut jouer</p>
+</div>
+
+<div class="coupon">
+<h3>🧾 COUPON / TICKETS</h3>
+<div id="couponList"><p style="font-size:13px;color:#666">Aucun ticket pour le moment.</p></div>
+<p style="margin-top:10px"><b>TOTAL COUPON : <span id="couponTotal">0</span> XOF</b></p>
+<button onclick="clearCoupon()" style="padding:10px;width:100%;background:#0a4bd6;color:#fff;border:none;border-radius:10px;font-weight:bold">Effacer coupon</button>
+<p style="font-size:12px;color:#555;margin-top:8px">Solde : 10 000 XOF | Résultats : En attente 22:50</p>
+</div>
+</div><script>
+let formule='twosure', pari='DIRECT', nappeN=2, mise=25, selected=[], base=null, role='admin', coupon=[];
+const limits={twosure:2,permutation:3,nappe:2,nap:3,against:2,anagramme:3,chance:1};
+function login(){
+  let u=document.getElementById('user').value.trim().toLowerCase();
+  if(u==='admin'){role='admin'} else if(u==='revendeur'||u==='vendeur'||u===''){role='revendeur'} else {role='revendeur'}
+  startApp();
+}
+function demoAdmin(){role='admin';startApp()}
+function demoRev(){role='revendeur';startApp()}
+function startApp(){
+  document.getElementById('loginBox').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  let bar=document.getElementById('roleBar');
+  if(role==='admin'){bar.innerHTML='<div class="admin-bar">✅ CONNECTÉ : ADMIN - Bouton JOUER DÉBLOQUÉ</div>';document.getElementById('btnCoupon').disabled=false;document.getElementById('blockedMsg').classList.add('hidden')}
+  else{bar.innerHTML='<div class="rev-bar">⛔ CONNECTÉ : REVENDEUR - Bouton JOUER BLOQUÉ</div>';document.getElementById('btnCoupon').disabled=true;document.getElementById('blockedMsg').classList.remove('hidden')}
+  buildGrid();render();
+}
+function setMode(m,el){
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));el.classList.add('active');
+  let b=document.getElementById('body');b.classList.remove('mode3d','modeClassic');
+  if(m==='3d')b.classList.add('mode3d'); if(m==='classic')b.classList.add('modeClassic');
+}
+function setFormule(f,el){
+  formule=f;selected=[];base=null;
+  document.querySelectorAll('#formules button').forEach(b=>b.classList.remove('active'));el.classList.add('active');
+  document.getElementById('nappeBox').classList.toggle('hidden',f!=='nappe');
+  document.getElementById('anagrammeBox').classList.toggle('hidden',f!=='anagramme');
+  let titres={twosure:'TWO SURE - DIRECT / TURBO2 / TURBO3 / TURBO4',permutation:'PERMUTATION - 3 numéros',nappe:'PN (1N) / NAPPE - '+nappeN+' numéros sûrs',nap:'NAP - Base en haut + plusieurs en bas = plusieurs couples',against:'AGAINST - Base en haut + plusieurs en bas = plusieurs couples',anagramme:'ANAGRAMME - 01-10, 02-20, 03-30 ... = 37 couples',chance:'CHANCE +'};
+  document.getElementById('titreFormule').innerText=titres[f];
+  if(f==='nap'||f==='against')document.getElementById('help').innerText='NAP / AGAINST : Choisis 1 numéro BASE en haut (clique 2 fois) + plusieurs numéros en bas. Mise = Nb en bas x 25 F';
+  else if(f==='anagramme')document.getElementById('help').innerText='ANAGRAMME : 01-10, 02-20, 03-30 ... Total 37 couples. Mise = 37 x 25 = 925 F';
+  else if(f==='nappe')document.getElementById('help').innerText='NAPPE : Nombre de numéros sûrs = '+nappeN;
+  else document.getElementById('help').innerText='Choisis tes numéros en bas.';
+  render();
+}
+function setPari(p,el){pari=p;document.querySelectorAll('#pariBox button').forEach(b=>b.classList.remove('active'));el.classList.add('active');calc()}
+function setNappe(n,el){nappeN=n;limits.nappe=n;document.querySelectorAll('#nappeBox button').forEach(b=>b.classList.remove('active'));el.classList.add('active');selected=[];setFormule('nappe',document.querySelector('#formules button:nth-child(3)'));render()}
+function setMise(m){mise=m;document.getElementById('miseInput').value=m;calc()}
+function buildGrid(){
+  let g=document.getElementById('grid');g.innerHTML='';
+  for(let i=1;i<=90;i++){let b=document.createElement('button');b.innerText=i<10?'0'+i:i;b.onclick=()=>toggleNum(i,b);g.appendChild(b)}
+}
+function toggleNum(n,btn){
+  let idx=selected.indexOf(n);
+  if(idx>=0){selected.splice(idx,1);if(base===n)base=null;btn.classList.remove('sel')}
+  else{
+    let lim=limits[formule]||2;
+    if(formule==='nap'||formule==='against'){
+      // Pour NAP/AGAINST : on autorise plus de numéros en bas (jusqu'à 10) + 1 base
+      if(selected.length>=10){alert('Max 10 numéros en bas pour NAP / AGAINST');return}
+      selected.push(n);
+      // Si c'est le 1er, il devient BASE automatiquement
+      if(selected.length===1)base=n;
+    } else {
+      if(selected.length>=lim){alert('Tu dois choisir '+lim+' numéros pour '+formule);return}
+      selected.push(n);
+    }
+    btn.classList.add('sel');
+  }
+  // 2e clic sur un numéro = le mettre en BASE pour NAP/AGAINST
+  if((formule==='nap'||formule==='against')&&selected.includes(n)){base=n}
+  render();
+}
+function render(){
+  let lim=limits[formule]||2;
+  if(formule==='nap'||formule==='against')lim=10;
+  document.getElementById('count').innerText=selected.length+'/'+(formule==='nap'||formule==='against'?'10':lim);
+  document.getElementById('baseInfo').innerText=base?(' | BASE : '+base):'';
+  let s=document.getElementById('selected');s.innerHTML='';
+  selected.forEach(n=>{
+    let d=document.createElement('div');d.className='num'+(n===base?' base':' sel');d.innerText=n<10?'0'+n:n;d.onclick=()=>{selected=selected.filter(x=>x!==n);if(base===n)base=null;buildGrid();render()};s.appendChild(d)
+  });
+  if(selected.length===0)s.innerHTML='<div class="num">+</div><div class="num">+</div>';
+  calc();
+}
+function calc(){
+  mise=parseInt(document.getElementById('miseInput').value)||25;
+  let comb=1,total=mise,gain=mise*13;
+  if(formule==='permutation'){comb=3;total=mise*3;gain=total*10}
+  if(formule==='nap'||formule==='against'){
+    let bas=selected.filter(n=>n!==base).length;
+    // Si pas de base, comb = selected
+    if(!base)bas=selected.length;
+    comb=Math.max(bas,1);total=comb*mise;gain=total*5;
+    if(selected.length===0){comb=1;total=mise}
+  }
+  if(formule==='anagramme'){comb=37;total=37*mise;gain=7500;if(mise!==25){gain=Math.round(7500*mise/25)}}
+  if(formule==='twosure'){comb=1;total=mise;gain=mise*13}
+  if(formule==='nappe'){comb=1;total=mise;gain=mise*13}
+  document.getElementById('miseTot').innerText=total+' XOF';
+  document.getElementById('comb').innerText=comb+' combinaison'+(comb>1?'s':'');
+  document.getElementById('gain').innerText=gain+' XOF';
+}
+function showGain(){document.getElementById('gainDetail').classList.toggle('hidden')}
+function addCoupon(){
+  if(role!=='admin'){alert('⛔ BLOQUÉ : Seul ADMIN peut jouer. REVENDEUR ne peut pas cliquer sur JOUER.');return}
+  if(selected.length===0){alert('Choisis d’abord tes numéros');return}
+  let total=parseInt(document.getElementById('miseTot').innerText);
+  let item={f:formule.toUpperCase(),nums:selected.join('-'),pari:pari,total:total,base:base};
+  coupon.push(item);renderCoupon();alert('✅ Ajouté au coupon : '+item.f+' - '+item.nums+' - '+total+' XOF');
+}
+function renderCoupon(){
+  let l=document.getElementById('couponList');if(coupon.length===0){l.innerHTML='<p style="font-size:13px;color:#666">Aucun ticket pour le moment.</p>'}else{l.innerHTML=coupon.map(c=>'<div class="coupon-item"><span>'+c.f+' : '+c.nums+(c.base?' (BASE '+c.base+')':'')+' - '+c.pari+'</span><b>'+c.total+' F</b></div>').join('')}
+  document.getElementById('couponTotal').innerText=coupon.reduce((a,c)=>a+c.total,0);
+}
+function clearCoupon(){coupon=[];renderCoupon()}
+</script>
+</body>
+</html>
