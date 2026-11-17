@@ -121,7 +121,7 @@ document.querySelectorAll('#app button').forEach(x=>
 x.classList.remove('active'));if(el)el.classList.add('active');maj()}
 function setMise(v){mise=v;
 document.getElementById('mise').value=v;calc()}
-function maj(){let max=1;
+function let ANA=['01-10','02-20','03-30','04-40','05-50','06-60','07-70','08-80','09-90','12-21','13-31','14-41','15-51','16-61','17-71','18-81','23-32','24-42','25-52','26-62','27-72','28-82','34-43','35-53','36-63','37-73','38-83','45-54','46-64','47-74','48-84','56-65','57-75','58-85','67-76','68-86','78-87'];let _calc=calc;calc=function(){_calc();if(formule=='anagramme'){let m=+document.getElementById('mise').value||25;document.getElementById('miseTot').textContent=(m*37)+' XOF';document.getElementById('miseTot').dataset.val=m*37;document.getElementById('nbComb').textContent='37 couples - mise x 37';let a=document.getElementById('anaList');if(a)a.textContent='37 COUPLES : '+ANA.join(' , ');}};document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active')});document.querySelectorAll('.pill').forEach(b=>b.onclick=()=>{document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));b.classList.add('active')});maj(){let max=1;
 if(formule=='two')max=2;if(formule=='perm')max=3;
 if(formule=='anagramme')max=37;
 document.getElementById('count').textContent=nums.length+'/'+max;
