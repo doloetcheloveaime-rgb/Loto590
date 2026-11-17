@@ -1,118 +1,211 @@
 <!DOCTYPE html>
-<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NET LOTO AT 590</title><link rel="stylesheet" href="style.css"></head>
+<html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NET LOTO AT 590</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#000;color:#fff}
+header{background:#0a3cff;padding:10px}
+.top{font-weight:900}
+button{border:2px solid #ffcc00;background:#fff;color:#000;
+padding:8px 10px;border-radius:20px;font-weight:700;
+margin:2px;cursor:pointer}
+button.active{background:#ffcc00}
+.card{background:#111;border:2px solid #0a3cff;
+border-radius:14px;padding:12px;margin:10px}
+.btnY{background:#ffcc00;border:none;padding:12px;
+width:100%;border-radius:10px;font-weight:900}
+.btnB{background:#0a3cff;color:#fff;border:none;
+padding:10px;width:100%;border-radius:10px;font-weight:900}
+.grille{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}
+.grille button{padding:8px;border-radius:8px}
+.grille button.sel{background:#ffcc00}
+.num{width:44px;height:44px;border:2px dashed #ffcc00;
+display:flex;align-items:center;justify-content:center;
+font-weight:900}
+.nums{display:flex;gap:8px;margin:8px 0}
+.hidden{display:none!important}
+.small{font-size:12px;opacity:.8}
+#badgeTest{background:red;color:#fff;
+padding:2px 8px;border-radius:10px}
+</style></head>
 <body>
-<header><div class="top">🇧🇯 BÉNIN - LUNDI 00H <span id="heure">Aujourd'hui 22:50</span> <span id="badgeTest" class="hidden">🧪 TEST - ADMIN SEUL</span></div>
-<div class="tabs"><button class="tab active" onclick="setMode('basic',this)">Basic</button><button class="tab" onclick="setMode('3d',this)">3D</button><button class="tab" onclick="setMode('classic',this)">Classic</button></div>
-<div class="sub"><button class="pill active">NORMAL</button><button class="pill">MA CHANCE</button><span id="soldeTxt">Solde: 0 XOF | Gain: 0 XOF</span></div></header>
-
+<header><div class="top">LUNDI 00H | Aujourd'hui 22:50
+<span id="badgeTest" class="hidden">🧪 TEST - ADMIN SEUL</span></div>
+<div><button class="tab active">Basic</button>
+<button class="tab">3D</button><button class="tab">Classic</button></div>
+<div><button class="pill active">NORMAL</button>
+<button class="pill">MA CHANCE</button>
+<span id="soldeTxt">Solde: 0 | Gain: 0</span></div></header>
 <div id="login" class="card">
 <h2>NET LOTO AT 590 - PAGE MÈRE</h2>
 <p>1 seule page. La connexion change la page.</p>
-<select id="role"><option value="client">CLIENT - Joue</option><option value="revendeur">REVENDEUR - Ne joue pas</option><option value="admin">ADMIN - Ne joue pas</option></select>
-<input id="code" placeholder="Ton code - Client / Revendeur / Admin">
-<input id="nom" placeholder="Ton nom">
-<button class="btn-yellow" onclick="entrer()">ENTRER</button>
-<p class="small">Démo : code CLIENT=1111, REVENDEUR=2222, ADMIN=9999</p>
-</div>
-
-<div id="app" class="hidden">
-<div class="formules">
-<button onclick="setFormule('two')">Two sure</button><button onclick="setFormule('perm')">Permutation</button>
-<button onclick="setFormule('pn')" class="active">PN (1N) Nappe 1</button><button onclick="setFormule('nap')">NAP</button>
-<button onclick="setFormule('against')">Against</button><button onclick="setFormule('anagramme')">Anagramme</button>
-<button onclick="setFormule('chance')">Chance +</button><button onclick="setFormule('total')">Total Résultat</button>
-</div>
-
-<div class="card" id="zoneJeu">
-<div id="pariTxt">PARI : DIRECT / 1ere POSITION</div>
-<div class="label">NUMÉROS <span id="count">0/1</span></div>
+<select id="role"><option value="client">CLIENT - Joue</option>
+<option value="revendeur">REVENDEUR - Ne joue pas</option>
+<option value="admin">ADMIN - Ne joue pas</option></select><br><br>
+<input id="code" placeholder="Ton code"><br><br>
+<input id="nom" placeholder="Ton nom"><br><br>
+<button class="btnY" onclick="entrer()">ENTRER</button>
+<p class="small">Démo : CLIENT=1111, REVENDEUR=2222, ADMIN=9999</p>
+</div><div id="app" class="hidden">
+<div class="card">
+<div><button onclick="setF('two',this)">Two sure</button>
+<button onclick="setF('perm',this)">Permutation</button>
+<button onclick="setF('pn',this)" class="active">PN (1N) Nappe 1</button>
+<button onclick="setF('nap',this)">NAP</button>
+<button onclick="setF('against',this)">Against</button>
+<button onclick="setF('anagramme',this)">Anagramme</button>
+<button onclick="setF('chance',this)">Chance +</button>
+<button onclick="setF('total',this)">Total Résultat</button></div>
+<p id="pariTxt">PARI : DIRECT / 1ere POSITION</p>
+<p>NUMÉROS <span id="count">0/1</span></p>
+<div id="baseZone" class="hidden"><b>BASE EN HAUT :</b>
+<div id="baseNums" class="nums"></div><b>EN BAS :</b></div>
 <div id="nums" class="nums"></div>
-<div id="baseZone" class="hidden"><b>BASE EN HAUT :</b><div id="baseNums" class="nums"></div><b>EN BAS :</b></div>
-<div class="label">Choisir numéros 01 à 90 :</div><div id="grille" class="grille"></div>
-<div class="mises"><button onclick="setMise(100)">100</button><button onclick="setMise(200)">200</button><button onclick="setMise(500)">500</button><button onclick="setMise(1000)">1000</button><button onclick="setMise(2000)">2000</button></div>
-<p>MISE : <input id="mise" type="number" value="100" onchange="calc()"> | MISE TOTALE : <b id="miseTot">100 XOF</b> | GAIN : <b id="gain">1 300 XOF</b> <span id="nbComb"></span></p>
-<button id="btnJouer" class="btn-yellow" onclick="ajouterCoupon()">⚡ Ajouter au coupon</button>
-<p id="msgJouer" class="hidden" style="color:#ffcc00">⛔ Tu ne joues pas. Tu vois seulement.</p>
+<p>Choisir 01 à 90 :</p><div id="grille" class="grille"></div><br>
+<div><button onclick="setMise(100)">100</button>
+<button onclick="setMise(200)">200</button>
+<button onclick="setMise(500)">500</button>
+<button onclick="setMise(1000)">1000</button>
+<button onclick="setMise(2000)">2000</button></div>
+<p>MISE : <input id="mise" type="number" value="100"
+onchange="calc()"> | TOTALE : <b id="miseTot">100 XOF</b>
+| GAIN : <b id="gain">1 300 XOF</b> <span id="nbComb"></span></p>
+<button id="btnJouer" class="btnY"
+onclick="ajouterCoupon()">⚡ Ajouter au coupon</button>
+<p id="msgJouer" class="hidden" style="color:#ffcc00">
+⛔ Tu ne joues pas. Tu vois seulement.</p>
 </div>
-
-<div class="card"><h3>🎟️ Coupon / Tickets</h3><div id="coupon">Aucun coupon.</div><p>Solde Gain : <b id="gainSolde">0</b> XOF</p>
-<button class="btn-blue" onclick="demanderRetrait()">Je veux faire RETRAIT - Valider</button><p class="small">Retrait validé = Solde Gain revient chez ADMIN. Paiement Momo = hors application.</p></div>
-
-<div class="card"><h3>📊 Historique des Résultats - Tout le monde voit</h3><div id="hist">LUNDI 00H : 22 - 05 - 37 ...</div>
-<h3>🔮 Pronostic - Tout le monde voit</h3><div id="prono">Nappe 1 : 22 | NAP : 22-05 | Two sure : 22-37</div></div>
-
-<div id="panelRevendeur" class="card hidden"><h3>🤝 REVENDEUR - 3 Boutons</h3>
-<button class="btn-yellow" onclick="revRecharger()">1. Se recharger chez ADMIN - Valider avec son code</button>
-<button class="btn-blue" onclick="revRechargerClient()">2. Recharger le compte des CLIENTS</button>
-<div><b>3. Mes Intérêts - 15%</b><p>Tu vends 10 000F → Tu retournes 10 000F Admin, tu gardes <b>1 500F</b>. Admin t'envoie 11 500F.</p>
-Montant vendu : <input id="vendu" type="number" value="10000"><button onclick="calcInteret()">Calculer</button><p id="interetTxt"></p></div></div>
-
-<div id="panelAdmin" class="card hidden"><h3>👑 ADMIN - Seulement ADMIN</h3>
-<button class="btn-yellow" onclick="adminRecharger('client')">Recharger compte CLIENT</button>
-<button class="btn-yellow" onclick="adminRecharger('revendeur')">Recharger compte REVENDEUR</button>
-<button class="btn-blue" onclick="adminValider()">Contrôler / Valider / Payer Coupon</button>
-<button class="btn-blue" onclick="adminGain()">Gain vers ADMIN - Retrait validé</button>
-<p>Gain en attente chez Admin : <b id="gainAdmin">0</b> XOF | Transfert Momo = hors app</p>
-<button onclick="voirDetail()">DÉTAILS Gains - Anagramme</button><div id="detail" class="hidden">2 bons = 2 000 XOF<br>3 bons = 43 750 XOF<br>Meilleur cas = 43 750 XOF</div></div>
-</div>
-<script src="app.js"></script></body></html>*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#000;color:#fff}
-header{background:#0a3cff;padding:10px}.top{display:flex;justify-content:space-between;font-weight:900}
-.tabs,.sub,.formules,.mises{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
-.tab,.pill,.formules button,.mises button{border:2px solid #ffcc00;background:#fff;color:#000;padding:8px 12px;border-radius:20px;font-weight:700;cursor:pointer}
-.tab.active,.pill.active,.formules button.active{background:#ffcc00}
-.card{background:#111;border:2px solid #0a3cff;border-radius:14px;padding:12px;margin:10px}
-.btn-yellow{background:#ffcc00;border:none;padding:12px;width:100%;border-radius:10px;font-weight:900;margin:6px 0;cursor:pointer}
-.btn-blue{background:#0a3cff;color:#fff;border:none;padding:10px;width:100%;border-radius:10px;font-weight:900;margin:6px 0;cursor:pointer}
-.grille{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}.grille button{background:#fff;border:1px solid #0a3cff;padding:8px;border-radius:8px;cursor:pointer}.grille button.sel{background:#ffcc00}
-.nums{display:flex;gap:8px;margin:8px 0}.num{width:44px;height:44px;border:2px dashed #ffcc00;display:flex;align-items:center;justify-content:center;font-weight:900}
-.hidden{display:none}.small{font-size:12px;opacity:.8}
-body.classic{background:#fff;color:#000}body.classic .card{background:#fff}
-#badgeTest{background:red;color:#fff;padding:2px 8px;border-radius:10px}let formule='pn', mise=100, nums=[], base=[], role='client', solde=0, gainSolde=0, gainAdmin=0;
-const grille=document.getElementById('grille');
-for(let i=1;i<=90;i++){let b=document.createElement('button');b.textContent=String(i).padStart(2,'0');b.onclick=()=>{if(formule==='nap'||formule==='against'){if(base.length<2&&!base.includes(i)){base.push(i)}else if(!nums.includes(i)){nums.push(i)}}else if(!nums.includes(i)){nums.push(i)};maj()};grille.appendChild(b)}
-function setMode(m,el){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');document.body.className=m==='classic'?'classic':''}
-function setFormule(f){formule=f;nums=[];base=[];document.querySelectorAll('.formules button').forEach((b,i)=>b.classList.toggle('active',b.textContent.toLowerCase().includes(f.slice(0,3))));maj()}
-function setMise(v){mise=v;document.getElementById('mise').value=v;calc()}
-function maj(){
-let max={two:2,perm:3,pn:1,nap:99,against:99,anagramme:2,chance:2,total:3}[formule]||1;
-document.getElementById('count').textContent=nums.length+'/'+(formule==='anagramme'?37:max);
-document.getElementById('baseZone').classList.toggle('hidden',!(formule==='nap'||formule==='against'));
-document.getElementById('baseNums').innerHTML=base.map(n=>`<div class="num">${n}</div>`).join('')||'<div class="num">+</div>';
-document.getElementById('nums').innerHTML=nums.map(n=>`<div class="num">${n}</div>`).join('')||'<div class="num">+</div>';
-document.getElementById('pariTxt').textContent=formule==='nap'?'PARI : NAP - 1 base en haut + plusieurs en bas':formule==='against'?'PARI : AGAINST - 1 base en haut + plusieurs en bas':formule==='pn'?'PARI : DIRECT / 1ere POSITION':'PARI : DIRECT / TURBO2 / TURBO3 / TURBO4';
+<div class="card"><h3>🎟️ Coupon</h3>
+<div id="coupon">Aucun coupon.</div>
+<p>Solde Gain : <b id="gainSolde">0</b></p>
+<button class="btnB" onclick="demanderRetrait()">
+Je veux faire RETRAIT - Valider</button>
+<p class="small">Retrait validé = Solde revient chez ADMIN.
+Momo = hors app.</p></div>
+<div class="card"><h3>📊 Historique - Tout le monde</h3>
+<p>LUNDI 00H : 22 - 05 - 37</p>
+<h3>🔮 Pronostic - Tout le monde</h3>
+<p>Nappe 1 : 22 | NAP : 22-05 | Two sure : 22-37</p></div>
+<div id="panelRev" class="card hidden"><h3>🤝 REVENDEUR - 3 Boutons</h3>
+<button class="btnY" onclick="revRecharger()">
+1. Se recharger chez ADMIN</button>
+<button class="btnB" onclick="revClient()">
+2. Recharger CLIENTS</button>
+<p><b>3. Mes Intérêts - 15%</b><br>
+Tu vends 10 000F → Tu retournes 10 000F Admin,
+tu gardes <b>1 500F</b>. Admin t'envoie 11 500F.</p>
+Montant vendu : <input id="vendu" type="number" value="10000">
+<button onclick="calcInt()">Calculer</button><p id="interetTxt"></p></div>
+<div id="panelAdmin" class="card hidden">
+<h3>👑 ADMIN - Seulement ADMIN</h3>
+<button class="btnY" onclick="adminR('client')">
+Recharger CLIENT</button>
+<button class="btnY" onclick="adminR('revendeur')">
+Recharger REVENDEUR</button>
+<button class="btnB" onclick="alert('Coupon contrôlé / validé / payé')">
+Contrôler / Valider / Payer</button>
+<button class="btnB" onclick="adminGain()">Gain vers ADMIN</button>
+<p>Gain chez Admin : <b id="gainAdmin">0</b> | Momo = hors app</p>
+<button onclick="voirDetail()">DÉTAILS Anagramme</button>
+<div id="detail" class="hidden"><p>2 bons = 2 000 XOF<br>
+3 bons = 43 750 XOF<br>Meilleur cas = 43 750 XOF</p></div></div>
+</div><script>
+let formule='pn',mise=100,nums=[],base=[],role='client';
+let solde=0,gainSolde=0,gainAdmin=0;
+let grille=document.getElementById('grille');
+for(let i=1;i<=90;i++){let b=document.createElement('button');
+b.textContent=String(i).padStart(2,'0');
+b.onclick=function(){if(formule=='nap'||formule=='against'){
+if(base.length<2&&!base.includes(i))base.push(i);
+else if(!nums.includes(i))nums.push(i)}
+else if(!nums.includes(i))nums.push(i);maj()};
+grille.appendChild(b)}
+function setF(f,el){formule=f;nums=[];base=[];
+document.querySelectorAll('#app button').forEach(x=>
+x.classList.remove('active'));if(el)el.classList.add('active');maj()}
+function setMise(v){mise=v;
+document.getElementById('mise').value=v;calc()}
+function maj(){let max=1;
+if(formule=='two')max=2;if(formule=='perm')max=3;
+if(formule=='anagramme')max=37;
+document.getElementById('count').textContent=nums.length+'/'+max;
+document.getElementById('baseZone').classList.toggle('hidden',
+!(formule=='nap'||formule=='against'));
+document.getElementById('baseNums').innerHTML=
+base.map(n=>'<div class="num">'+n+'</div>').join('')
+||'<div class="num">+</div>';
+document.getElementById('nums').innerHTML=
+nums.map(n=>'<div class="num">'+n+'</div>').join('')
+||'<div class="num">+</div>';
+if(formule=='nap')document.getElementById('pariTxt').textContent=
+'PARI : NAP - 1 base en haut + plusieurs en bas';
+else if(formule=='against')document.getElementById('pariTxt').textContent=
+'PARI : AGAINST - 1 base en haut + plusieurs en bas';
+else if(formule=='pn')document.getElementById('pariTxt').textContent=
+'PARI : DIRECT / 1ere POSITION';
+else document.getElementById('pariTxt').textContent=
+'PARI : DIRECT / TURBO2 / TURBO3 / TURBO4';
 calc()}
-function calc(){mise=+document.getElementById('mise').value||25;let total=mise, gain=mise*13, comb='';
-// NAP / AGAINST : nb en bas x mise
-if(formule==='nap'||formule==='against'){total=nums.length*mise;gain=total*13;comb=nums.length+' couples';}
-// Permutation : 25 x 3 = 75
-if(formule==='perm'){total=mise*3;comb='3 combinaisons'}
-// Anagramme : 37 couples - 37 x 25 = 925, Gain 7500
-if(formule==='anagramme'){total=37*25;gain=7500;comb='37 couples - Ex: 01-10, 02-20, 03-30...'}
-if(formule==='pn'&&nums.length===1&&mise===100){gain=1300}
-document.getElementById('miseTot').textContent=total+' XOF';document.getElementById('gain').textContent=gain+' XOF';document.getElementById('nbComb').textContent=comb;
-document.getElementById('gain').dataset.val=gain;document.getElementById('miseTot').dataset.val=total}
-function entrer(){role=document.getElementById('role').value;let code=document.getElementById('code').value;
-if((role==='client'&&code!=='1111')||(role==='revendeur'&&code!=='2222')||(role==='admin'&&code!=='9999')){alert('Mauvais code');return}
-document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');
-// BOUTON JOUER : CLIENT seul. ADMIN + REVENDEUR = BLOQUÉ
-let peutJouer=(role==='client');
-document.getElementById('btnJouer').classList.toggle('hidden',!peutJouer);
-document.getElementById('msgJouer').classList.toggle('hidden',peutJouer);
-// TEST visible ADMIN seul
+function calc(){mise=+document.getElementById('mise').value||25;
+let total=mise,gain=mise*13,comb='';
+if(formule=='nap'||formule=='against'){
+total=nums.length*mise;gain=total*13;
+comb=nums.length+' couples'}
+if(formule=='perm'){total=mise*3;comb='3 combinaisons'}
+if(formule=='anagramme'){total=37*25;gain=7500;
+comb='37 couples - 01-10, 02-20...'}
+if(formule=='pn'&&nums.length==1&&mise==100)gain=1300;
+document.getElementById('miseTot').textContent=total+' XOF';
+document.getElementById('gain').textContent=gain+' XOF';
+document.getElementById('nbComb').textContent=comb;
+document.getElementById('gain').dataset.val=gain;
+document.getElementById('miseTot').dataset.val=total}
+function entrer(){role=document.getElementById('role').value;
+let code=document.getElementById('code').value;
+if(role=='client'&&code!=='1111'){alert('Mauvais code');return}
+if(role=='revendeur'&&code!=='2222'){alert('Mauvais code');return}
+if(role=='admin'&&code!=='9999'){alert('Mauvais code');return}
+document.getElementById('login').classList.add('hidden');
+document.getElementById('app').classList.remove('hidden');
+let peut=(role=='client');
+document.getElementById('btnJouer').classList.toggle('hidden',!peut);
+document.getElementById('msgJouer').classList.toggle('hidden',peut);
 document.getElementById('badgeTest').classList.toggle('hidden',role!=='admin');
-document.getElementById('panelRevendeur').classList.toggle('hidden',role!=='revendeur');
-document.getElementById('panelAdmin').classList.toggle('hidden',role!=='admin');maj()}
-function ajouterCoupon(){if(role!=='client'){alert('Tu ne joues pas');return}
-let g=+document.getElementById('gain').dataset.val||0;let t=+document.getElementById('miseTot').dataset.val||0;
-gainSolde+=g;document.getElementById('coupon').innerHTML+=`<p>${formule.toUpperCase()} : ${nums.join('-')} - Mise ${t} - Gain ${g}</p>`;
-document.getElementById('gainSolde').textContent=gainSolde;document.getElementById('soldeTxt').textContent=`Solde: ${solde} | Gain: ${gainSolde}`}
-function demanderRetrait(){if(!confirm('Valider retrait ? Ton solde Gain revient chez ADMIN.'))return;gainAdmin+=gainSolde;gainSolde=0;document.getElementById('gainSolde').textContent=0;document.getElementById('gainAdmin').textContent=gainAdmin;alert('Retrait validé. Solde retourné chez ADMIN. Paiement Momo hors app.')}
-function adminRecharger(qui){let m=prompt('Montant à recharger pour '+qui+' ?');if(m){solde+=+m;document.getElementById('soldeTxt').textContent=`Solde: ${solde} | Gain: ${gainSolde}`;alert(m+' XOF rechargé pour '+qui)}}
-function adminValider(){alert('Coupon contrôlé / validé / payé par ADMIN');}
-function adminGain(){alert('Gain vers ADMIN : '+gainAdmin+' XOF. Transfert Momo hors app.')}
-function revRecharger(){let c=prompt('Ton code revendeur ?');if(c==='2222'){let m=prompt('Montant demandé chez ADMIN ? Ex: 10000');if(m){alert('Demande envoyée. Admin t\'envoie '+(+m*1.15)+' XOF (15% inclus).')}}else alert('Mauvais code')}
-function revRechargerClient(){let m=prompt('Montant à recharger pour le client ?');if(m)alert(m+' XOF rechargé pour client. Ton intérêt : '+(m*0.15)+' XOF')}
-function calcInteret(){let v=+document.getElementById('vendu').value||0;document.getElementById('interetTxt').textContent=`Tu vends ${v}F → Tu retournes ${v}F Admin, tu gardes ${v*0.15}F. Admin t'envoie ${v*1.15}F.`}
-function voirDetail(){document.getElementById('detail').classList.toggle('hidden')}
+document.getElementById('panelRev').classList.toggle('hidden',role!=='revendeur');
+document.getElementById('panelAdmin').classList.toggle('hidden',role!=='admin');
+maj()}
+function ajouterCoupon(){if(role!=='client'){
+alert('Tu ne joues pas');return}
+let g=+document.getElementById('gain').dataset.val||0;
+let t=+document.getElementById('miseTot').dataset.val||0;
+gainSolde+=g;
+document.getElementById('coupon').innerHTML+=
+'<p>'+formule+' : '+nums.join('-')+' - Mise '+t+' - Gain '+g+'</p>';
+document.getElementById('gainSolde').textContent=gainSolde}
+function demanderRetrait(){
+if(!confirm('Valider retrait ? Solde revient chez ADMIN.'))return;
+gainAdmin+=gainSolde;gainSolde=0;
+document.getElementById('gainSolde').textContent=0;
+document.getElementById('gainAdmin').textContent=gainAdmin;
+alert('Retrait validé. Paiement Momo hors app.')}
+function adminR(qui){let m=prompt('Montant pour '+qui+' ?');
+if(m){solde+=+m;
+document.getElementById('soldeTxt').textContent=
+'Solde: '+solde+' | Gain: '+gainSolde;
+alert(m+' rechargé pour '+qui)}}
+function adminGain(){alert('Gain vers ADMIN : '+gainAdmin+' XOF. Momo hors app.')}
+function revRecharger(){let c=prompt('Ton code revendeur ?');
+if(c=='2222'){let m=prompt('Montant demandé ? Ex: 10000');
+if(m)alert('Admin t\'envoie '+(m*1.15)+' XOF (15% inclus).')}
+else alert('Mauvais code')}
+function revClient(){let m=prompt('Montant pour client ?');
+if(m)alert(m+' rechargé. Ton intérêt : '+(m*0.15)+' XOF')}
+function calcInt(){let v=+document.getElementById('vendu').value||0;
+document.getElementById('interetTxt').textContent=
+'Tu vends '+v+'F -> Tu retournes '+v+'F, tu gardes '+(v*0.15)+
+'F. Admin t\'envoie '+(v*1.15)+'F.'}
+function voirDetail(){
+document.getElementById('detail').classList.toggle('hidden')}
 maj();
+</script></body></html>
