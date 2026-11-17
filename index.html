@@ -156,11 +156,13 @@ document.getElementById('gain').textContent=gain+' XOF';
 document.getElementById('nbComb').textContent=comb;
 document.getElementById('gain').dataset.val=gain;
 document.getElementById('miseTot').dataset.val=total}
-function entrer(){let code=document.getElementById('code').value;
+function entrer(){
+let code=document.getElementById('code').value;
+code=code.trim();
 if(code=='1111')role='client';
 else if(code=='2222')role='revendeur';
 else if(code=='9999')role='admin';
-else{alert('Mauvais code');return}
+else{alert('Mauvais code : '+code);return}
 document.getElementById('login').classList.add('hidden');
 document.getElementById('app').classList.remove('hidden');
 let peut=(role=='client');
