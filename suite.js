@@ -52,3 +52,22 @@ btn.onclick=()=>{
   };
 };
 },1500);
+setTimeout(()=>{
+let a=document.getElementById('panelAdmin'); if(!a||document.getElementById('resultatBox'))return;
+let d=document.createElement('div'); d.id='resultatBox';
+d.style.cssText='background:#fff;color:#000;padding:12px;border-radius:10px;margin:10px 0;border:2px solid #000';
+d.innerHTML='<b>📢 PUBLIER LES RÉSULTATS</b><br><br>'+
+'<label><b>🎯 Résultat NORMAL (5 numéros)</b></label><br>'+
+'<input id="resNormal" placeholder="Ex: 12 - 23 - 34 - 45 - 56" style="width:100%;padding:10px;margin:5px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<button id="btnPubNormal" style="background:#000;color:#fff;padding:10px;width:100%;border:none;border-radius:8px;font-weight:bold">PUBLIER NORMAL</button><br><br>'+
+'<label><b>🍀 Résultat DOUBLE CHANCE (5 numéros)</b></label><br>'+
+'<input id="resDouble" placeholder="Ex: 03 - 11 - 22 - 40 - 49" style="width:100%;padding:10px;margin:5px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<button id="btnPubDouble" style="background:green;color:#fff;padding:10px;width:100%;border:none;border-radius:8px;font-weight:bold">PUBLIER DOUBLE CHANCE</button><br>'+
+'<div id="resAffiche" style="margin-top:10px;font-weight:bold"></div>';
+a.appendChild(d);
+
+let aff=()=>{ let n=localStorage.getItem('resultatNormal')||'Pas encore publié'; let db=localStorage.getItem('resultatDouble')||'Pas encore publié'; document.getElementById('resAffiche').innerHTML='NORMAL : '+n+'<br>DOUBLE CHANCE : '+db; };
+aff();
+document.getElementById('btnPubNormal').onclick=()=>{ let v=document.getElementById('resNormal').value.trim(); if(!v) return alert('Mets les 5 numéros Normal'); localStorage.setItem('resultatNormal', v); aff(); alert('Résultat NORMAL publié : '+v); };
+document.getElementById('btnPubDouble').onclick=()=>{ let v=document.getElementById('resDouble').value.trim(); if(!v) return alert('Mets les 5 numéros Double Chance'); localStorage.setItem('resultatDouble', v); aff(); alert('Résultat DOUBLE CHANCE publié : '+v); };
+},1500);
