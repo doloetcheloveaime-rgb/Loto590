@@ -356,3 +356,12 @@ document.addEventListener('click', function(e){
   }
 });
 },1500);
+// VERSION POUR VERIFIER - V12
+setTimeout(()=>{
+  if(!document.getElementById('versionBox')){
+    let v=document.createElement('div'); v.id='versionBox';
+    v.textContent='VERSION V12 - PROFIL OK';
+    v.style.cssText='position:fixed;bottom:5px;right:5px;background:#000;color:yellow;font-size:10px;padding:4px 6px;border-radius:5px;z-index:99999';
+    document.body.appendChild(v);
+  }
+},1000);
