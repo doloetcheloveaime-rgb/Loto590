@@ -193,3 +193,17 @@ document.getElementById('btnCreerRev').onclick=()=>{
   afficher();
 };
 },1500);
+setTimeout(()=>{
+let a=document.getElementById('panelAdmin');
+if(a && !document.getElementById('pronoAdminBox')){
+let d=document.createElement('div'); d.id='pronoAdminBox';
+d.style.cssText='background:#fff;color:#000;padding:12px;border-radius:10px;margin:10px 0;border:2px solid gold';
+d.innerHTML='<b>PRONOSTIC DU JOUR</b><br><br><textarea id="pronoText" style="width:100%;height:60px;padding:10px"></textarea><br><button id="btnPubProno" style="background:gold;padding:12px;width:100%;border:none;border-radius:8px;font-weight:bold">PUBLIER</button>';
+a.appendChild(d);
+document.getElementById('btnPubProno').onclick=()=>{
+let v=document.getElementById('pronoText').value;
+localStorage.setItem('pronoJour',v);
+alert('Pronostic publié !');
+};
+}
+},1500);
