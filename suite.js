@@ -109,3 +109,30 @@ b.style.cssText='position:fixed;top:5px;left:5px;z-index:9999;background:rgba(0,
 }
 let m=document.getElementById('menuBox'); if(m){ m.style.width='200px'; m.style.padding='45px 12px 12px'; }
 },1000);
+setInterval(()=>{
+  // On regarde si on est sur la page de connexion
+  let pageTexte = document.body.innerText || '';
+  let surLogin = pageTexte.includes('NET LOTO AT 590') && pageTexte.includes('ENTRER');
+  // On cherche si le panneau ADMIN est visible
+  let adminVisible = document.getElementById('panelAdmin') && document.getElementById('panelAdmin').offsetParent !== null;
+
+  let cacher = surLogin && !adminVisible;
+
+  // Cacher / Montrer RETOUR et SE DECONNECTER
+  document.querySelectorAll('button').forEach(b=>{
+    let t=b.textContent.trim().toUpperCase();
+    if(t.includes('RETOUR')||t.includes('DECONNECTER')||t.includes('DÉCONNECTER')){
+      b.style.display = cacher ? 'none' : '';
+    }
+  });
+  // Cacher / Montrer le menu ☰ et CAISSE
+  let menuBtn=document.getElementById('btnMenu'); if(menuBtn) menuBtn.style.display = cacher ? 'none' : '';
+  let caisse=document.getElementById('caisseBox'); if(caisse) caisse.style.display = cacher ? 'none' : '';
+  // Cacher aussi 3D / Classic / NORMAL / MA CHANCE quand on est sur login
+  document.querySelectorAll('button').forEach(b=>{
+    let t=b.textContent.trim().toUpperCase();
+    if(['3D','CLASSIC','NORMAL','MA CHANCE'].includes(t)){
+      b.style.display = cacher ? 'none' : '';
+    }
+  });
+},800);
