@@ -7,3 +7,4 @@ let en=[...document.querySelectorAll('button')].find(x=>x.textContent.trim()=='E
 let r=[...document.querySelectorAll('button')].find(x=>x.textContent.trim()=='RETOUR');if(r){r.onclick=()=>history.back();}
 let ins=document.querySelectorAll('input');if(ins[0])ins[0].placeholder='Code (1111 / 2222 / 9999)';if(ins[1]){ins[1].placeholder='Ton nom';ins[1].type='text';}
 let ic=document.getElementById('insc');if(ic){ic.onclick=function(){alert('Pour avoir un code, demande à l admin. Client: 1111 Revendeur: 2222');};}
+setTimeout(()=>{document.querySelectorAll('*').forEach(e=>{if(e.children.length===0&&e.textContent.includes('LUNDI'))e.parentElement.style.display='none';});},500);
