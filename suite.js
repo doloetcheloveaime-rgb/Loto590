@@ -103,3 +103,9 @@ menu.querySelectorAll('.menuItem').forEach(item=>{
   };
 });
 },1500);
+setTimeout(()=>{
+let b=document.getElementById('btnMenu'); if(b){
+b.style.cssText='position:fixed;top:5px;left:5px;z-index:9999;background:rgba(0,0,0,0.6);color:#fff;font-size:13px;width:26px;height:26px;border:none;border-radius:5px;padding:0;line-height:1';
+}
+let m=document.getElementById('menuBox'); if(m){ m.style.width='200px'; m.style.padding='45px 12px 12px'; }
+},1000);
