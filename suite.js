@@ -4,3 +4,4 @@ t.innerHTML='<button onclick="history.back()">RETOUR</button><button onclick="ou
 let b=[...document.querySelectorAll('button')];b.forEach(x=>{if(x.textContent.trim()=='RETOUR'){x.style.cssText='background:#2b2b2b!important;color:#fff!important';}});
 let e=[...document.querySelectorAll('div,span')];e.forEach(y=>{if((y.textContent.includes('Aujourd')||y.textContent.includes('Solde:'))&&y.children.length==0)y.style.display='none'});
 let en=[...document.querySelectorAll('button')].find(x=>x.textContent.trim()=='ENTRER');if(en){let p=document.createElement('div');p.style.cssText='margin-top:10px;text-align:center';p.innerHTML='<div id="insc" style="color:#2196f3;cursor:pointer;font-weight:bold">S INSCRIRE</div><div style="color:#666;font-size:13px;margin-top:6px">Mot de passe oublié ? Cliquez ici</div>';en.parentNode.appendChild(p);}
+let r=[...document.querySelectorAll('button')].find(x=>x.textContent.trim()=='RETOUR');if(r){r.onclick=()=>history.back();}
