@@ -12,3 +12,43 @@ setInterval(()=>{let a=document.getElementById('panelAdmin'),r=document.getEleme
 setTimeout(()=>{let a=document.getElementById('panelAdmin');if(a){a.style.display='block';document.body.prepend(a);}},1000);
 setTimeout(()=>{if(document.getElementById('caisseBox'))return;let a=document.getElementById('panelAdmin');if(!a)return;let c=localStorage.getItem('caisseAdmin')||'0';let d=document.createElement('div');d.id='caisseBox';d.style.cssText='background:#111;color:#fff;padding:12px;border-radius:10px;margin-bottom:10px;text-align:center';d.innerHTML='<b>💰 CAISSE ADMIN : <span id="caisseVal">'+c+'</span> FCFA</b><br><br><button id="btnCaisse" style="background:green;color:#fff;padding:10px 15px;border:none;border-radius:8px;font-weight:bold">+ RECHARGER CAISSE</button>';a.prepend(d);document.getElementById('btnCaisse').onclick=()=>{let m=prompt('Montant à mettre dans la Caisse ?');if(!m)return;let nv=Number(localStorage.getItem('caisseAdmin')||0)+Number(m);localStorage.setItem('caisseAdmin',nv);document.getElementById('caisseVal').textContent=nv;alert('Caisse rechargée : '+nv+' FCFA');};},1200);
 setTimeout(()=>{document.querySelectorAll('button').forEach(b=>{let t=b.textContent.trim().toUpperCase();if(t.includes('RETOUR')||t.includes('DECONNECTER')||t.includes('DÉCONNECTER')){b.style.cssText='font-size:11px!important;padding:5px 8px!important;border-radius:20px!important;margin:2px!important';}});let c=document.getElementById('caisseBox');if(c){c.style.marginTop='8px';c.style.fontSize='15px';}},1500);
+setTimeout(()=>{
+let btn=[...document.querySelectorAll('button')].find(b=>b.textContent.includes('Contrôler'));
+if(!btn||btn.dataset.ok)return; btn.dataset.ok='1';
+btn.onclick=()=>{
+  // 1. On récupère tous les tickets
+  let tickets=JSON.parse(localStorage.getItem('tickets')||localStorage.getItem('coupons')||'[]');
+  // Si tes tickets sont ailleurs, on prend aussi les paris
+  if(!tickets.length){ try{tickets=JSON.parse(localStorage.getItem('paris')||'[]');}catch(e){} }
+  let totalJoues=tickets.length;
+  let gagnants=tickets.filter(t=>t.gain>0||t.statut==='gagnant'||t.gagnant===true);
+  let totalGagnants=gagnants.length;
+  let totalAPayer=gagnants.reduce((s,t)=>s+Number(t.gain||t.montantGain||0),0);
+
+  let box=document.getElementById('payerBox');
+  if(!box){ box=document.createElement('div'); box.id='payerBox'; box.style.cssText='background:#fff;color:#000;padding:15px;border-radius:12px;margin:10px 0;border:2px solid #000'; document.getElementById('panelAdmin').appendChild(box); }
+  box.innerHTML='<b>📋 CONTRÔLE</b><br><br>'+
+  'Total Tickets Joués : <b>'+totalJoues+'</b><br>'+
+  'Total Tickets Gagnants : <b>'+totalGagnants+'</b><br>'+
+  'Total Gains à Payer : <b>'+totalAPayer+' FCFA</b><br><br>'+
+  '<button id="btnPayerGain" style="background:green;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:bold;font-size:16px">✅ PAYER / DISTRIBUER</button>'+
+  '<div id="payerResult" style="margin-top:10px"></div>';
+  box.scrollIntoView({behavior:'smooth'});
+
+  document.getElementById('btnPayerGain').onclick=()=>{
+    if(totalAPayer<=0){ alert('Aucun gain à payer'); return; }
+    if(!confirm('Valider et payer '+totalAPayer+' FCFA à '+totalGagnants+' gagnant(s) ?')) return;
+    // 2. DISTRIBUTION AUTOMATIQUE vers Solde Gain de chacun
+    gagnants.forEach(t=>{
+      let user=t.user||t.client||t.telephone||t.code||'client';
+      let key='gain_'+user;
+      let ancien=Number(localStorage.getItem(key)||0);
+      localStorage.setItem(key, ancien + Number(t.gain||t.montantGain||0));
+      t.paye=true; t.statut='paye';
+    });
+    localStorage.setItem('tickets', JSON.stringify(tickets));
+    document.getElementById('payerResult').innerHTML='<b style="color:green">✅ Payé ! Chaque gagnant a reçu son gain dans son Solde Gain.<br>Ex: 2.000 -> 2.000, 3.000 -> 3.000, 100.000 -> 100.000</b>';
+    alert('Paiement distribué ! Total payé : '+totalAPayer+' FCFA');
+  };
+};
+},1500);
