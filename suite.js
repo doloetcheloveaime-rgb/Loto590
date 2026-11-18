@@ -257,3 +257,59 @@ document.getElementById('btnSaveGain').onclick=()=>{
   afficher();
 };
 },1500);
+// REPARATION BOUTON GAIN - Version qui marche toujours
+(function(){
+  // Créer la boite une seule fois
+  if(!document.getElementById('gainPayeBox')){
+    let box=document.createElement('div'); box.id='gainPayeBox';
+    box.style.cssText='background:#fff;color:#000;padding:12px;border-radius:10px;margin:10px;border:2px solid green;display:none;position:relative;z-index:9999';
+    box.innerHTML='<b>💰 GAIN PAYÉ HORS APPLICATION</b><br><br>'+
+    '<input id="gainCoupon2" placeholder="Numéro du coupon gagnant" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+    '<input id="gainMontant2" placeholder="Montant payé" type="number" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+    '<input id="gainDate2" type="date" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+    '<input id="gainNom2" placeholder="Nom du client payé" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+    '<button id="btnSaveGain2" style="background:green;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:bold">✅ ENREGISTRER GAIN PAYÉ</button>'+
+    '<button onclick="document.getElementById(\'gainPayeBox\').style.display=\'none\'" style="background:#000;color:#fff;padding:10px;width:100%;border:none;border-radius:8px;margin-top:6px">FERMER</button>'+
+    '<div id="listeGains2" style="margin-top:10px"></div>';
+    document.body.appendChild(box);
+    document.getElementById('gainDate2').value=new Date().toISOString().slice(0,10);
+  }
+
+  function afficher(){
+    let list=JSON.parse(localStorage.getItem('gainsPayes')||'[]');
+    let h='<b>Gains enregistrés : '+list.length+'</b><br>';
+    list.forEach(g=>{
+      h+='<div style="border:1px solid #ccc;padding:8px;border-radius:8px;margin:5px 0">✅ Coupon : <b>'+g.coupon+'</b><br>👤 '+g.nom+'<br>💰 '+g.montant+' FCFA<br>📅 '+g.date+'</div>';
+    });
+    let l=document.getElementById('listeGains2'); if(l) l.innerHTML=h;
+  }
+
+  // Quand on clique N'IMPORTE OU sur un bouton GAIN, on ouvre
+  document.addEventListener('click', function(e){
+    let t=e.target;
+    if(!t) return;
+    let txt=(t.textContent||'').trim().toUpperCase();
+    if(txt==='GAIN' || txt.includes('GAIN')){
+      // On ne veut pas déclencher sur ENREGISTRER
+      if(txt.includes('ENREGISTRER')) return;
+      e.stopPropagation();
+      let box=document.getElementById('gainPayeBox');
+      box.style.display = box.style.display==='none' ? 'block' : 'none';
+      box.scrollIntoView({behavior:'smooth'});
+      afficher();
+    }
+    if(t.id==='btnSaveGain2'){
+      let coupon=document.getElementById('gainCoupon2').value.trim();
+      let montant=document.getElementById('gainMontant2').value.trim();
+      let date=document.getElementById('gainDate2').value;
+      let nom=document.getElementById('gainNom2').value.trim();
+      if(!coupon||!montant||!date) return alert('Mets Coupon + Montant + Date');
+      let list=JSON.parse(localStorage.getItem('gainsPayes')||'[]');
+      list.push({coupon,montant,date,nom:nom||'Client'});
+      localStorage.setItem('gainsPayes',JSON.stringify(list));
+      alert('Gain enregistré : '+coupon+' - '+montant+' FCFA');
+      document.getElementById('gainCoupon2').value=''; document.getElementById('gainMontant2').value=''; document.getElementById('gainNom2').value='';
+      afficher();
+    }
+  });
+})();
