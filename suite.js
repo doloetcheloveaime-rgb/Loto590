@@ -206,3 +206,109 @@ alert('Pronostic publié !');
 };
 }
 },1500);
+setTimeout(()=>{
+// On cherche le bouton GAIN
+let btnGain=null;
+document.querySelectorAll('button').forEach(b=>{
+  if(b.textContent.trim().toUpperCase()==='GAIN') btnGain=b;
+});
+if(!btnGain || document.getElementById('gainPayeBox')) return;
+
+let box=document.createElement('div'); box.id='gainPayeBox';
+box.style.cssText='background:#fff;color:#000;padding:12px;border-radius:10px;margin:10px 0;border:2px solid green;display:none';
+box.innerHTML='<b>💰 GAIN PAYÉ HORS APPLICATION (Preuve)</b><br><br>'+
+'<input id="gainCoupon" placeholder="Numéro du coupon gagnant" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<input id="gainMontant" placeholder="Montant payé (Ex: 50000)" type="number" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<input id="gainDate" type="date" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<input id="gainNom" placeholder="Nom du client payé" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<button id="btnSaveGain" style="background:green;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:bold">✅ ENREGISTRER GAIN PAYÉ</button>'+
+'<div id="listeGains" style="margin-top:10px"></div>';
+let a=document.getElementById('panelAdmin'); if(a) a.appendChild(box); else document.body.appendChild(box);
+
+// Mettre la date d'aujourd'hui par défaut
+document.getElementById('gainDate').value=new Date().toISOString().slice(0,10);
+
+let afficher=()=>{
+  let list=JSON.parse(localStorage.getItem('gainsPayes')||'[]');
+  let h='<b>Gains payés enregistrés : '+list.length+'</b><br>';
+  list.forEach((g,i)=>{
+    h+='<div style="border:1px solid #ccc;padding:8px;border-radius:8px;margin:5px 0">✅ <b>Coupon : '+g.coupon+'</b><br>👤 '+g.nom+'<br>💰 '+g.montant+' FCFA<br>📅 '+g.date+'<br><button onclick="alert(\'PREUVE DE PAIEMENT\\n\\nCoupon : '+g.coupon+'\\nClient : '+g.nom+'\\nMontant : '+g.montant+' FCFA\\nDate : '+g.date+'\\n\\nCe gain a été payé. Vérifie dans ton MoMo.\')" style="background:#000;color:#fff;padding:6px 10px;border:none;border-radius:6px;margin-top:5px">📤 VOIR PREUVE / ENVOYER</button></div>';
+  });
+  document.getElementById('listeGains').innerHTML=h;
+};
+afficher();
+
+btnGain.onclick=()=>{
+  box.style.display = box.style.display==='none' ? 'block' : 'none';
+  afficher();
+};
+document.getElementById('btnSaveGain').onclick=()=>{
+  let coupon=document.getElementById('gainCoupon').value.trim();
+  let montant=document.getElementById('gainMontant').value.trim();
+  let date=document.getElementById('gainDate').value;
+  let nom=document.getElementById('gainNom').value.trim();
+  if(!coupon||!montant||!date) return alert('Mets Coupon + Montant + Date');
+  let list=JSON.parse(localStorage.getItem('gainsPayes')||'[]');
+  list.push({coupon,montant,date,nom:nom||'Client'});
+  localStorage.setItem('gainsPayes',JSON.stringify(list));
+  alert('Gain payé enregistré : Coupon '+coupon+' - '+montant+' FCFA');
+  document.getElementById('gainCoupon').value=''; document.getElementById('gainMontant').value=''; document.getElementById('gainNom').value='';
+  afficher();
+};
+},1500);
+// REPARATION BOUTON GAIN - Version qui marche toujours
+(function(){
+  // Créer la boite une seule fois
+  if(!document.getElementById('gainPayeBox')){
+    let box=document.createElement('div'); box.id='gainPayeBox';
+    box.style.cssText='background:#fff;color:#000;padding:12px;border-radius:10px;margin:10px;border:2px solid green;display:none;position:relative;z-index:9999';
+    box.innerHTML='<b>💰 GAIN PAYÉ HORS APPLICATION</b><br><br>'+
+    '<input id="gainCoupon2" placeholder="Numéro du coupon gagnant" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+    '<input id="gainMontant2" placeholder="Montant payé" type="number" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+    '<input id="gainDate2" type="date" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+    '<input id="gainNom2" placeholder="Nom du client payé" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+    '<button id="btnSaveGain2" style="background:green;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:bold">✅ ENREGISTRER GAIN PAYÉ</button>'+
+    '<button onclick="document.getElementById(\'gainPayeBox\').style.display=\'none\'" style="background:#000;color:#fff;padding:10px;width:100%;border:none;border-radius:8px;margin-top:6px">FERMER</button>'+
+    '<div id="listeGains2" style="margin-top:10px"></div>';
+    document.body.appendChild(box);
+    document.getElementById('gainDate2').value=new Date().toISOString().slice(0,10);
+  }
+
+  function afficher(){
+    let list=JSON.parse(localStorage.getItem('gainsPayes')||'[]');
+    let h='<b>Gains enregistrés : '+list.length+'</b><br>';
+    list.forEach(g=>{
+      h+='<div style="border:1px solid #ccc;padding:8px;border-radius:8px;margin:5px 0">✅ Coupon : <b>'+g.coupon+'</b><br>👤 '+g.nom+'<br>💰 '+g.montant+' FCFA<br>📅 '+g.date+'</div>';
+    });
+    let l=document.getElementById('listeGains2'); if(l) l.innerHTML=h;
+  }
+
+  // Quand on clique N'IMPORTE OU sur un bouton GAIN, on ouvre
+  document.addEventListener('click', function(e){
+    let t=e.target;
+    if(!t) return;
+    let txt=(t.textContent||'').trim().toUpperCase();
+    if(txt==='GAIN' || txt.includes('GAIN')){
+      // On ne veut pas déclencher sur ENREGISTRER
+      if(txt.includes('ENREGISTRER')) return;
+      e.stopPropagation();
+      let box=document.getElementById('gainPayeBox');
+      box.style.display = box.style.display==='none' ? 'block' : 'none';
+      box.scrollIntoView({behavior:'smooth'});
+      afficher();
+    }
+    if(t.id==='btnSaveGain2'){
+      let coupon=document.getElementById('gainCoupon2').value.trim();
+      let montant=document.getElementById('gainMontant2').value.trim();
+      let date=document.getElementById('gainDate2').value;
+      let nom=document.getElementById('gainNom2').value.trim();
+      if(!coupon||!montant||!date) return alert('Mets Coupon + Montant + Date');
+      let list=JSON.parse(localStorage.getItem('gainsPayes')||'[]');
+      list.push({coupon,montant,date,nom:nom||'Client'});
+      localStorage.setItem('gainsPayes',JSON.stringify(list));
+      alert('Gain enregistré : '+coupon+' - '+montant+' FCFA');
+      document.getElementById('gainCoupon2').value=''; document.getElementById('gainMontant2').value=''; document.getElementById('gainNom2').value='';
+      afficher();
+    }
+  });
+})();
