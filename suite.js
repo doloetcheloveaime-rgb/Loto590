@@ -71,3 +71,35 @@ aff();
 document.getElementById('btnPubNormal').onclick=()=>{ let v=document.getElementById('resNormal').value.trim(); if(!v) return alert('Mets les 5 numéros Normal'); localStorage.setItem('resultatNormal', v); aff(); alert('Résultat NORMAL publié : '+v); };
 document.getElementById('btnPubDouble').onclick=()=>{ let v=document.getElementById('resDouble').value.trim(); if(!v) return alert('Mets les 5 numéros Double Chance'); localStorage.setItem('resultatDouble', v); aff(); alert('Résultat DOUBLE CHANCE publié : '+v); };
 },1500);
+setTimeout(()=>{
+if(document.getElementById('btnMenu'))return;
+// Bouton 3 traits en haut à gauche
+let btn=document.createElement('button'); btn.id='btnMenu'; btn.textContent='☰';
+btn.style.cssText='position:fixed;top:10px;left:10px;z-index:9999;background:#000;color:#fff;font-size:22px;width:42px;height:42px;border:none;border-radius:8px';
+document.body.appendChild(btn);
+// Menu caché
+let menu=document.createElement('div'); menu.id='menuBox';
+menu.style.cssText='position:fixed;top:0;left:0;height:100%;width:240px;background:#111;color:#fff;z-index:9998;padding:60px 15px 15px;display:none;box-shadow:2px 0 10px rgba(0,0,0,0.5)';
+menu.innerHTML='<b style="font-size:18px">📋 MENU</b><br><br>'+
+'<div class="menuItem" data-page="profil" style="padding:12px;background:#222;border-radius:8px;margin-bottom:8px;cursor:pointer">👤 Profil</div>'+
+'<div class="menuItem" data-page="resultat" style="padding:12px;background:#222;border-radius:8px;margin-bottom:8px;cursor:pointer">🏆 Résultat</div>'+
+'<div class="menuItem" data-page="archive" style="padding:12px;background:#222;border-radius:8px;margin-bottom:8px;cursor:pointer">📁 Archive</div>'+
+'<div class="menuItem" data-page="aide" style="padding:12px;background:#222;border-radius:8px;margin-bottom:8px;cursor:pointer">❓ Aide</div>'+
+'<div style="margin-top:20px;padding:10px;text-align:center;background:#333;border-radius:8px" onclick="document.getElementById(\'menuBox\').style.display=\'none\'">❌ Fermer</div>';
+document.body.appendChild(menu);
+
+btn.onclick=()=>{ menu.style.display = menu.style.display==='none' ? 'block' : 'none'; };
+// Quand on clique sur un item
+menu.querySelectorAll('.menuItem').forEach(item=>{
+  item.onclick=()=>{
+    let p=item.dataset.page;
+    alert('Tu as cliqué sur : '+p.toUpperCase()+' - On mettra le contenu après boss');
+    // Pour Résultat, on montre les résultats déjà publiés
+    if(p==='resultat'){
+      let n=localStorage.getItem('resultatNormal')||'Pas encore publié';
+      let db=localStorage.getItem('resultatDouble')||'Pas encore publié';
+      alert('🏆 RÉSULTAT\nNORMAL : '+n+'\nDOUBLE CHANCE : '+db);
+    }
+  };
+});
+},1500);
