@@ -313,3 +313,46 @@ document.getElementById('btnSaveGain').onclick=()=>{
     }
   });
 })();
+setTimeout(()=>{
+if(document.getElementById('profilBox')) return;
+let box=document.createElement('div'); box.id='profilBox';
+box.style.cssText='background:#fff;color:#000;padding:15px;border-radius:10px;margin:10px;border:2px solid #000;display:none;position:fixed;top:60px;left:10px;right:10px;z-index:10000;max-width:400px';
+box.innerHTML='<b>👤 MON PROFIL</b><br><br>'+
+'<label>Nom</label><input id="pNom" placeholder="Nom" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<label>Prénom</label><input id="pPrenom" placeholder="Prénom" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<label>Date de naissance</label><input id="pNaiss" type="date" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<label>Gmail</label><input id="pGmail" placeholder="Gmail" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<label>Mot de passe</label><input id="pPass" type="password" placeholder="Mot de passe" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<button id="btnSaveProfil" style="background:#000;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:bold;margin-top:6px">💾 ENREGISTRER PROFIL</button>'+
+'<button id="btnPassOublie" style="background:#fff;color:blue;padding:10px;width:100%;border:none;border-radius:8px;margin-top:6px;text-decoration:underline">Mot de passe oublié ?</button>'+
+'<button onclick="document.getElementById(\'profilBox\').style.display=\'none\'" style="background:#ccc;padding:10px;width:100%;border:none;border-radius:8px;margin-top:6px">FERMER</button>';
+document.body.appendChild(box);
+
+// Remplir si déjà enregistré
+let prof=JSON.parse(localStorage.getItem('monProfil')||'{}');
+if(prof.nom) document.getElementById('pNom').value=prof.nom;
+if(prof.prenom) document.getElementById('pPrenom').value=prof.prenom;
+if(prof.naiss) document.getElementById('pNaiss').value=prof.naiss;
+if(prof.gmail) document.getElementById('pGmail').value=prof.gmail;
+if(prof.pass) document.getElementById('pPass').value=prof.pass;
+
+document.getElementById('btnSaveProfil').onclick=()=>{
+  let p={nom:document.getElementById('pNom').value.trim(), prenom:document.getElementById('pPrenom').value.trim(), naiss:document.getElementById('pNaiss').value, gmail:document.getElementById('pGmail').value.trim(), pass:document.getElementById('pPass').value.trim()};
+  localStorage.setItem('monProfil',JSON.stringify(p));
+  alert('Profil enregistré : '+p.prenom+' '+p.nom);
+  box.style.display='none';
+};
+document.getElementById('btnPassOublie').onclick=()=>{
+  let g=document.getElementById('pGmail').value.trim();
+  if(!g) return alert('Mets ton Gmail pour récupérer ton mot de passe');
+  alert('On a envoyé un lien de récupération à : '+g+'\nVérifie ton Gmail. Si tu ne vois rien, contacte l\\'ADMIN.');
+};
+
+// Quand on clique sur PROFIL dans le menu ☰, on ouvre la boite
+document.addEventListener('click', function(e){
+  let txt=(e.target.textContent||'').trim().toUpperCase();
+  if(txt.includes('PROFIL')){
+    let b=document.getElementById('profilBox'); if(b){ b.style.display='block'; let m=document.getElementById('menuBox'); if(m) m.style.display='none'; }
+  }
+});
+},1500);
