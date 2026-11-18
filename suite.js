@@ -136,3 +136,24 @@ setInterval(()=>{
     }
   });
 },800);
+setInterval(()=>{
+  // 1. Enlever Basic
+  document.querySelectorAll('button,div,span').forEach(el=>{
+    if(el.textContent.trim()==='Basic' && el.children.length===0){
+      el.style.display='none';
+    }
+  });
+  // 2. Mettre Bienvenue dans le bleu en haut
+  // Le bleu c'est la barre en haut de la page
+  let bleu = document.querySelector('header') || document.body.firstElementChild;
+  // On cherche la div bleue qui contenait Basic
+  document.querySelectorAll('div').forEach(d=>{
+    let bg = getComputedStyle(d).backgroundColor;
+    if((bg.includes('0, 0, 255') || bg.includes('0, 102') || d.style.background==='blue' || d.style.backgroundColor==='blue') && d.offsetHeight<100 && d.offsetHeight>30){
+      if(!d.dataset.bienvenue){
+        d.dataset.bienvenue='1';
+        d.innerHTML='<div style="color:#fff;font-weight:bold;font-size:16px;text-align:center;padding:12px 5px">👋 Bienvenue sur Net Loto at 5/90</div>';
+      }
+    }
+  });
+},800);
