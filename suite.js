@@ -1,3 +1,5 @@
-function out(){location.reload()}
-let t=document.createElement('div');t.style.cssText='position:fixed;top:5px;right:5px;z-index:9999;display:flex;gap:5px';
-t.innerHTML='<button onclick="history.back()">RETOUR</button><button onclick="out()">SE DECONNECTER</button>';document.body.appendChild(t);// suite - corrections
+// Page connexion seulement
+let b=document.querySelectorAll('button');b.forEach(x=>{if(x.textContent.includes('RETOUR')){x.style.cssText='position:fixed;top:5px;left:5px;z-index:9999;padding:5px 8px;font-size:11px;background:#333;color:#fff;border:none;border-radius:8px'};if(x.textContent.includes('DECONNECTER')){x.style.cssText='position:fixed;top:5px;right:5px;z-index:9999;padding:5px 8px;font-size:11px;background:red;color:#fff;border:none;border-radius:8px'}});
+document.body.innerHTML=document.body.innerHTML.replace(/LUNDI.*?Aujourd.*?/g,'').replace(/Solde:.*?Gain:.*?/g,'');
+let ins=document.querySelectorAll('input');if(ins[0])ins[0].placeholder='Gmail ou Identifiant';if(ins[1]){ins[1].placeholder='Mot de passe';ins[1].type='password'};
+let ent=document.querySelector('button');let all=document.querySelectorAll('button');all.forEach(x=>{if(x.textContent.includes('ENTRER')){let p=document.createElement('div');p.style.cssText='text-align:center;margin-top:10px;color:#fff;font-size:13px';p.innerHTML='<div style="color:yellow">Inscrivez-vous ici</div><div style="margin-top:5px">Mot de passe oublié ?</div>';x.parentNode.appendChild(p)}});
