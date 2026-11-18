@@ -157,3 +157,39 @@ setInterval(()=>{
     }
   });
 },800);
+setTimeout(()=>{
+let a=document.getElementById('panelAdmin'); if(!a||document.getElementById('creerRevBox'))return;
+let d=document.createElement('div'); d.id='creerRevBox';
+d.style.cssText='background:#fff;color:#000;padding:12px;border-radius:10px;margin:10px 0;border:2px solid #000';
+d.innerHTML='<b>🏪 CRÉER UN REVENDEUR</b><br><br>'+
+'<input id="revEtab" placeholder="Nom de l’établissement" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<input id="revNom" placeholder="Nom du revendeur" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<input id="revGmail" placeholder="Gmail du revendeur" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<input id="revWhats" placeholder="Numéro WhatsApp" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<input id="revPass" placeholder="Mot de passe" type="password" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+'<button id="btnCreerRev" style="background:#000;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:bold">+ CRÉER REVENDEUR</button>'+
+'<div id="listeRev" style="margin-top:10px"></div>';
+a.appendChild(d);
+
+let afficher=()=>{
+  let list=JSON.parse(localStorage.getItem('revendeurs')||'[]');
+  let h='<b>Revendeurs créés : '+list.length+'</b><br>';
+  list.forEach(r=>{ h+='🏪 '+r.etab+' - '+r.nom+' - '+r.whats+'<br>'; });
+  document.getElementById('listeRev').innerHTML=h;
+};
+afficher();
+document.getElementById('btnCreerRev').onclick=()=>{
+  let etab=document.getElementById('revEtab').value.trim();
+  let nom=document.getElementById('revNom').value.trim();
+  let gmail=document.getElementById('revGmail').value.trim();
+  let whats=document.getElementById('revWhats').value.trim();
+  let pass=document.getElementById('revPass').value.trim();
+  if(!etab||!nom||!whats||!pass) return alert('Remplis tout : Établissement, Nom, WhatsApp, Mot de passe');
+  let list=JSON.parse(localStorage.getItem('revendeurs')||'[]');
+  list.push({etab,nom,gmail,whats,pass});
+  localStorage.setItem('revendeurs',JSON.stringify(list));
+  alert('Revendeur créé : '+nom+' - '+etab);
+  document.getElementById('revEtab').value='';document.getElementById('revNom').value='';document.getElementById('revGmail').value='';document.getElementById('revWhats').value='';document.getElementById('revPass').value='';
+  afficher();
+};
+},1500);
