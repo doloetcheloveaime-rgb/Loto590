@@ -604,3 +604,58 @@ if(oldPub && !oldPub.dataset.logged){
 window.enregistrerArchive('CONNEXION', 'Connexion sur la plateforme');
 
 },1500);
+// AIDE - COMMENT JOUER AU LOTO 5/90 - A COLLER A LA FIN
+setTimeout(()=>{
+if(document.getElementById('aideBox')) return;
+
+let box=document.createElement('div'); box.id='aideBox';
+box.style.cssText='background:#fff;color:#000;padding:15px;border-radius:10px;display:none;position:fixed;top:60px;left:10px;right:10px;z-index:10004;max-width:460px;border:2px solid #000;max-height:82vh;overflow:auto';
+box.innerHTML=
+'<b>❓ AIDE - COMMENT JOUER AU LOTO 5/90</b><br><br>'+
+
+'<div style="background:#e8f0ff;padding:10px;border-radius:8px"><b>🎯 C\'EST QUOI LE 5/90 ?</b><br>Tu choisis <b>5 numéros</b> de <b>1 à 90</b>. Le tirage sort aussi 5 numéros. Si tes numéros sortent, tu gagnes.</div><br>'+
+
+'<b>📝 COMMENT JOUER EN 3 ÉTAPES :</b><br>'+
+'<b>1.</b> Appuie sur <b>JOUER</b> ou <b>Loto 5/90</b><br>'+
+'<b>2.</b> Choisis tes <b>5 numéros</b>. Exemple : <b>12 - 23 - 34 - 45 - 56</b><br>'+
+'<b>3.</b> Mets ta <b>mise</b> (ex: 500F, 1000F) et appuie sur <b>VALIDER</b>. Tu reçois ton coupon.<br><br>'+
+
+'<div style="background:#fff3cd;padding:10px;border-radius:8px"><b>💡 EXEMPLE QUI GAGNE :</b><br>Tu as joué : <b>12 - 23 - 34 - 45 - 56</b><br>Tirage sort : <b>12 - 23 - 34 - 45 - 56</b><br>✅ Tu as gagné ! Va dans <b>GAIN</b> pour voir ton gain.</div><br>'+
+
+'<b>🏆 COMBIEN JE GAGNE ?</b><br>'+
+'• 5 bons numéros = <b>GROS GAIN</b><br>'+
+'• 4 bons numéros = <b>Petit gain</b><br>'+
+'• 3 bons numéros = <b>Tu récupères un peu</b><br>'+
+'• Moins de 3 = Tu as perdu, rejoue.<br><br>'+
+
+'<b>❓ QUESTIONS FRÉQUENTES :</b><br>'+
+'<b>Q : Quand je reçois mon gain ?</b><br>R : Juste après la publication du résultat, dans <b>GAIN</b>.<br><br>'+
+'<b>Q : Je peux jouer avec DOUBLE CHANCE ?</b><br>R : Oui, DOUBLE CHANCE = 2 chances de gagner au lieu de 1.<br><br>'+
+'<b>Q : Où je vois les anciens résultats ?</b><br>R : Dans <b>☰ MENU -> Résultat</b>, tu choisis ton pays.<br><br>'+
+'<b>Q : J\'ai oublié mon mot de passe ?</b><br>R : Va dans <b>☰ MENU -> Profil -> Mot de passe oublié</b>.<br><br>'+
+
+'<button id="btnAideWhats" style="background:green;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:bold">💬 J\'AI TOUJOURS UN PROBLÈME - PARLER À L\'ADMIN</button><br>'+
+'<button onclick="document.getElementById(\'aideBox\').style.display=\'none\'" style="background:#000;color:#fff;padding:10px;width:100%;border:none;border-radius:8px;margin-top:8px">FERMER</button>';
+
+document.body.appendChild(box);
+
+document.getElementById('btnAideWhats').onclick=()=>{
+  alert('Écris à l\'ADMIN sur WhatsApp et dis : Bonjour, je ne comprends pas comment jouer au 5/90, aide-moi.');
+};
+
+// Bouton AIDE dans le MENU
+let menu=document.getElementById('menuBox');
+if(menu && !document.getElementById('menuAide')){
+  let b=document.createElement('button'); b.id='menuAide'; b.textContent='❓ Aide - Comment jouer ?';
+  b.style.cssText='width:100%;padding:12px;margin:4px 0;background:#e8f0ff;border:1px solid blue;border-radius:8px;font-weight:bold';
+  menu.appendChild(b);
+}
+
+// Ouvrir quand on clique sur AIDE
+document.addEventListener('click', function(e){
+  let txt=(e.target.textContent||'').trim().toUpperCase();
+  if(txt.includes('AIDE') || txt.includes('COMMENT JOUER')){
+    let b=document.getElementById('aideBox'); if(b){ b.style.display='block'; let m=document.getElementById('menuBox'); if(m) m.style.display='none'; }
+  }
+});
+},1500);
