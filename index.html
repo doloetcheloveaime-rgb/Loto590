@@ -254,4 +254,70 @@ setTimeout(()=>{
   }
 },2000);
 </script>
-<!-- ===== FIN CORRECTIF ===== --></body></html>
+<!-- ===== FIN CORRECTIF ===== --><!-- ===== CORRECTIF MENU REVENDEUR : CACHER, AFFICHER AU CLIC ===== -->
+<script>
+setTimeout(()=>{
+  let DB2=JSON.parse(localStorage.getItem('netloto')||'{}');
+  let s=localStorage.getItem('session');
+  let u=DB2.users?DB2.users.find(x=>x.gmail==s):null;
+  if(!u || u.role!='REVENDEUR') return;
+
+  // 1. On repère les cartes de la page revendeur
+  let cards=document.querySelectorAll('#pageRevendeur .card');
+  // cards[0]=Titre, [1]=Solde, [2]=Recharger Revendeur, [3]=Recharger Client, [4]=Archive, [5]=Aide
+  cards.forEach((c,i)=>{
+    if(i==0||i==1) c.style.display='block'; // Titre + Solde restent toujours
+    else c.style.display='none'; // Le reste est CACHÉ au début
+    // On donne un id pour pouvoir l'afficher
+    if(i==2) c.id='revBoxRechargerMoi';
+    if(i==3) c.id='revBoxRechargerClient';
+    if(i==4) c.id='revBoxArchive';
+    if(i==5) c.id='revBoxAide';
+  });
+
+  // 2. Fonction pour afficher UNE SEULE section à la fois
+  window.showRevSection=function(nom){
+    ['revBoxRechargerMoi','revBoxRechargerClient','revBoxArchive','revBoxAide'].forEach(id=>{
+      let el=document.getElementById(id); if(el) el.style.display='none';
+    });
+    // On cache aussi le Profil / Résultat ADMIN qui ne sont pas pour revendeur
+    let p=document.getElementById('profil'); if(p) p.style.display='none';
+    let r=document.getElementById('resultat'); if(r) r.style.display='none';
+    if(nom=='archive'){ let el=document.getElementById('revBoxArchive'); if(el){el.style.display='block'; el.scrollIntoView({behavior:'smooth'});} }
+    if(nom=='aide'){ let el=document.getElementById('revBoxAide'); if(el){el.style.display='block'; el.scrollIntoView({behavior:'smooth'});} }
+    if(nom=='rechargerMoi'){ let el=document.getElementById('revBoxRechargerMoi'); if(el){el.style.display='block'; el.scrollIntoView({behavior:'smooth'});} }
+    if(nom=='rechargerClient'){ let el=document.getElementById('revBoxRechargerClient'); if(el){el.style.display='block'; el.scrollIntoView({behavior:'smooth'});} }
+    if(nom=='profil'){
+      // Profil revendeur : on montre un petit popup avec ses infos
+      alert('👤 PROFIL REVENDEUR\n\nNom: '+u.gmail+'\nWhatsApp: '+u.wa+'\nRôle: REVENDEUR\nSolde Revendeur: '+(u.soldeRev||0)+' FCFA');
+    }
+    if(nom=='resultat'){
+      // Résultat : on va chercher les résultats publiés par ADMIN
+      let res=DB2.resultats||[];
+      if(res.length==0) alert('🏆 RÉSULTAT\n\nPas encore de résultat publié par ADMIN.');
+      else alert('🏆 RÉSULTAT\n\n'+res.join('\n\n'));
+    }
+    // Fermer le menu
+    let menu=document.getElementById('menu'); if(menu) menu.style.display='none';
+  };
+
+  // 3. On branche les boutons du menu ☰
+  // Le menu d'origine appelle show('profil') etc. On le remplace pour revendeur
+  window.show=function(id){
+    let menu=document.getElementById('menu'); if(menu) menu.style.display='none';
+    if(id=='profil') showRevSection('profil');
+    if(id=='resultat') showRevSection('resultat');
+    if(id=='archive') showRevSection('archive');
+    if(id=='aide') showRevSection('aide');
+    if(id=='dashboard'){ window.scrollTo(0,0); }
+  };
+
+  // 4. On ajoute 2 boutons rapides sous le solde pour recharger
+  let soldeCard=cards[1];
+  if(soldeCard && !document.getElementById('btnRevMenu')){
+    soldeCard.innerHTML += '<br><div style="display:flex;gap:8px"><button class="btn orange" id="btnRevMenu" onclick="showRevSection(\'rechargerMoi\')">🔑 ME RECHARGER</button><button class="btn green" onclick="showRevSection(\'rechargerClient\')">💰 RECHARGER CLIENT</button></div>';
+  }
+
+},2500);
+</script>
+<!-- ===== FIN CORRECTIF MENU ===== --></body></html>
