@@ -502,3 +502,105 @@ setTimeout(()=>{
     });
   },2000);
 },1000);
+// ARCHIVE - ADMIN VOIT TOUT, REVENDEUR VOIT LE SIEN, CLIENT VOIT LE SIEN
+setTimeout(()=>{
+
+// 1. FONCTION POUR ENREGISTRER TOUT CE QUI SE FAIT
+window.enregistrerArchive=function(action, details){
+  try{
+    let qui = localStorage.getItem('currentUser') || localStorage.getItem('userPhone') || 'VISITEUR';
+    let role = 'CLIENT';
+    if(qui==='9999' || localStorage.getItem('isAdmin')==='1') role='ADMIN';
+    if(localStorage.getItem('isRevendeur')==='1') role='REVENDEUR';
+    // Si c'est le revendeur, on prend son nom
+    let nomRev = localStorage.getItem('nomRevendeur') || qui;
+
+    let e={date:new Date().toLocaleDateString(), heure:new Date().toLocaleTimeString(), qui:qui, nom:nomRev, role:role, action:action, details:details||''};
+    let all=JSON.parse(localStorage.getItem('archiveGlobale')||'[]');
+    all.push(e);
+    localStorage.setItem('archiveGlobale',JSON.stringify(all));
+
+    // Archive perso aussi
+    let perso=JSON.parse(localStorage.getItem('archivePerso_'+qui)||'[]');
+    perso.push(e);
+    localStorage.setItem('archivePerso_'+qui,JSON.stringify(perso));
+  }catch(err){}
+};
+
+// 2. BOITE ARCHIVE
+if(!document.getElementById('archiveBox')){
+  let box=document.createElement('div'); box.id='archiveBox';
+  box.style.cssText='background:#fff;color:#000;padding:15px;border-radius:10px;display:none;position:fixed;top:60px;left:10px;right:10px;z-index:10003;max-width:480px;border:2px solid #000;max-height:80vh;overflow:auto';
+  box.innerHTML='<b>📁 MON ARCHIVE</b><br><span id="archiveTitre" style="font-size:12px;color:#555"></span><br><br>'+
+  '<div id="archiveFiltre" style="margin-bottom:8px"><select id="filtreArchiveJour" style="width:100%;padding:10px;border:1px solid #000;border-radius:8px"><option value="TOUT">TOUS LES JOURS</option><option value="AUJOURDUI">AUJOURD\'HUI SEULEMENT</option></select></div>'+
+  '<div id="archiveTotal" style="background:#000;color:#fff;padding:8px;border-radius:8px;font-weight:bold;margin-bottom:8px"></div>'+
+  '<div id="listeArchive"></div>'+
+  '<button onclick="document.getElementById(\'archiveBox\').style.display=\'none\'" style="background:#000;color:#fff;padding:10px;width:100%;border:none;border-radius:8px;margin-top:10px">FERMER</button>';
+  document.body.appendChild(box);
+}
+
+// 3. AFFICHER ARCHIVE SELON QUI REGARDE
+window.afficherArchive=function(){
+  let qui = localStorage.getItem('currentUser') || localStorage.getItem('userPhone') || 'VISITEUR';
+  let isAdmin = (qui==='9999' || localStorage.getItem('isAdmin')==='1');
+  let titre=document.getElementById('archiveTitre');
+  let list=[];
+  if(isAdmin){
+    // ADMIN : VOIT TOUT
+    list=JSON.parse(localStorage.getItem('archiveGlobale')||'[]');
+    if(titre) titre.textContent='ADMIN - Tu vois TOUT le site : Admin + Revendeurs + Clients';
+  }else{
+    // REVENDEUR / CLIENT : VOIT SEULEMENT LE SIEN
+    list=JSON.parse(localStorage.getItem('archivePerso_'+qui)||'[]');
+    if(titre) titre.textContent='Tu vois SEULEMENT tes mouvements : '+qui;
+  }
+  let filtre=document.getElementById('filtreArchiveJour').value;
+  let auj=new Date().toLocaleDateString();
+  if(filtre==='AUJOURDUI') list=list.filter(e=>e.date===auj);
+
+  let h='';
+  let totalGain=0;
+  list.slice().reverse().forEach(e=>{
+    h+='<div style="border:1px solid #ccc;padding:8px;border-radius:8px;margin:5px 0"><b>'+e.action+'</b><br>👤 '+e.role+' : '+e.qui+'<br>📅 '+e.date+' ⏰ '+e.heure+'<br>'+e.details+'</div>';
+  });
+  if(list.length===0) h='<p>Aucune archive pour le moment.</p>';
+  document.getElementById('listeArchive').innerHTML=h;
+  document.getElementById('archiveTotal').textContent='Total mouvements : '+list.length+' | Jour : '+auj;
+};
+document.getElementById('filtreArchiveJour').onchange=window.afficherArchive;
+
+// 4. BOUTON ARCHIVE DANS LE MENU
+let menu=document.getElementById('menuBox');
+if(menu && !document.getElementById('menuArchive')){
+  let b=document.createElement('button'); b.id='menuArchive'; b.textContent='📁 Archive';
+  b.style.cssText='width:100%;padding:12px;margin:4px 0;background:#fff3cd;border:1px solid orange;border-radius:8px;font-weight:bold';
+  menu.appendChild(b);
+}
+// Bouton Archive aussi dans panelAdmin
+let pa=document.getElementById('panelAdmin');
+if(pa && !document.getElementById('btnArchiveAdmin')){
+  let b2=document.createElement('button'); b2.id='btnArchiveAdmin'; b2.textContent='📁 VOIR ARCHIVE GLOBALE (TOUT LE SITE)';
+  b2.style.cssText='background:#000;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:bold;margin:10px 0';
+  b2.onclick=()=>{ let box=document.getElementById('archiveBox'); box.style.display='block'; window.afficherArchive(); };
+  pa.appendChild(b2);
+}
+
+// 5. OUVRIR QUAND ON CLIQUE SUR ARCHIVE
+document.addEventListener('click', function(e){
+  let txt=(e.target.textContent||'').trim().toUpperCase();
+  if(txt.includes('ARCHIVE') && !txt.includes('RÉSULTAT')){
+    let box=document.getElementById('archiveBox'); if(box){ box.style.display='block'; window.afficherArchive(); let m=document.getElementById('menuBox'); if(m) m.style.display='none'; }
+  }
+});
+
+// 6. ENREGISTRER AUTOMATIQUEMENT : quand on publie un résultat, quand on joue, quand on gagne
+let oldPub=document.getElementById('btnPubRes');
+if(oldPub && !oldPub.dataset.logged){
+  oldPub.dataset.logged='1';
+  oldPub.addEventListener('click', ()=>{ setTimeout(()=>{ window.enregistrerArchive('PUBLICATION RESULTAT', 'Résultat publié'); },500); });
+}
+
+// Exemple : tu peux appeler ça partout : enregistrerArchive('JEU JOUE', 'Bénin Loto 5/90 - Mise 500F')
+window.enregistrerArchive('CONNEXION', 'Connexion sur la plateforme');
+
+},1500);
