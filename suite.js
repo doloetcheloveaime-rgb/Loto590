@@ -354,3 +354,81 @@ document.addEventListener('click', function(e){
   }
 });
 },1500);
+// CORRECTION RESULTAT - EN TETE + NORMAL / URGENT + N° TIRAGE
+setTimeout(()=>{
+  let old=document.getElementById('pubResultBox');
+  if(old) old.remove(); // On remplace l'ancienne boite par la nouvelle
+
+  let a=document.getElementById('panelAdmin');
+  if(!a) return;
+
+  let d=document.createElement('div'); d.id='pubResultBox';
+  d.style.cssText='background:#fff;color:#000;padding:12px;border-radius:10px;margin:10px 0;border:2px solid blue';
+  d.innerHTML=
+  // EN HAUT : CE QUE TU ES EN TRAIN DE PUBLIER
+  '<div id="entetePub" style="background:#000;color:#fff;padding:10px;border-radius:8px;text-align:center;font-weight:bold">📊 EN TRAIN DE PUBLIER :<br><span id="enteteTexte" style="color:yellow;font-size:16px">Bénin - Loto 5/90</span><br><span id="enteteType" style="font-size:12px;background:green;color:#fff;padding:2px 8px;border-radius:10px">NORMAL</span></div><br>'+
+  'Pays<br><select id="resPays" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><option>Bénin</option><option>Togo</option><option>Côte d\'Ivoire</option><option>France</option><option>Ghana</option><option>Nigeria</option><option>Sénégal</option></select>'+
+  'Jeu<br><select id="resJeu" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><option>Loto 5/90</option><option>Loto 4/40</option><option>PMU</option><option>Paris Foot</option><option>Autre Jeu</option></select>'+
+  'Type de résultat<br><select id="resType" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><option value="NORMAL">🟢 NORMAL</option><option value="URGENT">🔴 URGENT</option></select>'+
+  'Date<br><input id="resDate" type="date" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+  'Numéro de tirage<br><input id="resTirage" placeholder="Ex: Tirage N° 1234" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+  'Numéros gagnants<br><input id="resNum" placeholder="Ex: 12 - 23 - 34 - 45 - 56" style="width:100%;padding:10px;margin:4px 0;border:1px solid #000;border-radius:8px"><br>'+
+  '<button id="btnPubRes" style="background:blue;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:bold">📢 PUBLIER RÉSULTAT</button>';
+  a.appendChild(d);
+  document.getElementById('resDate').value=new Date().toISOString().slice(0,10);
+
+  // Mettre à jour l'en-tête en haut quand l'admin change Pays / Jeu / Type
+  function majEntete(){
+    let pays=document.getElementById('resPays').value;
+    let jeu=document.getElementById('resJeu').value;
+    let type=document.getElementById('resType').value;
+    document.getElementById('enteteTexte').textContent=pays+' - '+jeu;
+    let et=document.getElementById('enteteType');
+    et.textContent=type;
+    et.style.background = type==='URGENT' ? 'red' : 'green';
+  }
+  document.getElementById('resPays').onchange=majEntete;
+  document.getElementById('resJeu').onchange=majEntete;
+  document.getElementById('resType').onchange=majEntete;
+  majEntete();
+
+  document.getElementById('btnPubRes').onclick=()=>{
+    let pays=document.getElementById('resPays').value;
+    let jeu=document.getElementById('resJeu').value;
+    let type=document.getElementById('resType').value;
+    let date=document.getElementById('resDate').value;
+    let tirage=document.getElementById('resTirage').value.trim();
+    let numeros=document.getElementById('resNum').value.trim();
+    if(!date||!tirage||!numeros) return alert('Mets Date + Numéro de tirage + Numéros');
+    let list=JSON.parse(localStorage.getItem('resultatsArchive')||'[]');
+    list.push({pays,jeu,type,date,tirage,numeros});
+    localStorage.setItem('resultatsArchive',JSON.stringify(list));
+    alert('Résultat publié : '+pays+' - '+jeu+' - '+type+' - Tirage '+tirage);
+    document.getElementById('resTirage').value=''; document.getElementById('resNum').value='';
+  };
+
+  // Nouvelle affichage archive avec Tirage + Type
+  window.afficherResultatsNew=function(){
+    let list=JSON.parse(localStorage.getItem('resultatsArchive')||'[]');
+    let filtreEl=document.getElementById('filtrePays'); let filtre=filtreEl?filtreEl.value:'TOUS';
+    let h='';
+    let aff=list.slice().reverse();
+    if(filtre!=='TOUS') aff=aff.filter(r=>r.pays===filtre);
+    if(aff.length===0) h='<p>Aucun résultat.</p>';
+    aff.forEach(r=>{
+      let badge=r.type==='URGENT' ? '<span style="background:red;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px">🔴 URGENT</span>' : '<span style="background:green;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px">🟢 NORMAL</span>';
+      h+='<div style="border:1px solid #ccc;padding:10px;border-radius:8px;margin:6px 0"><b>🌍 '+(r.pays||'')+' - '+(r.jeu||'')+'</b> '+badge+'<br>📅 '+(r.date||'')+' | 🎫 Tirage N° <b>'+(r.tirage||'-')+'</b><br>🎱 Résultat : <b style="font-size:16px">'+(r.numeros||'')+'</b></div>';
+    });
+    let l=document.getElementById('listeResultats'); if(l) l.innerHTML=h;
+  };
+  let f=document.getElementById('filtrePays'); if(f) f.onchange=window.afficherResultatsNew;
+
+  // Quand on ouvre Résultat, on utilise le nouvel affichage
+  document.addEventListener('click', function(e){
+    let txt=(e.target.textContent||'').trim().toUpperCase();
+    if(txt.includes('RÉSULTAT')||txt.includes('RESULTAT')){
+      if(txt.includes('PUBLIER')) return;
+      setTimeout(()=>{ if(window.afficherResultatsNew) window.afficherResultatsNew(); },100);
+    }
+  });
+},1500);
