@@ -225,4 +225,33 @@ setTimeout(()=>{
   }
 },1800);
 </script>
-<!-- ===== FIN CODE REVENDEUR SEUL ===== --></body></html>
+<!-- ===== FIN CODE REVENDEUR SEUL ===== --><!-- ===== CORRECTIF REVENDEUR NE VOIT PAS PAGE ADMIN ===== -->
+<script>
+setTimeout(()=>{
+  let DB2=JSON.parse(localStorage.getItem('netloto')||'{}');
+  let s=localStorage.getItem('session');
+  let u=DB2.users?DB2.users.find(x=>x.gmail==s):null;
+  if(u && u.role=='REVENDEUR'){
+    // 1. On cache TOUT le dashboard ADMIN
+    let dash=document.getElementById('dashboard');
+    if(dash) dash.style.display='none';
+    // 2. On cache la partie AUTH aussi
+    let auth=document.getElementById('auth');
+    if(auth) auth.style.display='none';
+    // 3. On montre SEULEMENT la page REVENDEUR
+    let rev=document.getElementById('pageRevendeur');
+    if(rev){ rev.style.display='block'; rev.style.marginTop='10px'; }
+    // 4. On remet son solde
+    let sol=document.getElementById('soldeRevTxt2');
+    if(sol) sol.innerText=(u.soldeRev||0)+' FCFA';
+    document.getElementById('revNomTxt').innerText=u.gmail;
+    document.getElementById('revInfoTxt').innerText=u.gmail+' | WhatsApp: '+u.wa;
+  }
+  if(u && u.role=='ADMIN'){
+    // ADMIN lui, il ne voit PAS la page revendeur
+    let rev=document.getElementById('pageRevendeur');
+    if(rev) rev.style.display='none';
+  }
+},2000);
+</script>
+<!-- ===== FIN CORRECTIF ===== --></body></html>
