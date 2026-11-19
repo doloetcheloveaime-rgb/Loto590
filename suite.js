@@ -719,3 +719,79 @@ setTimeout(()=>{
   },2000);
 
 },1500);
+// PAGE REVENDEUR - ETAPE 1 : SOLDE + RECHARGE
+setTimeout(()=>{
+
+// 1. RETOUR + DECONNEXION POUR TOUT LE MONDE (Client + Revendeur + Admin)
+if(!document.getElementById('barTopTous')){
+  let bar=document.createElement('div'); bar.id='barTopTous';
+  bar.style.cssText='display:flex;gap:8px;padding:8px;position:fixed;top:0;left:0;right:0;z-index:10010;background:#fff;border-bottom:1px solid #ccc';
+  bar.innerHTML='<button id="btnRetourTous" style="flex:1;padding:10px;background:#eee;border:1px solid #000;border-radius:8px;font-weight:bold">⬅ RETOUR</button><button id="btnDecoTous" style="flex:1;padding:10px;background:#ff4444;color:#fff;border:none;border-radius:8px;font-weight:bold">🚪 DÉCONNEXION</button>';
+  document.body.prepend(bar);
+  document.getElementById('btnRetourTous').onclick=()=>{ history.back(); };
+  document.getElementById('btnDecoTous').onclick=()=>{
+    localStorage.removeItem('currentUser'); localStorage.removeItem('isAdmin'); localStorage.removeItem('isRevendeur');
+    alert('Tu es déconnecté'); location.reload();
+  };
+}
+
+// 2. PAGE REVENDEUR
+let qui = localStorage.getItem('currentUser') || '';
+let isRev = localStorage.getItem('isRevendeur')==='1' || qui.startsWith('REV');
+
+if(isRev && !document.getElementById('pageRevendeur')){
+  let p=document.createElement('div'); p.id='pageRevendeur';
+  p.style.cssText='background:#fff;color:#000;padding:15px;border-radius:10px;margin:60px 10px 10px 10px;border:2px solid #000';
+  p.innerHTML=
+  '<div style="text-align:center"><b style="font-size:18px">NET LOTO AT 5/90<br>REVENDEUR</b><br><span style="font-size:12px">Bienvenue Revendeur : '+qui+'</span></div><br>'+
+
+  // SOLDE REVENDEUR
+  '<div style="background:#000;color:#fff;padding:12px;border-radius:10px;text-align:center"><span style="font-size:12px">SOLDE REVENDEUR</span><br><b id="soldeRev" style="font-size:26px">0 F</b></div><br>'+
+
+  // SE RECHARGER CHEZ L ADMIN
+  '<b>💰 SE RECHARGER CHEZ L\'ADMINISTRATEUR</b><br>'+
+  '<input id="montantRechargeRev" type="number" placeholder="Montant ex: 10000" style="width:100%;padding:12px;border:1px solid #000;border-radius:8px;margin:6px 0">'+
+  '<button id="btnRechargeAdmin" style="background:green;color:#fff;padding:13px;width:100%;border:none;border-radius:8px;font-weight:bold">📲 SE RECHARGER CHEZ L\'ADMINISTRATEUR</button><br>'+
+  '<span style="font-size:11px;color:#555">Quand tu appuies, un message part sur WhatsApp de l\'admin. L\'admin te recharge.</span><br><br>'+
+
+  // RECHARGER LES CLIENTS
+  '<b>👥 RECHARGER LES CLIENTS</b><br>'+
+  '<input id="telClientRecharge" type="tel" placeholder="N° WhatsApp du client ex: 229..." style="width:100%;padding:12px;border:1px solid #000;border-radius:8px;margin:6px 0">'+
+  '<input id="montantClientRecharge" type="number" placeholder="Montant à donner au client ex: 5000" style="width:100%;padding:12px;border:1px solid #000;border-radius:8px;margin:6px 0">'+
+  '<button id="btnRechargerClient" style="background:orange;color:#000;padding:13px;width:100%;border:none;border-radius:8px;font-weight:bold">💸 RECHARGER LE CLIENT</button><br>'+
+  '<span style="font-size:11px;color:#555">Le client reçoit un code sur son WhatsApp pour valider.</span>';
+
+  document.body.appendChild(p);
+
+  // Afficher solde
+  let solde = parseInt(localStorage.getItem('soldeRev_'+qui)||'0');
+  document.getElementById('soldeRev').textContent = solde.toLocaleString()+' F';
+
+  // Bouton SE RECHARGER CHEZ ADMIN -> WhatsApp Admin
+  document.getElementById('btnRechargeAdmin').onclick=()=>{
+    let m=document.getElementById('montantRechargeRev').value;
+    if(!m){ alert('Mets le montant d\'abord'); return; }
+    let msg='Bonjour ADMIN, je suis le REVENDEUR '+qui+', je veux me recharger de '+m+' F. Merci de recharger mon compte.';
+    // METS ICI LE NUMERO WHATSAPP DE L ADMIN
+    let numAdmin='22900000000';
+    window.open('https://wa.me/'+numAdmin+'?text='+encodeURIComponent(msg),'_blank');
+    alert('Message envoyé à l\'admin sur WhatsApp. Attends qu\'il te recharge.');
+  };
+
+  // Bouton RECHARGER CLIENT -> Code WhatsApp
+  document.getElementById('btnRechargerClient').onclick=()=>{
+    let tel=document.getElementById('telClientRecharge').value;
+    let mont=document.getElementById('montantClientRecharge').value;
+    if(!tel || !mont){ alert('Mets le numéro du client et le montant'); return; }
+    // Vérifier solde revendeur
+    let s=parseInt(localStorage.getItem('soldeRev_'+qui)||'0');
+    if(s < parseInt(mont)){ alert('Ton solde est insuffisant. Recharge-toi chez l\'admin d\'abord.'); return; }
+    // Générer code
+    let code=Math.floor(100000+Math.random()*900000);
+    localStorage.setItem('codeRecharge_'+tel, code+'|'+mont+'|'+qui);
+    let msg='Bonjour, ton revendeur '+qui+' veut te recharger de '+mont+' F. Ton code est : '+code+'. Donne ce code au revendeur pour valider.';
+    window.open('https://wa.me/'+tel.replace(/\D/g,'')+'?text='+encodeURIComponent(msg),'_blank');
+    alert('Code '+code+' envoyé sur WhatsApp du client. Quand le client te donne le code, tu pourras valider.');
+  };
+}
+},1500);
