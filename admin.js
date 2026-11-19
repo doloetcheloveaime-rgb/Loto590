@@ -145,3 +145,94 @@ setInterval(()=>{
 },800);
 // IMPORTANT : On pousse la page vers le bas pour que la barre ne cache plus le SOLDE
 document.body.style.paddingTop = '28px';
+// ADMIN.JS - ADMIN DECIDE CE QUE LA PAGE REVENDEUR VA MONTRER
+// Quand ADMIN crée un revendeur, son compte devient ce que ADMIN a dit ici
+
+// 1. CE QUE ADMIN VEUT QUE LE REVENDEUR VOIT - C'EST ICI QUE TU DECIDES
+const MODELE_REVENDEUR = {
+  voirSolde: true,              // Il voit son solde
+  demanderRechargeAdmin: true,  // Il peut demander recharge à ADMIN
+  rechargerClient: true,        // Il peut recharger un client
+  voirArchive: true,            // Il voit SON archive
+  voirCaisseAdmin: false,       // Il ne voit JAMAIS la caisse ADMIN
+  voirValider: false,           // Il ne valide RIEN, c'est ADMIN qui valide
+  voirCreerRevendeur: false     // Il ne crée JAMAIS un autre revendeur
+};
+
+function getData(){
+  return JSON.parse(localStorage.getItem('adminData') || '{"caisse":2000000,"revendeurs":{},"archiveAdmin":[]}');
+}
+function saveData(d){ localStorage.setItem('adminData', JSON.stringify(d)); }
+
+// 2. QUAND ADMIN CREE LE REVENDEUR, ON LUI COLLE CE MODELE
+// Le fichier creer-revendeur.js appelle cette fonction
+function creerRevendeurDepuisAdmin(etab, nom, gmail, whatsapp, mdp){
+  let code = 'REV-' + Math.floor(10000 + Math.random()*90000);
+  let data = getData();
+  data.revendeurs[whatsapp] = {
+    etab: etab,
+    nom: nom,
+    gmail: gmail,
+    whatsapp: whatsapp,
+    mdp: mdp,
+    code: code,
+    solde: 0,
+    archive: [],
+    // SON COMPTE DEVIENT CE QUE ADMIN A DIT
+    droits: { ...MODELE_REVENDEUR }
+  };
+  data.archiveAdmin.push('Tu as créé revendeur '+nom+' ('+whatsapp+') Code '+code);
+  saveData(data);
+  return code;
+}
+
+// 3. QUAND LE REVENDEUR SE CONNECTE, SA PAGE MONTRE SEULEMENT CE QUE ADMIN A DIT
+function afficherPageRevendeur(whatsapp){
+  let data = getData();
+  let r = data.revendeurs[whatsapp];
+  if(!r) return alert('Ce revendeur n\'existe pas');
+
+  let droits = r.droits || MODELE_REVENDEUR;
+  let html = '<div style="text-align:center"><b>BIENVENUE SUR<br>NET LOTO AT 5/90</b><br><b style="color:green">COMPTE REVENDEUR : '+r.nom+'</b><br><span style="font-size:11px">'+r.etab+'</span></div><br>';
+
+  if(droits.voirSolde){
+    html += '<div style="background:#000;color:#fff;padding:10px;border-radius:10px;text-align:center">SOLDE REVENDEUR<br><b style="font-size:24px">'+r.solde.toLocaleString()+' F</b></div><br>';
+  }
+  if(droits.demanderRechargeAdmin){
+    html += '<input id="montDem" type="number" placeholder="Montant à demander ex: 10000" style="width:100%;padding:10px;margin:4px 0">'+
+    '<button id="btnDem" style="background:green;color:#fff;padding:12px;width:100%;border:none;border-radius:8px;font-weight:bold">📲 DEMANDER RECHARGE À ADMIN</button><br><br>';
+  }
+  if(droits.rechargerClient){
+    html += '<input id="telCli" type="tel" placeholder="N° Client ex: 229..." style="width:100%;padding:10px;margin:4px 0">'+
+    '<input id="montCli" type="number" placeholder="Montant client ex: 5000" style="width:100%;padding:10px;margin:4px 0">'+
+    '<button id="btnCli" style="background:orange;padding:12px;width:100%;border:none;border-radius:8px;font-weight:bold">💸 RECHARGER CLIENT</button><br><br>';
+  }
+  if(droits.voirArchive){
+    html += '<button id="btnArch" style="width:100%;padding:10px">📁 MON ARCHIVE</button><div id="zArch" style="display:none;margin-top:8px;font-size:12px"></div>';
+  }
+
+  // On affiche cette page, pas une autre
+  let box = document.getElementById('pageRevendeur') || document.createElement('div');
+  box.id='pageRevendeur';
+  box.style.cssText='margin:40px 10px;padding:12px;background:#fff;color:#000;border:2px solid #000;border-radius:10px';
+  box.innerHTML = html;
+  document.body.appendChild(box);
+
+  // Branchements
+  if(document.getElementById('btnDem')) document.getElementById('btnDem').onclick=()=>{
+    let m=document.getElementById('montDem').value; if(!m) return alert('Mets montant');
+    window.open('https://wa.me/22900000000?text='+encodeURIComponent('Bonjour ADMIN, je suis '+r.nom+', je veux '+m+' F'),'_blank');
+    alert('Demande envoyée à ADMIN. Lui seul valide.');
+  };
+  if(document.getElementById('btnCli')) document.getElementById('btnCli').onclick=()=>{
+    let tel=document.getElementById('telCli').value; let mont=parseInt(document.getElementById('montCli').value||'0');
+    if(!tel||!mont) return alert('Mets numéro + montant');
+    if(r.solde < mont) return alert('Solde insuffisant. Demande à ADMIN.');
+    let d=getData(); d.revendeurs[whatsapp].solde -= mont; d.revendeurs[whatsapp].archive.push('Tu as rechargé client '+tel+' de '+mont+' F'); saveData(d);
+    alert('Client rechargé. Nouveau solde : '+d.revendeurs[whatsapp].solde+' F'); location.reload();
+  };
+  if(document.getElementById('btnArch')) document.getElementById('btnArch').onclick=()=>{
+    let z=document.getElementById('zArch'); z.style.display=z.style.display==='none'?'block':'none';
+    z.innerHTML=r.archive.map(x=>'<div>• '+x+'</div>').join('')||'Aucune activité';
+  };
+}
