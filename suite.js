@@ -416,7 +416,7 @@ setTimeout(()=>{
     if(filtre!=='TOUS') aff=aff.filter(r=>r.pays===filtre);
     if(aff.length===0) h='<p>Aucun résultat.</p>';
     aff.forEach(r=>{
-      let badge=r.type==='URGENT' ? '<span style="background:red;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px">🔴 DOUBLE CHANCE</span>' : '<span style="background:green;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px">🟢 NORMAL</span>';
+      let badge=r.type==='DOUBLE CHANGE' ? '<span style="background:red;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px">🔴 DOUBLE CHANCE</span>' : '<span style="background:green;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px">🟢 NORMAL</span>';
       h+='<div style="border:1px solid #ccc;padding:10px;border-radius:8px;margin:6px 0"><b>🌍 '+(r.pays||'')+' - '+(r.jeu||'')+'</b> '+badge+'<br>📅 '+(r.date||'')+' | 🎫 Tirage N° <b>'+(r.tirage||'-')+'</b><br>🎱 Résultat : <b style="font-size:16px">'+(r.numeros||'')+'</b></div>';
     });
     let l=document.getElementById('listeResultats'); if(l) l.innerHTML=h;
