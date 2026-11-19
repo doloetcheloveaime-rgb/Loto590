@@ -236,3 +236,23 @@ function afficherPageRevendeur(whatsapp){
     z.innerHTML=r.archive.map(x=>'<div>• '+x+'</div>').join('')||'Aucune activité';
   };
 }
+
+// ===== A COLLER TOUT EN BAS DE admin.js - ADMIN DECIDE CE QUE REVENDEUR VOIT =====
+const MODELE_REVENDEUR = {
+  voirSolde: true,
+  demanderRechargeAdmin: true,
+  rechargerClient: true,
+  voirArchive: true,
+  voirCaisseAdmin: false,
+  voirValider: false,
+  voirCreerRevendeur: false
+};
+
+function creerRevendeurDepuisAdmin(etab, nom, gmail, whatsapp, mdp){
+  let code = 'REV-' + Math.floor(10000 + Math.random()*90000);
+  let data = JSON.parse(localStorage.getItem('adminData') || '{"caisse":2000000,"revendeurs":{},"archiveAdmin":[]}');
+  data.revendeurs[whatsapp] = { etab: etab, nom: nom, gmail: gmail, whatsapp: whatsapp, mdp: mdp, code: code, solde: 0, archive: [], droits: { ...MODELE_REVENDEUR } };
+  data.archiveAdmin.push('Tu as créé revendeur '+nom+' ('+whatsapp+') Code '+code);
+  localStorage.setItem('adminData', JSON.stringify(data));
+  return code;
+}
