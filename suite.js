@@ -432,3 +432,43 @@ setTimeout(()=>{
     }
   });
 },1500);
+// CORRECTION - REMPLACER URGENT PAR DOUBLE CHANCE
+setTimeout(()=>{
+  let sel=document.getElementById('resType');
+  if(sel){
+    sel.innerHTML='<option value="NORMAL">🟢 NORMAL</option><option value="DOUBLE CHANCE">⭐ DOUBLE CHANCE</option>';
+  }
+  // Corriger l'en-tête en haut aussi
+  let et=document.getElementById('enteteType');
+  if(et && et.textContent.includes('URGENT')){
+    et.textContent='DOUBLE CHANCE';
+    et.style.background='orange';
+  }
+  // Corriger l'affichage dans les archives
+  window.afficherResultatsNew=function(){
+    let list=JSON.parse(localStorage.getItem('resultatsArchive')||'[]');
+    let filtreEl=document.getElementById('filtrePays'); let filtre=filtreEl?filtreEl.value:'TOUS';
+    let h='';
+    let aff=list.slice().reverse();
+    if(filtre!=='TOUS') aff=aff.filter(r=>r.pays===filtre);
+    if(aff.length===0) h='<p>Aucun résultat.</p>';
+    aff.forEach(r=>{
+      let isDouble = r.type==='DOUBLE CHANCE' || r.type==='URGENT';
+      let badge=isDouble ? '<span style="background:orange;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px">⭐ DOUBLE CHANCE</span>' : '<span style="background:green;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px">🟢 NORMAL</span>';
+      h+='<div style="border:1px solid #ccc;padding:10px;border-radius:8px;margin:6px 0"><b>🌍 '+(r.pays||'')+' - '+(r.jeu||'')+'</b> '+badge+'<br>📅 '+(r.date||'')+' | 🎫 Tirage N° <b>'+(r.tirage||'-')+'</b><br>🎱 Résultat : <b style="font-size:16px">'+(r.numeros||'')+'</b></div>';
+    });
+    let l=document.getElementById('listeResultats'); if(l) l.innerHTML=h;
+  };
+  // Corriger la couleur de l'en-tête quand on change le type
+  if(sel){
+    sel.onchange=()=>{
+      let pays=document.getElementById('resPays').value;
+      let jeu=document.getElementById('resJeu').value;
+      let type=sel.value;
+      document.getElementById('enteteTexte').textContent=pays+' - '+jeu;
+      let e=document.getElementById('enteteType');
+      e.textContent=type;
+      e.style.background = type==='DOUBLE CHANCE' ? 'orange' : 'green';
+    };
+  }
+},1500);
