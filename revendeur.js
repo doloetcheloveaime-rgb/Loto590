@@ -1,7 +1,5 @@
-alert("REVENDEUR.JS EST BIEN CHARGE");
 // FICHIER REVENDEUR.JS - PAGE REVENDEUR SEULE
 setTimeout(()=>{
-
 // 1. RETOUR / DECONNEXION TRES TRES PETIT POUR TOUT LE MONDE
 if(!document.getElementById('barTopTous')){
   let bar=document.createElement('div'); bar.id='barTopTous';
@@ -17,8 +15,8 @@ if(!document.getElementById('barTopTous')){
 
 // 2. PAGE REVENDEUR EN HAUT
 let qui = localStorage.getItem('currentUser') || '';
-let isRev = localStorage.getItem('isRevendeur')==='1' || qui.startsWith('REV');
-
+let q = (qui||'').toLowerCase();
+let isRev = localStorage.getItem('isRevendeur')==='1' || q.includes('rev') || q==='rev1';
 if(isRev && !document.getElementById('pageRevendeur')){
   let p=document.createElement('div'); p.id='pageRevendeur';
   p.style.cssText='background:#fff;color:#000;padding:12px;border-radius:10px;margin:28px 10px 5px 10px;border:2px solid #000';
