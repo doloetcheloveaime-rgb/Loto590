@@ -146,4 +146,83 @@ function debloquer(g){let u=DB.users.find(x=>x.gmail==g);if(u){u.bloque=false;sa
 function supprimer(g){DB.users=DB.users.filter(x=>x.gmail!=g);save()}
 function render(){document.getElementById('nbUsers').innerText=DB.users.length;document.getElementById('nbClients').innerText=DB.users.filter(x=>x.role=='CLIENT').length;document.getElementById('nbRev').innerText=DB.revendeurs.length;document.getElementById('ventes').innerText=DB.ventes;document.getElementById('gains').innerText=DB.gains;document.getElementById('caisse').innerText=DB.caisse;document.getElementById('prList').innerHTML=DB.pronostics.map(p=>'<div>🔮 '+p+'</div>').join('');document.getElementById('resList').innerHTML=DB.resultats.map(r=>'<div>🏆 '+r+'</div>').join('');document.getElementById('revList').innerHTML=DB.revendeurs.map(r=>'<div>'+r.nom+' - '+r.etab+' - Code: '+r.code+' - Solde Rev: '+r.soldeRev+'</div>').join('');document.getElementById('archiveList').innerHTML=DB.archives.map(a=>'<div>📁 '+a+'</div>').join('');document.getElementById('contenuList').innerHTML=DB.contenus.map(c=>'<div>'+c+'</div>').join('');document.getElementById('usersList').innerHTML=DB.users.map(u=>'<div>'+u.gmail+' - '+u.role+' '+(u.bloque?'(BLOQUÉ)':'')+' <button onclick="bloquer(\''+u.gmail+'\')">BLOQUER</button> <button onclick="debloquer(\''+u.gmail+'\')">DÉBLOQUER</button> <button onclick="supprimer(\''+u.gmail+'\')">SUPPRIMER</button></div>').join('');document.getElementById('resultatTxt').innerHTML=DB.resultats.map(r=>'<div>'+r+'</div>').join('')}
 setTimeout(()=>{document.getElementById('splash').style.display='none';render();let s=localStorage.getItem('session');if(s){let u=DB.users.find(x=>x.gmail==s);if(u)showDash(u)}},1500);
-</script></body></html>
+</script><!-- ===== DEBUT CODE REVENDEUR SEUL - A COLLER APRES CODE ADMIN ===== -->
+<div id="pageRevendeur" style="display:none">
+<div class="card"><b>🧑‍💼 PAGE REVENDEUR - <span id="revNomTxt"></span></b><br><span id="revInfoTxt"></span></div>
+
+<div class="card" style="background:#ffe600"><h3>💰 SOLDE REVENDEUR</h3><h1 id="soldeRevTxt2">0 FCFA</h1><p class="small">Tu te recharges avec code ADMIN, puis tu recharges tes clients.</p></div>
+
+<div class="card"><h3>🔑 1 - RECHARGER REVENDEUR avec Code WhatsApp ADMIN</h3>
+<p class="small">Le code que tu as reçu de l'ADMINISTRATION, de l'ADMIN. Tu mets ça là, tu te recharges ton compte.</p>
+<input id="codeRevInput2" placeholder="Colle ici le Code reçu de l'ADMIN sur WhatsApp">
+<button class="btn orange" onclick="revRechargerMoi2()">RECHARGER MON COMPTE REVENDEUR</button><div id="msgRevMoi2"></div></div>
+
+<div class="card"><h3>💰 2 - RECHARGER CLIENT avec Code WhatsApp</h3>
+<p class="small">C'est de TOI que les clients vont recevoir ces codes. Tu crées le code, tu envoies au client sur WhatsApp.</p>
+<input id="clientWaRev2" placeholder="WhatsApp du CLIENT à recharger">
+<input id="montantClientRev2" type="number" placeholder="Montant FCFA pour le client">
+<button class="btn green" onclick="revCreerCodeClient2()">CRÉER CODE CLIENT + ENVOYER SUR WHATSAPP</button><div id="msgRevClient2"></div></div>
+
+<div class="card"><h3>📁 Archive Revendeur - Mes activités seules</h3><div id="archiveRev2"></div></div>
+
+<div class="card"><h3>❓ Aide Revendeur - Comment recharger les clients</h3>
+<p>1. Le client te demande recharge.<br>2. Tu mets son WhatsApp + Montant.<br>3. Tu appuies CRÉER CODE CLIENT.<br>4. Le client reçoit le code sur WhatsApp.<br>5. Le client tape le code dans son appli, son Solde Jeu est validé.</p>
+<button class="btn" onclick="alert('Fermé')">FERMER</button></div>
+</div>
+
+<script>
+// --- FONCTIONS REVENDEUR SEUL ---
+function revRechargerMoi2(){
+  let c=document.getElementById('codeRevInput2').value;
+  let DB2=JSON.parse(localStorage.getItem('netloto')||'{}');
+  let info=DB2.codes?DB2.codes[c]:null;
+  if(!info) return alert('Code faux - Demande code à ADMIN');
+  let s=localStorage.getItem('session');
+  let u=DB2.users.find(x=>x.gmail==s);
+  if(!u || info.wa!=u.wa) return alert("Ce code n'est pas pour toi");
+  u.soldeRev+=info.montant; DB2.caisse-=info.montant;
+  DB2.archives.push('Revendeur rechargé: '+u.gmail+' wa:'+u.wa+' montant '+info.montant+' code '+c);
+  delete DB2.codes[c];
+  localStorage.setItem('netloto',JSON.stringify(DB2));
+  document.getElementById('msgRevMoi2').innerHTML='<b>RECHARGÉ ! '+info.montant+' FCFA ajouté.</b>';
+  document.getElementById('soldeRevTxt2').innerText=u.soldeRev+' FCFA';
+  alert('Tu t\'es rechargé ! Solde Revendeur: '+u.soldeRev);
+  location.reload();
+}
+function revCreerCodeClient2(){
+  let wa=document.getElementById('clientWaRev2').value;
+  let m=parseInt(document.getElementById('montantClientRev2').value);
+  let DB2=JSON.parse(localStorage.getItem('netloto')||'{}');
+  let s=localStorage.getItem('session');
+  let u=DB2.users.find(x=>x.gmail==s);
+  if(!wa||!m) return alert('Mets WhatsApp client + Montant');
+  if(u.soldeRev < m) return alert("Ton Solde Revendeur est insuffisant. Recharge-toi d'abord avec code ADMIN.");
+  u.soldeRev-=m;
+  let code='NET-'+Math.floor(10000+Math.random()*90000);
+  if(!DB2.codes) DB2.codes={};
+  DB2.codes[code]={wa:wa,montant:m,type:'client',fromRev:u.gmail};
+  DB2.archives.push('Revendeur '+u.gmail+' wa:'+u.wa+' a créé code client '+code+' pour wa:'+wa+' montant '+m);
+  localStorage.setItem('netloto',JSON.stringify(DB2));
+  document.getElementById('msgRevClient2').innerHTML='Code <b>'+code+'</b> créé pour client '+wa+' - '+m+' FCFA';
+  document.getElementById('soldeRevTxt2').innerText=u.soldeRev+' FCFA';
+  window.open('https://wa.me/'+wa.replace(/\D/g,'')+'?text='+encodeURIComponent('Bonjour, ton code NET LOTO de ton Revendeur: '+code+' Montant: '+m+' FCFA. Tape-le dans l\'appli pour valider ton solde.'),'_blank');
+}
+// --- AFFICHER PAGE REVENDEUR SI C'EST UN REVENDEUR ---
+setTimeout(()=>{
+  let DB2=JSON.parse(localStorage.getItem('netloto')||'{}');
+  let s=localStorage.getItem('session');
+  let u=DB2.users?DB2.users.find(x=>x.gmail==s):null;
+  if(u && u.role=='REVENDEUR'){
+    document.getElementById('pageRevendeur').style.display='block';
+    document.getElementById('revNomTxt').innerText=u.gmail;
+    document.getElementById('revInfoTxt').innerText=u.gmail+' | WhatsApp: '+u.wa;
+    document.getElementById('soldeRevTxt2').innerText=(u.soldeRev||0)+' FCFA';
+    // Archive : que ses activités
+    let arch=(DB2.archives||[]).filter(a=>a.includes(u.gmail)||a.includes(u.wa)||a.includes('Revendeur'));
+    document.getElementById('archiveRev2').innerHTML=arch.map(a=>'<div>📁 '+a+'</div>').join('');
+    // On cache la partie ADMIN si elle s'affiche
+    let adminBox=document.getElementById('pageAdmin'); if(adminBox) adminBox.style.display='none';
+  }
+},1800);
+</script>
+<!-- ===== FIN CODE REVENDEUR SEUL ===== --></body></html>
