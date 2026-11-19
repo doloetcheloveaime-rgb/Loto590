@@ -132,6 +132,16 @@ document.getElementById('btnMenuTous').onclick = ()=>{
   mm.innerHTML='<b>MENU</b><br><br><button onclick="location.reload()" style="width:100%;padding:6px;margin:2px">🔄 Actualiser</button><br><button onclick="document.getElementById(\'menuTous\').style.display=\'none\'" style="width:100%;padding:6px;margin:2px">❌ Fermer</button>';
   document.body.appendChild(mm);
 };
-
+// ENLEVER LES GROS RETOUR / DECONNEXION DE SUITE.JS QUI CACHENT LE SOLDE
+setInterval(()=>{
+  document.querySelectorAll('button').forEach(b=>{
+    let t=(b.textContent||'').trim().toUpperCase();
+    if(b.id==='btnRetourTous' || b.id==='btnDecoTous' || b.id==='btnMenuTous') return;
+    // Si un bouton RETOUR ou DECONNEXION est GROS (plus de 30px de haut), on l'enlève
+    if((t.includes('RETOUR') || t.includes('DÉCONNEXION') || t.includes('DECONNEXION')) && b.offsetHeight > 25){
+      b.remove();
+    }
+  });
+},800);
 // IMPORTANT : On pousse la page vers le bas pour que la barre ne cache plus le SOLDE
 document.body.style.paddingTop = '28px';
