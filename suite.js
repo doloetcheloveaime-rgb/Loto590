@@ -472,3 +472,33 @@ setTimeout(()=>{
     };
   }
 },1500);
+// SUPPRIMER ANCIEN TABLEAU PUBLIER LES RESULTATS - GARDER LE NOUVEAU SEUL
+setTimeout(()=>{
+  // On cherche toutes les boites
+  let all=document.querySelectorAll('div');
+  all.forEach(d=>{
+    let txt=d.textContent||'';
+    // C'est l'ancien tableau si il a ces 2 phrases en même temps
+    if(txt.includes('PUBLIER LES RÉSULTATS') && txt.includes('PUBLIER NORMAL')){
+      // On vérifie que ce n'est pas le nouveau (le nouveau a EN TRAIN DE PUBLIER)
+      if(!txt.includes('EN TRAIN DE PUBLIER')){
+        d.style.display='none';
+        d.remove();
+      }
+    }
+    // Au cas où, on supprime aussi les vieux boutons tout seuls
+    if(txt.trim()==='PUBLIER NORMAL' || txt.trim()==='PUBLIER DOUBLE CHANCE'){
+      if(d.tagName==='BUTTON') d.remove();
+    }
+  });
+
+  // Sécurité : si l'ancien revient, on le cache toutes les 2 secondes
+  setInterval(()=>{
+    document.querySelectorAll('div').forEach(d=>{
+      let txt=d.textContent||'';
+      if(txt.includes('PUBLIER LES RÉSULTATS') && txt.includes('PUBLIER NORMAL') && !txt.includes('EN TRAIN DE PUBLIER')){
+        d.remove();
+      }
+    });
+  },2000);
+},1000);
