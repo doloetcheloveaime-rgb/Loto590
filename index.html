@@ -320,4 +320,75 @@ setTimeout(()=>{
 
 },2500);
 </script>
-<!-- ===== FIN CORRECTIF MENU ===== --></body></html>
+<!-- ===== FIN CORRECTIF MENU ===== --><!-- ===== CORRECTIF CONNEXION : CHOIX CLIENT / REVENDEUR + CODE ===== -->
+<div id="boxChoixRole" style="display:none"></div>
+<script>
+setTimeout(()=>{
+  // 1. Si on vient d'ouvrir le lien, on force à se déconnecter une fois pour tester la vraie connexion
+  // On ne déconnecte que si l'utilisateur appuie sur Déconnexion, mais on ajoute le choix
+  let auth=document.getElementById('auth');
+  if(!auth) return;
+
+  // 2. On ajoute le petit cadre CHOIX + CODE dans la page connexion, si pas déjà là
+  if(!document.getElementById('choixRoleRev')){
+    let div=document.createElement('div');
+    div.innerHTML=`
+    <div style="background:#ffe600;padding:12px;border-radius:10px;margin-top:10px">
+      <b>Qui es-tu ? Choisis :</b><br><br>
+      <select id="choixRoleRev" style="padding:12px">
+        <option value="CLIENT">Je suis CLIENT</option>
+        <option value="REVENDEUR">Je suis REVENDEUR</option>
+      </select>
+      <div id="boxCodeRev" style="display:none;margin-top:8px">
+        <input id="codeConnexionRev" placeholder="Mets ici le CODE que l'ADMIN t'a envoyé ex: REV-12345">
+        <p style="font-size:12px">Le code que l'ADMIN t'a envoyé sur WhatsApp quand il a créé ton compte.</p>
+      </div>
+      <button class="btn red" onclick="localStorage.removeItem('session');location.reload()" style="margin-top:8px">🔒 DÉCONNECTER POUR TESTER VRAIE CONNEXION</button>
+    </div>`;
+    auth.appendChild(div);
+    document.getElementById('choixRoleRev').addEventListener('change', function(){
+      document.getElementById('boxCodeRev').style.display = this.value=='REVENDEUR' ? 'block' : 'none';
+    });
+  }
+
+  // 3. On remplace la fonction connecter pour vérifier le CODE REVENDEUR
+  window.connecterOrig = window.connecter;
+  window.connecter = function(){
+    let g=document.getElementById('cGmail').value;
+    let p=document.getElementById('cPass').value;
+    let choix=document.getElementById('choixRoleRev') ? document.getElementById('choixRoleRev').value : 'CLIENT';
+    let DB2=JSON.parse(localStorage.getItem('netloto')||'{}');
+    let u=(DB2.users||[]).find(x=>x.gmail==g && x.pass==p);
+    if(!u) return alert('Gmail ou mot de passe faux. Vérifie bien.');
+    if(u.bloque) return alert('Compte bloqué par ADMIN');
+
+    if(choix=='REVENDEUR'){
+      if(u.role!='REVENDEUR') return alert('Ce compte n\'est pas un REVENDEUR. Choisis CLIENT ou crée un compte Revendeur avec ADMIN.');
+      let code=document.getElementById('codeConnexionRev').value;
+      if(!code) return alert('Mets le CODE que l\'ADMIN t\'a envoyé sur WhatsApp.');
+      let rev=(DB2.revendeurs||[]).find(r=>r.gmail==g && r.code==code);
+      if(!rev) return alert('CODE FAUX. Demande le bon code à l\'ADMIN. Code ex: '+((DB2.revendeurs||[]).find(r=>r.gmail==g)?.code||'REV-?????'));
+      // CODE BON -> on va sur page revendeur
+      localStorage.setItem('session',g);
+      alert('CODE BON ! Bienvenue Revendeur '+g);
+      location.reload();
+      return;
+    }
+    // CLIENT
+    if(choix=='CLIENT' && u.role=='REVENDEUR') return alert('Tu es REVENDEUR, choisis REVENDEUR en haut et mets ton CODE.');
+    localStorage.setItem('session',g);
+    location.reload();
+  };
+
+  // 4. Si tu es déjà connecté comme ADMIN, on te montre un bouton pour te déconnecter et tester revendeur
+  let s=localStorage.getItem('session');
+  if(s){
+    let u=(JSON.parse(localStorage.getItem('netloto')||'{}').users||[]).find(x=>x.gmail==s);
+    if(u && u.role=='ADMIN'){
+      // On ne force pas la déconnexion, mais on prévient
+      console.log('Connecté comme ADMIN, utilise Déconnexion pour tester Revendeur');
+    }
+  }
+},1500);
+</script>
+<!-- ===== FIN CORRECTIF CONNEXION ===== --></body></html>
