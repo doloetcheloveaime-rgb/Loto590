@@ -659,3 +659,63 @@ document.addEventListener('click', function(e){
   }
 });
 },1500);
+// CACHER LA ZONE DE JEU SUR LA PAGE ADMIN - GARDER QUE ADMIN + COUPON
+setTimeout(()=>{
+  let qui = localStorage.getItem('currentUser') || localStorage.getItem('userPhone') || '';
+  let isAdmin = (qui==='9999' || localStorage.getItem('isAdmin')==='1');
+  if(!isAdmin) return; // Si ce n'est pas l'admin, on ne cache rien
+
+  // On cache tout ce qui parle de jeu
+  document.querySelectorAll('div, section, button').forEach(el=>{
+    let txt=(el.textContent||'');
+    // On ne touche pas aux boites admin
+    if(el.id==='panelAdmin' || el.id==='pubResultBox' || el.id==='archiveBox' || el.id==='resultatBox') return;
+    if(el.closest('#panelAdmin')) return;
+
+    // Mots du tableau de jeu à cacher
+    if(
+      txt.includes('Choisir 01 à 90') ||
+      txt.includes('PARI : DIRECT') ||
+      txt.includes('NUMEROS 0/1') ||
+      txt.includes('Two sure') && txt.includes('Permutation')
+    ){
+      // On cache le grand bloc, pas le petit bouton seul
+      if(el.tagName==='DIV' && txt.length>50){
+        el.style.display='none';
+      }
+    }
+  });
+
+  // Cacher aussi les boutons de jeu un par un
+  ['TEST','3D','Classic','NORMAL','MA CHANCE','Two sure','Permutation','PN (1N) Nappe 1','NAP','Against','Anagramme','Chance +','Total Résultat'].forEach(nom=>{
+    document.querySelectorAll('button').forEach(b=>{
+      if(b.textContent.trim()===nom){
+        // Ne pas cacher si c'est dans panelAdmin
+        if(!b.closest('#panelAdmin')) b.style.display='none';
+      }
+    });
+  });
+
+  // Cacher la grille des numéros 01 à 90
+  document.querySelectorAll('button').forEach(b=>{
+    let t=b.textContent.trim();
+    if(/^(0[1-9]|[1-8][0-9]|90)$/.test(t)){
+      if(!b.closest('#panelAdmin')) b.style.display='none';
+    }
+  });
+
+  // Vérifier toutes les 2 secondes, au cas où ça revient
+  setInterval(()=>{
+    if(localStorage.getItem('currentUser')!=='9999' && localStorage.getItem('isAdmin')!=='1') return;
+    document.querySelectorAll('button').forEach(b=>{
+      let t=b.textContent.trim();
+      if(['TEST','3D','Classic','NORMAL','MA CHANCE','Two sure','Permutation','NAP','Against','Anagramme','Chance +','Total Résultat'].includes(t)){
+        if(!b.closest('#panelAdmin')) b.style.display='none';
+      }
+      if(/^(0[1-9]|[1-8][0-9]|90)$/.test(t)){
+        if(!b.closest('#panelAdmin')) b.style.display='none';
+      }
+    });
+  },2000);
+
+},1500);
