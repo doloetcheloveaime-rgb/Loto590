@@ -256,3 +256,5 @@ function creerRevendeurDepuisAdmin(etab, nom, gmail, whatsapp, mdp){
   localStorage.setItem('adminData', JSON.stringify(data));
   return code;
 }
+// CHARGE CREER-REVENDEUR SANS TOUCHER INDEX.HTML
+let s=document.createElement('script'); s.src='creer-revendeur.js'; document.body.appendChild(s);
