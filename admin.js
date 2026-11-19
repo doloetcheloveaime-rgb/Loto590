@@ -106,3 +106,32 @@ if(!monRole){
     }
   });
 }
+// BARRE HAUT TRES PETITE - NE CACHE PLUS LE SOLDE
+let bar = document.createElement('div');
+bar.id = 'barTopTous';
+bar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:1px 3px;background:#fff;border-bottom:1px solid #ccc;position:fixed;top:0;left:0;right:0;z-index:99999;height:24px';
+
+bar.innerHTML =
+  // 3 BARRES A GAUCHE, TRES PETIT
+  '<button id="btnMenuTous" style="padding:0px 5px;font-size:11px;height:18px;line-height:18px;border-radius:3px;background:#eee;border:1px solid #000;font-weight:bold;min-width:24px">☰</button>' +
+  // RETOUR + DECONNEXION A DROITE, TRES PETIT
+  '<div style="display:flex;gap:3px">' +
+  '<button id="btnRetourTous" style="padding:0px 5px;font-size:8px;height:18px;line-height:18px;border-radius:3px;background:#eee;border:1px solid #000;font-weight:bold">⬅ RETOUR</button>' +
+  '<button id="btnDecoTous" style="padding:0px 5px;font-size:8px;height:18px;line-height:18px;border-radius:3px;background:#ff4444;color:#fff;border:none;font-weight:bold">🚪 DÉCONNEXION</button>' +
+  '</div>';
+
+document.body.prepend(bar);
+
+document.getElementById('btnRetourTous').onclick = ()=>{ history.back(); };
+document.getElementById('btnDecoTous').onclick = ()=>{ localStorage.removeItem('monRole'); localStorage.clear(); alert('Tu es déconnecté'); location.reload(); };
+document.getElementById('btnMenuTous').onclick = ()=>{
+  let m = document.getElementById('menuTous');
+  if(m){ m.style.display = m.style.display==='none' ? 'block' : 'none'; return; }
+  let mm = document.createElement('div'); mm.id='menuTous';
+  mm.style.cssText='position:fixed;top:26px;left:3px;z-index:100000;background:#fff;border:1px solid #000;border-radius:6px;padding:6px;width:180px;font-size:12px';
+  mm.innerHTML='<b>MENU</b><br><br><button onclick="location.reload()" style="width:100%;padding:6px;margin:2px">🔄 Actualiser</button><br><button onclick="document.getElementById(\'menuTous\').style.display=\'none\'" style="width:100%;padding:6px;margin:2px">❌ Fermer</button>';
+  document.body.appendChild(mm);
+};
+
+// IMPORTANT : On pousse la page vers le bas pour que la barre ne cache plus le SOLDE
+document.body.style.paddingTop = '28px';
