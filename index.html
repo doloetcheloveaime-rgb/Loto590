@@ -391,122 +391,133 @@ setTimeout(()=>{
   }
 },1500);
 </script>
-<!-- ===== FIN CORRECTIF CONNEXION ===== --><!-- 1. LISTE REVENDEURS AVEC BOUTON SUPPRIMER -->
-<div id="listeRevendeurs"></div>
+</script><!-- ===== NET LOTO AT 590 - ADMIN : SUPPRIMER + SOLDE BLOQUÉ + DÉPLACER ===== -->
+<div id="zoneAdminBloque" style="display:none; padding:15px; background:#fff5f5; border:2px solid red; margin:15px; border-radius:12px;">
+  <h2>👥 REVENDEURS ACTIFS</h2>
+  <div id="listeRevendeursAdmin"></div>
 
-<!-- 2. SOLDE REVENDEUR BLOQUÉ -->
-<h2>🔒 SOLDE REVENDEUR BLOQUÉ : <span id="totalBloque">0</span> F</h2>
-<div id="listeBloque"></div>
+  <h2>🔒 SOLDE REVENDEUR BLOQUÉ : <span id="totalBloqueAdmin">0</span> F</h2>
+  <div id="listeBloqueAdmin"></div>
+</div>
 
-<!-- 3. POPUP POUR CHOISIR RAISON -->
-<div id="popupBloquer" style="display:none; border:2px solid red; padding:15px; background:white;">
+<div id="popupBloquerRev" style="display:none; position:fixed; top:20%; left:5%; right:5%; background:white; border:2px solid red; padding:15px; border-radius:12px; z-index:9999;">
   <h3>Pourquoi tu bloques ce revendeur ?</h3>
-  <label><input type="radio" name="raison" value="Ne vend plus"> Ne vend plus</label><br>
-  <label><input type="radio" name="raison" value="Erreur"> Erreur</label><br>
-  <label><input type="radio" name="raison" value="Fraude"> Fraude</label><br>
-  <label><input type="radio" name="raison" value="Autre"> Autre</label><br>
-  <input id="raisonAutre" placeholder="Écris la raison si Autre"><br><br>
-  <button onclick="confirmerBlocage()">✅ BLOQUER</button>
-  <button onclick="fermerPopup()">❌ ANNULER</button>
+  <label><input type="radio" name="raisonBloque" value="Ne vend plus"> Ne vend plus</label><br>
+  <label><input type="radio" name="raisonBloque" value="Erreur"> Erreur</label><br>
+  <label><input type="radio" name="raisonBloque" value="Fraude"> Fraude</label><br>
+  <label><input type="radio" name="raisonBloque" value="Autre"> Autre</label><br>
+  <input id="raisonAutreInput" placeholder="Écris raison si Autre" style="width:100%; padding:8px; margin-top:8px;"><br><br>
+  <button onclick="confirmerBlocageRev()" style="padding:10px; background:red; color:white;">✅ BLOQUER</button>
+  <button onclick="fermerPopupBloquer()" style="padding:10px;">❌ ANNULER</button>
 </div>
 
 <script>
-let revendeurs = JSON.parse(localStorage.getItem("revendeurs") || "[]");
-let soldeBloqueListe = JSON.parse(localStorage.getItem("soldeBloque") || "[]");
-let caisseAdmin = parseInt(localStorage.getItem("caisseAdmin") || "0");
-let revendeurABloquer = null;
+let gmailABloquer = null;
 
-// AFFICHER REVENDEURS
-function afficherRevendeurs(){
+function getDataNetloto(){
+  return JSON.parse(localStorage.getItem('netloto')||'{}');
+}
+function saveDataNetloto(d){
+  localStorage.setItem('netloto', JSON.stringify(d));
+}
+
+function afficherZoneAdmin(){
+  let d = getDataNetloto();
+  let session = JSON.parse(localStorage.getItem('session')||'null');
+  let zone = document.getElementById('zoneAdminBloque');
+  if(!zone) return;
+  // On montre seulement si ADMIN connecté
+  if(session && session.role === 'ADMIN'){
+    zone.style.display = 'block';
+  } else {
+    zone.style.display = 'none';
+    return;
+  }
+  let users = d.users || [];
+  let bloques = d.soldeBloque || [];
+
+  // 1. REVENDEURS ACTIFS
   let html = "";
-  revendeurs.forEach((r, i) => {
-    html += `
-    <div style="border:1px solid #ccc; padding:10px; margin:5px;">
-      <b>${r.nom}</b> - ${r.gmail} - Code: ${r.code} - Solde: ${r.solde} F<br>
-      <button onclick="ouvrirPopupBloquer('${r.gmail}')">🗑️ SUPPRIMER / BLOQUER</button>
+  let revs = users.filter(u => u.role === 'REVENDEUR');
+  if(revs.length === 0) html = "<p>Aucun revendeur pour le moment.</p>";
+  revs.forEach(r => {
+    html += `<div style="border:1px solid #ccc; padding:10px; margin:5px; border-radius:8px;">
+      <b>${r.nom || r.gmail}</b><br>
+      Gmail: ${r.gmail}<br>
+      Code: ${r.code || '---'}<br>
+      Solde: <b>${r.solde || 0} F</b><br>
+      <button onclick="ouvrirPopupBloquer('${r.gmail}')" style="padding:8px; background:red; color:white; margin-top:5px;">🗑️ SUPPRIMER / BLOQUER</button>
     </div>`;
   });
-  document.getElementById("listeRevendeurs").innerHTML = html;
-}
+  document.getElementById('listeRevendeursAdmin').innerHTML = html;
 
-// OUVRIR POPUP RAISON
-function ouvrirPopupBloquer(gmail){
-  revendeurABloquer = gmail;
-  document.getElementById("popupBloquer").style.display = "block";
-}
-function fermerPopup(){
-  document.getElementById("popupBloquer").style.display = "none";
-  revendeurABloquer = null;
-}
-
-// CONFIRMER BLOCAGE
-function confirmerBlocage(){
-  let raison = document.querySelector('input[name="raison"]:checked');
-  if(!raison){ alert("Choisis une raison !"); return; }
-  let raisonFinale = raison.value;
-  if(raisonFinale === "Autre"){
-    raisonFinale = document.getElementById("raisonAutre").value || "Autre";
-  }
-
-  let r = revendeurs.find(x => x.gmail === revendeurABloquer);
-
-  // On met son solde dans SOLDE BLOQUÉ, PAS dans caisse
-  soldeBloqueListe.push({
-    nom: r.nom,
-    gmail: r.gmail,
-    code: r.code,
-    solde: r.solde,
-    date: new Date().toLocaleDateString(),
-    raison: raisonFinale
-  });
-
-  // On le supprime des actifs
-  revendeurs = revendeurs.filter(x => x.gmail !== revendeurABloquer);
-
-  localStorage.setItem("revendeurs", JSON.stringify(revendeurs));
-  localStorage.setItem("soldeBloque", JSON.stringify(soldeBloqueListe));
-
-  fermerPopup();
-  afficherRevendeurs();
-  afficherSoldeBloque();
-  alert("Revendeur bloqué ! Son solde est dans SOLDE BLOQUÉ.");
-}
-
-// AFFICHER SOLDE BLOQUÉ + BOUTON DÉPLACER VERS CAISSE
-function afficherSoldeBloque(){
+  // 2. SOLDE BLOQUÉ
   let total = 0;
-  let html = "";
-  soldeBloqueListe.forEach((b, i) => {
-    total += parseInt(b.solde);
-    html += `
-    <div style="border:1px solid red; padding:10px; margin:5px;">
+  let html2 = "";
+  if(bloques.length === 0) html2 = "<p>Aucun solde bloqué.</p>";
+  bloques.forEach((b, i) => {
+    total += parseInt(b.solde||0);
+    html2 += `<div style="border:1px solid red; padding:10px; margin:5px; border-radius:8px; background:#ffecec;">
       <b>${b.nom}</b> - ${b.gmail} - Code: ${b.code}<br>
       Solde bloqué: <b>${b.solde} F</b> - Date: ${b.date} - Raison: ${b.raison}<br>
-      <button onclick="deplacerVersCaisse(${i})">💰 DÉPLACER GAIN VERS CAISSE</button>
+      <button onclick="deplacerVersCaisseAdmin(${i})" style="padding:8px; background:green; color:white; margin-top:5px;">💰 DÉPLACER GAIN VERS CAISSE</button>
     </div>`;
   });
-  document.getElementById("listeBloque").innerHTML = html;
-  document.getElementById("totalBloque").innerText = total;
+  document.getElementById('listeBloqueAdmin').innerHTML = html2;
+  document.getElementById('totalBloqueAdmin').innerText = total;
 }
 
-// DÉPLACER GAIN VERS CAISSE
-function deplacerVersCaisse(index){
-  let b = soldeBloqueListe[index];
-  let ok = confirm("Déplacer " + b.solde + " F de " + b.nom + " vers CAISSE ADMIN ?");
-  if(!ok) return;
-
-  // 1. On ajoute à la caisse
-  caisseAdmin += parseInt(b.solde);
-  localStorage.setItem("caisseAdmin", caisseAdmin);
-
-  // 2. On enlève de la liste bloquée
-  soldeBloqueListe.splice(index, 1);
-  localStorage.setItem("soldeBloque", JSON.stringify(soldeBloqueListe));
-
-  afficherSoldeBloque();
-  alert(b.solde + " F déplacé vers CAISSE. Nouvelle caisse: " + caisseAdmin + " F");
+function ouvrirPopupBloquer(gmail){
+  gmailABloquer = gmail;
+  document.getElementById('popupBloquerRev').style.display = 'block';
+}
+function fermerPopupBloquer(){
+  document.getElementById('popupBloquerRev').style.display = 'none';
+  gmailABloquer = null;
 }
 
-afficherRevendeurs();
-afficherSoldeBloque();
-</script></body></html>
+function confirmerBlocageRev(){
+  let r = document.querySelector('input[name="raisonBloque"]:checked');
+  if(!r){ alert("Choisis une raison !"); return; }
+  let raison = r.value;
+  if(raison === "Autre"){
+    raison = document.getElementById('raisonAutreInput').value || "Autre";
+  }
+  let d = getDataNetloto();
+  let users = d.users || [];
+  let rev = users.find(x => x.gmail === gmailABloquer);
+  if(!rev){ alert("Revendeur introuvable"); return; }
+
+  if(!d.soldeBloque) d.soldeBloque = [];
+  d.soldeBloque.push({
+    nom: rev.nom || rev.gmail,
+    gmail: rev.gmail,
+    code: rev.code || '',
+    solde: rev.solde || 0,
+    date: new Date().toLocaleDateString(),
+    raison: raison
+  });
+
+  // On supprime le revendeur des actifs - son solde ne va PAS dans la caisse
+  d.users = users.filter(x => x.gmail !== gmailABloquer);
+  saveDataNetloto(d);
+  fermerPopupBloquer();
+  afficherZoneAdmin();
+  alert("Revendeur bloqué ! Son solde " + (rev.solde||0) + " F est dans SOLDE BLOQUÉ.");
+}
+
+function deplacerVersCaisseAdmin(index){
+  let d = getDataNetloto();
+  let b = d.soldeBloque[index];
+  if(!confirm("Déplacer " + b.solde + " F de " + b.nom + " vers CAISSE ADMIN ?")) return;
+  d.caisseAdmin = (parseInt(d.caisseAdmin||0) + parseInt(b.solde||0));
+  d.soldeBloque.splice(index, 1);
+  saveDataNetloto(d);
+  afficherZoneAdmin();
+  alert(b.solde + " F déplacé vers CAISSE. Nouvelle caisse: " + d.caisseAdmin + " F");
+}
+
+// On lance l'affichage quand la page charge
+setTimeout(afficherZoneAdmin, 500);
+</script>
+<!-- ===== FIN BLOC ADMIN ===== --></body></html>
