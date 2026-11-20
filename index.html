@@ -391,4 +391,122 @@ setTimeout(()=>{
   }
 },1500);
 </script>
-<!-- ===== FIN CORRECTIF CONNEXION ===== --></body></html>
+<!-- ===== FIN CORRECTIF CONNEXION ===== --><!-- 1. LISTE REVENDEURS AVEC BOUTON SUPPRIMER -->
+<div id="listeRevendeurs"></div>
+
+<!-- 2. SOLDE REVENDEUR BLOQUÉ -->
+<h2>🔒 SOLDE REVENDEUR BLOQUÉ : <span id="totalBloque">0</span> F</h2>
+<div id="listeBloque"></div>
+
+<!-- 3. POPUP POUR CHOISIR RAISON -->
+<div id="popupBloquer" style="display:none; border:2px solid red; padding:15px; background:white;">
+  <h3>Pourquoi tu bloques ce revendeur ?</h3>
+  <label><input type="radio" name="raison" value="Ne vend plus"> Ne vend plus</label><br>
+  <label><input type="radio" name="raison" value="Erreur"> Erreur</label><br>
+  <label><input type="radio" name="raison" value="Fraude"> Fraude</label><br>
+  <label><input type="radio" name="raison" value="Autre"> Autre</label><br>
+  <input id="raisonAutre" placeholder="Écris la raison si Autre"><br><br>
+  <button onclick="confirmerBlocage()">✅ BLOQUER</button>
+  <button onclick="fermerPopup()">❌ ANNULER</button>
+</div>
+
+<script>
+let revendeurs = JSON.parse(localStorage.getItem("revendeurs") || "[]");
+let soldeBloqueListe = JSON.parse(localStorage.getItem("soldeBloque") || "[]");
+let caisseAdmin = parseInt(localStorage.getItem("caisseAdmin") || "0");
+let revendeurABloquer = null;
+
+// AFFICHER REVENDEURS
+function afficherRevendeurs(){
+  let html = "";
+  revendeurs.forEach((r, i) => {
+    html += `
+    <div style="border:1px solid #ccc; padding:10px; margin:5px;">
+      <b>${r.nom}</b> - ${r.gmail} - Code: ${r.code} - Solde: ${r.solde} F<br>
+      <button onclick="ouvrirPopupBloquer('${r.gmail}')">🗑️ SUPPRIMER / BLOQUER</button>
+    </div>`;
+  });
+  document.getElementById("listeRevendeurs").innerHTML = html;
+}
+
+// OUVRIR POPUP RAISON
+function ouvrirPopupBloquer(gmail){
+  revendeurABloquer = gmail;
+  document.getElementById("popupBloquer").style.display = "block";
+}
+function fermerPopup(){
+  document.getElementById("popupBloquer").style.display = "none";
+  revendeurABloquer = null;
+}
+
+// CONFIRMER BLOCAGE
+function confirmerBlocage(){
+  let raison = document.querySelector('input[name="raison"]:checked');
+  if(!raison){ alert("Choisis une raison !"); return; }
+  let raisonFinale = raison.value;
+  if(raisonFinale === "Autre"){
+    raisonFinale = document.getElementById("raisonAutre").value || "Autre";
+  }
+
+  let r = revendeurs.find(x => x.gmail === revendeurABloquer);
+
+  // On met son solde dans SOLDE BLOQUÉ, PAS dans caisse
+  soldeBloqueListe.push({
+    nom: r.nom,
+    gmail: r.gmail,
+    code: r.code,
+    solde: r.solde,
+    date: new Date().toLocaleDateString(),
+    raison: raisonFinale
+  });
+
+  // On le supprime des actifs
+  revendeurs = revendeurs.filter(x => x.gmail !== revendeurABloquer);
+
+  localStorage.setItem("revendeurs", JSON.stringify(revendeurs));
+  localStorage.setItem("soldeBloque", JSON.stringify(soldeBloqueListe));
+
+  fermerPopup();
+  afficherRevendeurs();
+  afficherSoldeBloque();
+  alert("Revendeur bloqué ! Son solde est dans SOLDE BLOQUÉ.");
+}
+
+// AFFICHER SOLDE BLOQUÉ + BOUTON DÉPLACER VERS CAISSE
+function afficherSoldeBloque(){
+  let total = 0;
+  let html = "";
+  soldeBloqueListe.forEach((b, i) => {
+    total += parseInt(b.solde);
+    html += `
+    <div style="border:1px solid red; padding:10px; margin:5px;">
+      <b>${b.nom}</b> - ${b.gmail} - Code: ${b.code}<br>
+      Solde bloqué: <b>${b.solde} F</b> - Date: ${b.date} - Raison: ${b.raison}<br>
+      <button onclick="deplacerVersCaisse(${i})">💰 DÉPLACER GAIN VERS CAISSE</button>
+    </div>`;
+  });
+  document.getElementById("listeBloque").innerHTML = html;
+  document.getElementById("totalBloque").innerText = total;
+}
+
+// DÉPLACER GAIN VERS CAISSE
+function deplacerVersCaisse(index){
+  let b = soldeBloqueListe[index];
+  let ok = confirm("Déplacer " + b.solde + " F de " + b.nom + " vers CAISSE ADMIN ?");
+  if(!ok) return;
+
+  // 1. On ajoute à la caisse
+  caisseAdmin += parseInt(b.solde);
+  localStorage.setItem("caisseAdmin", caisseAdmin);
+
+  // 2. On enlève de la liste bloquée
+  soldeBloqueListe.splice(index, 1);
+  localStorage.setItem("soldeBloque", JSON.stringify(soldeBloqueListe));
+
+  afficherSoldeBloque();
+  alert(b.solde + " F déplacé vers CAISSE. Nouvelle caisse: " + caisseAdmin + " F");
+}
+
+afficherRevendeurs();
+afficherSoldeBloque();
+</script></body></html>
