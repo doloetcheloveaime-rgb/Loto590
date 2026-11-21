@@ -663,44 +663,4 @@ function afficherJeuxBenin_Aujourdhui(){
 }
 setInterval(afficherJeuxBenin_Aujourdhui, 6000);
 <!-- ===== FIN SUITE AUJOURD'HUI ===== -->
-</script><!-- ===== CACHE CAISSE ADMIN POUR CLIENT ===== -->
-<script>
-function cacherCaissePourClient(){
-  let roleTxt = document.getElementById('roleTxt');
-  if(!roleTxt) return;
-  let estAdmin = roleTxt.innerText.includes('ADMIN') && !roleTxt.innerText.includes('pas ADMIN');
-  if(estAdmin) return; // Si c'est vraiment ADMIN, on laisse tout
-
-  // 1. Cacher les 2 boutons RECHARGER CAISSE et CONTRÔLE
-  document.querySelectorAll('button').forEach(function(b){
-    let t = (b.innerText||"").toUpperCase();
-    if(t.includes('RECHARGER CAISSE') || t.includes('CONTRÔLE') || t.includes('CONTROLE')){
-      b.style.display = 'none';
-    }
-  });
-
-  // 2. Cacher la ligne Utilisateurs / Caisse dans le 1er tableau
-  let dash = document.getElementById('dashboard');
-  if(dash){
-    // On remplace le texte sensible par le texte client
-    let html = dash.innerHTML;
-    // On ne touche pas à tout, on cache juste les parents qui contiennent Caisse
-    document.querySelectorAll('#dashboard .card').forEach(function(card){
-      if((card.innerText||"").includes('Solde Caisse ADMIN')){
-        // On cache seulement les lignes, on garde le reste
-        card.innerHTML = card.innerHTML
-          .replace(/Utilisateurs.*?<br>/, '')
-          .replace(/Ventes.*?<br>/, '')
-          .replace(/Solde Caisse ADMIN.*/, 'Ton Solde : <span id="soldeClientTxt"></span>');
-      }
-      if((card.innerText||"").includes('Archive Globale')){
-        card.innerHTML = card.innerHTML.replace(/Archive Globale.*?sur le site\./, 'Archive Client : Tes activités seules.');
-      }
-    });
-  }
-}
-// On lance après chaque affichage
-let ancienShowDash = window.showDash;
-setTimeout(cacherCaissePourClient, 800);
-setInterval(cacherCaissePourClient, 1500);
-      </script></body></html>
+  </script></body></html>
