@@ -128,13 +128,15 @@ function showDash(u){
   document.getElementById('auth').style.display='none';
   document.getElementById('dashboard').classList.remove('hide');
   document.getElementById('roleTxt').innerText = u.role;
-  document.getElementById('userTxt').innerText = u.gmail+' | WhatsApp: '+u.wa+' | Solde Jeu: '+u.soldeJeu+' | Solde Gain: '+u.soldeGain+' | Solde Revendeur: '+u.soldeRev;
   document.getElementById('profilTxt').innerText = 'Nom: '+u.gmail+' | Rôle: '+u.role+' | WhatsApp: '+u.wa;
-
+if(u.role === 'ADMIN'){
+  document.getElementById('userTxt').innerText = u.gmail+' | WhatsApp: '+u.wa+' | Solde Jeu: '+u.soldeJeu+' | Solde Gain: '+u.soldeGain+' | Solde Revendeur: '+u.soldeRev;
+} else {
+  document.getElementById('userTxt').innerText = u.gmail+' | WhatsApp: '+u.wa+' | Solde Jeu: '+u.soldeJeu+' | Solde Gain: '+u.soldeGain;
+}
   // ===== SI C'EST UN CLIENT, ON CACHE TOUT CE QUI EST ADMIN =====
   let estAdmin = (u.role === 'ADMIN');
   let estRevendeur = (u.role === 'REVENDEUR');
-
   // Toutes les cards du dashboard
   let cards = document.querySelectorAll('#dashboard > .card');
   cards.forEach(function(card){
