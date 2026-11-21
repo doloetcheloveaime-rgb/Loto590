@@ -681,4 +681,23 @@ setInterval(function(){
     }
   }catch(e){}
 }, 1000);
+</script><!-- CACHE LIGNES ADMIN POUR CLIENT -->
+<script>
+setInterval(function(){
+  try{
+    let role = document.getElementById('roleTxt');
+    if(!role || !role.innerText.includes('pas ADMIN')) return;
+
+    document.querySelectorAll('#dashboard div, #dashboard p, #dashboard li').forEach(function(el){
+      if(el.children.length > 0) return; // on cache seulement la petite ligne, pas toute la carte
+      let t = el.innerText || "";
+      if(t.includes('Solde Caisse ADMIN') || t.includes('Utilisateurs :') || t.includes('Archive Globale') || t.includes('Archive Revendeur') || t.includes('Revendeur créé') || t.includes('Caisse rechargée') || t.includes('Revendeur rechargé')){
+        el.style.display = 'none';
+      }
+      if(t.includes('Inscription:') && !t.includes('teste@gmail.com')){
+        el.style.display = 'none';
+      }
+    });
+  }catch(e){}
+}, 1000);
 </script></body></html>
