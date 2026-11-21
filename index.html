@@ -123,8 +123,54 @@ function save(){localStorage.setItem('netloto',JSON.stringify(DB));render()}
 function toggleAuth(){document.getElementById('insc').classList.toggle('hide');document.getElementById('conn').classList.toggle('hide');document.getElementById('authTitle').innerText=document.getElementById('insc').classList.contains('hide')?'Connexion':'Inscription'}
 function inscrire(){let g=document.getElementById('iGmail').value,p=document.getElementById('iPass').value,w=document.getElementById('iWa').value;if(!g||!p||!w)return alert('Remplis Gmail + Mot de passe + WhatsApp');if(p.length<6)return alert('Mot de passe très fort : 6 caractères minimum');DB.users.push({gmail:g,pass:p,wa:w,role:'CLIENT',soldeJeu:0,soldeGain:0,soldeRev:0,bloque:false});DB.archives.push('Inscription: '+g+' - '+new Date().toLocaleString());save();alert('Inscription réussie ! Connecte-toi maintenant.');toggleAuth()}
 function connecter(){let g=document.getElementById('cGmail').value,p=document.getElementById('cPass').value;let u=DB.users.find(x=>x.gmail==g&&x.pass==p);if(!u)return alert('Gmail ou mot de passe faux');if(u.bloque)return alert('Compte bloqué par ADMIN');localStorage.setItem('session',g);showDash(u)}
-function showDash(u){document.getElementById('auth').style.display='none';document.getElementById('dashboard').classList.remove('hide');document.getElementById('roleTxt').innerText=u.role;document.getElementById('userTxt').innerText=u.gmail+' | WhatsApp: '+u.wa+' | Solde Jeu: '+u.soldeJeu+' | Solde Gain: '+u.soldeGain+' | Solde Revendeur: '+u.soldeRev;document.getElementById('profilTxt').innerText='Nom: '+u.gmail+' | Rôle: '+u.role+' | WhatsApp: '+u.wa;render()}
 function logout(){localStorage.removeItem('session');location.reload()}
+<script>
+function showDash(u){
+  document.getElementById('auth').style.display='none';
+  document.getElementById('dashboard').classList.remove('hide');
+  document.getElementById('roleTxt').innerText = u.role;
+  document.getElementById('userTxt').innerText = u.gmail+' | WhatsApp: '+u.wa+' | Solde Jeu: '+u.soldeJeu+' | Solde Gain: '+u.soldeGain+' | Solde Revendeur: '+u.soldeRev;
+  document.getElementById('profilTxt').innerText = 'Nom: '+u.gmail+' | Rôle: '+u.role+' | WhatsApp: '+u.wa;
+
+  // ===== SI C'EST UN CLIENT, ON CACHE TOUT CE QUI EST ADMIN =====
+  let estAdmin = (u.role === 'ADMIN');
+  let estRevendeur = (u.role === 'REVENDEUR');
+
+  // Toutes les cards du dashboard
+  let cards = document.querySelectorAll('#dashboard > .card');
+  cards.forEach(function(card){
+    let titre = (card.innerText || "").toUpperCase();
+    // La 1ère card = Tableau de bord, on la garde pour tout le monde
+    if(titre.includes('TABLEAU DE BORD')){ card.style.display='block'; return; }
+    // La card LOTO Types, on la garde pour tout le monde
+    if(titre.includes('TYPES DE LOTO')){ card.style.display='block'; return; }
+    // La card Profil / Résultat / Aide / Archive, on garde pour tout le monde
+    if(titre.includes('PROFIL') || titre.includes('RÉSULTAT') && !titre.includes('PUBLIER') || titre.includes('AIDE') || titre.includes('ARCHIVES')){ card.style.display='block'; return; }
+
+    // Le reste = ADMIN seul
+    if(estAdmin){
+      card.style.display='block';
+    } else {
+      // CLIENT et REVENDEUR ne voient PAS : Pronostic, Publier Résultat, Créer Revendeur, Recharger, Contrôle, Retrait, Gestion Utilisateurs, Gestion Contenu
+      card.style.display='none';
+    }
+  });
+
+  // Spécial : si c'est un REVENDEUR, on montre sa page revendeur
+  let pageRev = document.getElementById('pageRevendeur');
+  if(pageRev){
+    if(estRevendeur){ pageRev.style.display='block'; }
+    else { pageRev.style.display='none'; }
+  }
+
+  // Si CLIENT, on change le titre pour qu'il sache qu'il est CLIENT
+  if(!estAdmin){
+    document.getElementById('roleTxt').innerText = u.role + ' - Tu es bien CLIENT, pas ADMIN';
+  }
+
+  render();
+}
+</script>
 function goBack(){history.back();window.scrollTo(0,0)}
 function show(id){document.getElementById('menu').style.display='none';let el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'})}
 function rechargerCaisse(){let m=prompt('Montant à ajouter à la Caisse ADMIN ?');if(m){DB.caisse+=parseInt(m);DB.archives.push('Caisse rechargée: '+m+' - '+new Date().toLocaleString());save()}}
@@ -618,428 +664,5 @@ function afficherJeuxBenin_Aujourdhui(){
   idxCarrousel = (idxCarrousel+1)%HEURES_BENIN.length;
 }
 setInterval(afficherJeuxBenin_Aujourdhui, 6000);
-</script>
 <!-- ===== FIN SUITE AUJOURD'HUI ===== -->
-  <!-- ===== CORRECTIF CONNEXION CLIENT / ADMIN ===== -->
-<script>
-// On écrase l'ancienne fonction connecter
-function connecter(){
-  let gmail = document.getElementById('logGmail') ? document.getElementById('logGmail').value.trim().toLowerCase() : "";
-  let pass = document.getElementById('logPass') ? document.getElementById('logPass').value : "";
-  // Si tes inputs ont d'autres IDs, dis-moi, je corrige
-  // Essaie aussi : emailConnexion / motDePasseConnexion
-  if(!gmail && document.getElementById('emailConnexion')) gmail = document.getElementById('emailConnexion').value.trim().toLowerCase();
-  if(!pass && document.getElementById('motDePasseConnexion')) pass = document.getElementById('motDePasseConnexion').value;
-
-  if(!gmail || !pass) return alert("Mets ton Gmail et ton mot de passe");
-
-  let d = getDataNetloto();
-
-  // 1. D'abord, on vide l'ancienne session ADMIN
-  localStorage.removeItem("netloto_admin_connecte");
-  sessionStorage.removeItem("netloto_admin_connecte");
-  if(d.adminConnecte) delete d.adminConnecte;
-
-  // 2. C'est l'ADMIN ? - Change l'email admin ici si ce n'est pas ça
-  let emailAdmin = "admin@netloto.com";
-  if(d.adminEmail) emailAdmin = d.adminEmail.toLowerCase();
-
-  if(gmail === emailAdmin){
-    // C'est vraiment l'admin
-    d.adminConnecte = true;
-    saveDataNetloto(d);
-    alert("Connexion ADMIN");
-    afficherZoneAdmin();
-    return;
-  }
-
-  // 3. Sinon, c'est un CLIENT - on cherche dans la liste des clients
-  let clients = d.clients || d.users || [];
-  // Si tes clients sont stockés ailleurs, on cherche aussi dans localStorage
-  let clientTrouve = clients.find(c => (c.gmail||c.email||"").toLowerCase() === gmail && (c.pass||c.password||c.motDePasse) === pass);
-
-  if(!clientTrouve){
-    return alert("Coordonnées client introuvables.\nVérifie ton Gmail et ton mot de passe.\nOu réinscris-toi.");
-  }
-
-  // 4. On connecte le CLIENT, PAS l'admin
-  d.clientConnecte = clientTrouve;
-  d.utilisateurActuel = clientTrouve;
-  saveDataNetloto(d);
-
-  // On cache la zone admin, on montre la zone client
-  let zoneAdmin = document.getElementById("zoneAdmin");
-  if(zoneAdmin) zoneAdmin.style.display = "none";
-  let zoneClient = document.getElementById("zoneClient");
-  if(zoneClient) zoneClient.style.display = "block";
-
-  // On cache inscription / connexion, on montre accueil client
-  let pIns = document.getElementById("page-inscription");
-  if(pIns) pIns.style.display = "none";
-  let pCon = document.getElementById("page-connexion");
-  if(pCon) pCon.style.display = "none";
-  let pAcc = document.getElementById("page-accueil");
-  if(pAcc) pAcc.style.display = "block";
-
-  alert("Bienvenue " + (clientTrouve.nom || clientTrouve.gmail) + " - Tu es connecté comme CLIENT");
-  if(typeof showPage === "function") showPage('accueil');
-}
-
-// Correctif inscription aussi : après inscription -> aller à connexion, pas à admin
-function inscrire(){
-  let gmailEl = document.getElementById('regGmail') || document.getElementById('emailInscription');
-  let waEl = document.getElementById('regWhatsapp') || document.getElementById('whatsappInscription');
-  let passEl = document.getElementById('regPass') || document.getElementById('motDePasseInscription');
-  let gmail = gmailEl ? gmailEl.value.trim().toLowerCase() : "";
-  let wa = waEl ? waEl.value.trim() : "";
-  let pass = passEl ? passEl.value : "";
-  if(!gmail || !pass) return alert("Mets Gmail et mot de passe");
-
-  let d = getDataNetloto();
-  if(!d.clients) d.clients = [];
-  if(!d.users) d.users = [];
-  // On n'écrase pas si déjà existant
-  let existe = d.clients.find(c => (c.gmail||c.email||"").toLowerCase() === gmail);
-  if(existe) return alert("Ce Gmail existe déjà, connecte-toi.");
-
-  let nouveau = {gmail: gmail, email: gmail, whatsapp: wa, pass: pass, password: pass, soldeJeu: 0, soldeGain: 0};
-  d.clients.push(nouveau);
-  d.users.push(nouveau);
-  // On s'assure qu'on ne reste PAS connecté en admin
-  if(d.adminConnecte) delete d.adminConnecte;
-  d.clientConnecte = null;
-  saveDataNetloto(d);
-  alert("Inscription réussie ! Maintenant connecte-toi comme CLIENT.");
-  if(typeof showPage === "function") showPage('connexion');
-}
-</script>
-<!-- ===== CORRECTIF 2 - FORCE CLIENT, PAS ADMIN ===== -->
-<script>
-// 1. Quand la page se charge, on vérifie qui est vraiment connecté
-window.addEventListener("load", function(){
-  setTimeout(function(){
-    let d = getDataNetloto();
-    console.log("DEBUG - clientConnecte:", d.clientConnecte);
-    console.log("DEBUG - adminConnecte:", d.adminConnecte);
-
-    // Si c'est un CLIENT qui est connecté, on FORCE l'affichage CLIENT
-    if(d.clientConnecte && d.clientConnecte.gmail){
-      let zoneAdmin = document.getElementById("zoneAdmin");
-      if(zoneAdmin) zoneAdmin.style.display = "none";
-      let zoneClient = document.getElementById("zoneClient");
-      if(zoneClient) zoneClient.style.display = "block";
-
-      // On cache toutes les pages admin / inscription / connexion
-      let pages = document.querySelectorAll('[id^="page-"]');
-      pages.forEach(p => p.style.display = "none");
-      let acc = document.getElementById("page-accueil");
-      if(acc) acc.style.display = "block";
-      alert("DEBUG : Tu es connecté comme CLIENT : " + d.clientConnecte.gmail + " - Je te mets sur CLIENT, pas ADMIN");
-    }
-  }, 500);
-});
-
-// 2. On bloque afficherZoneAdmin si c'est un client
-let ancienneAfficherAdmin = null;
-if(typeof afficherZoneAdmin === "function"){
-  ancienneAfficherAdmin = afficherZoneAdmin;
-  afficherZoneAdmin = function(){
-    let d = getDataNetloto();
-    // Si un client est connecté, on ne montre JAMAIS l'admin
-    if(d.clientConnecte && d.clientConnecte.gmail){
-      alert("BLOQUÉ : Tu es CLIENT ("+d.clientConnecte.gmail+"), je ne peux pas t'envoyer sur ADMIN");
-      let zoneAdmin = document.getElementById("zoneAdmin");
-      if(zoneAdmin) zoneAdmin.style.display = "none";
-      let acc = document.getElementById("page-accueil");
-      if(acc) acc.style.display = "block";
-      return;
-    }
-    // Sinon, c'est vraiment l'admin
-    return ancienneAfficherAdmin();
-  };
-}
-
-// 3. Bouton pour vraiment se déconnecter de l'ADMIN
-function deconnecterAdminTotal(){
-  let d = getDataNetloto();
-  delete d.adminConnecte;
-  d.clientConnecte = null;
-  localStorage.removeItem("netloto_admin_connecte");
-  sessionStorage.removeItem("netloto_admin_connecte");
-  saveDataNetloto(d);
-  alert("ADMIN déconnecté totalement. Maintenant reconnecte-toi comme CLIENT.");
-  location.reload();
-}
-</script><!-- ===== CORRECTIF 3 - INSCRIPTION / CONNEXION PAR PLACEHOLDER ===== -->
-<script>
-// On trouve les inputs même si les IDs sont différents
-function trouverInputInscription(){
-  let inputs = document.querySelectorAll("input");
-  let gmailInput = null, passInput = null, waInput = null;
-  inputs.forEach(inp => {
-    let ph = (inp.placeholder || "").toLowerCase();
-    let type = inp.type;
-    if(ph.includes("gmail") || ph.includes("email")) gmailInput = inp;
-    if(ph.includes("whatsapp") || ph.includes("numéro") || ph.includes("numero")) waInput = inp;
-    if(type === "password") passInput = inp;
-  });
-  return {gmailInput, passInput, waInput};
-}
-
-function inscrire(){
-  let {gmailInput, passInput, waInput} = trouverInputInscription();
-  let gmail = gmailInput ? gmailInput.value.trim().toLowerCase() : "";
-  let pass = passInput ? passInput.value : "";
-  let wa = waInput ? waInput.value.trim() : "";
-
-  // On regarde aussi le choix CLIENT / ADMIN dans ton menu jaune
-  let selectRole = document.querySelector("select");
-  let role = selectRole ? selectRole.value : "CLIENT";
-  console.log("INSCRIPTION - gmail:", gmail, "role:", role);
-
-  if(!gmail || !pass) return alert("Mets Gmail et mot de passe - DEBUG: gmail trouvé = ["+gmail+"]");
-
-  let d = getDataNetloto();
-  if(!d.clients) d.clients = [];
-  if(!d.users) d.users = [];
-
-  let existe = d.clients.find(c => (c.gmail||c.email||"").toLowerCase() === gmail);
-  if(existe) return alert("Ce Gmail existe déjà, connecte-toi.");
-
-  let nouveau = {gmail: gmail, email: gmail, whatsapp: wa, pass: pass, password: pass, role: role, soldeJeu: 0, soldeGain: 0};
-  d.clients.push(nouveau);
-  d.users.push(nouveau);
-  if(d.adminConnecte) delete d.adminConnecte;
-  d.clientConnecte = null;
-  saveDataNetloto(d);
-  alert("Inscription réussie ! " + gmail + " comme " + role + " - Maintenant connecte-toi.");
-  if(typeof showPage === "function") showPage('connexion');
-  // On force l'affichage de la connexion
-  let pCon = document.getElementById("page-connexion");
-  if(pCon) pCon.style.display = "block";
-}
-
-function connecter(){
-  let {gmailInput, passInput} = trouverInputInscription();
-  let gmail = gmailInput ? gmailInput.value.trim().toLowerCase() : "";
-  let pass = passInput ? passInput.value : "";
-  if(!gmail || !pass) return alert("Mets Gmail et mot de passe pour te connecter - DEBUG: gmail = ["+gmail+"]");
-
-  let d = getDataNetloto();
-  localStorage.removeItem("netloto_admin_connecte");
-  sessionStorage.removeItem("netloto_admin_connecte");
-  if(d.adminConnecte) delete d.adminConnecte;
-
-  let emailAdmin = (d.adminEmail || "admin@netloto.com").toLowerCase();
-  // Si tu as choisi ADMIN dans le menu jaune, on te met admin
-  let selectRole = document.querySelector("select");
-  let roleChoisi = selectRole ? selectRole.value.toUpperCase() : "";
-
-  if(gmail === emailAdmin || roleChoisi.includes("ADMIN")){
-    d.adminConnecte = true;
-    saveDataNetloto(d);
-    alert("Connexion ADMIN");
-    afficherZoneAdmin();
-    return;
-  }
-
-  let clients = d.clients || d.users || [];
-  let clientTrouve = clients.find(c => (c.gmail||c.email||"").toLowerCase() === gmail && (c.pass||c.password||c.motDePasse) === pass);
-  if(!clientTrouve) return alert("Coordonnées client introuvables pour " + gmail);
-
-  d.clientConnecte = clientTrouve;
-  d.utilisateurActuel = clientTrouve;
-  saveDataNetloto(d);
-
-  let zoneAdmin = document.getElementById("zoneAdmin");
-  if(zoneAdmin) zoneAdmin.style.display = "none";
-  let zoneClient = document.getElementById("zoneClient");
-  if(zoneClient) zoneClient.style.display = "block";
-
-  alert("Bienvenue " + gmail + " - Tu es connecté comme CLIENT");
-  if(typeof showPage === "function") showPage('accueil');
-  let pAcc = document.getElementById("page-accueil");
-  if(pAcc) pAcc.style.display = "block";
-}
-      </script><!-- ===== CORRECTIF 4 - PRENDRE SEULEMENT LA CASE VISIBLE ===== -->
-<script>
-function trouverInputInscription(){
-  let tous = Array.from(document.querySelectorAll("input"));
-  // 1. On garde SEULEMENT les inputs visibles à l'écran
-  let visibles = tous.filter(inp => {
-    // Si l'input ou son parent est caché, on l'ignore
-    if(inp.offsetParent === null) return false;
-    if(inp.style.display === "none") return false;
-    if(inp.type === "hidden") return false;
-    return true;
-  });
-
-  console.log("Inputs visibles:", visibles.map(i => i.placeholder + " = " + i.value));
-
-  let gmailInput = null, passInput = null, waInput = null;
-
-  // 2. On cherche d'abord celui qui a déjà une valeur avec @
-  gmailInput = visibles.find(inp => (inp.value || "").includes("@"));
-
-  // 3. Sinon, on cherche par placeholder
-  if(!gmailInput) gmailInput = visibles.find(inp => (inp.placeholder||"").toLowerCase().includes("gmail") || (inp.placeholder||"").toLowerCase().includes("email"));
-  if(!gmailInput) gmailInput = visibles.find(inp => inp.type === "text" || inp.type === "email");
-
-  // Mot de passe : celui qui est visible et qui a une valeur
-  let passVisibles = visibles.filter(inp => inp.type === "password");
-  passInput = passVisibles.find(inp => inp.value) || passVisibles[0];
-
-  waInput = visibles.find(inp => (inp.placeholder||"").toLowerCase().includes("whatsapp") || (inp.placeholder||"").toLowerCase().includes("numéro") || (inp.placeholder||"").toLowerCase().includes("numero"));
-
-  return {gmailInput, passInput, waInput};
-}
-
-function inscrire(){
-  let {gmailInput, passInput, waInput} = trouverInputInscription();
-  let gmail = gmailInput ? gmailInput.value.trim().toLowerCase() : "";
-  let pass = passInput ? passInput.value : "";
-  let wa = waInput ? waInput.value.trim() : "";
-
-  let selectRole = document.querySelector("select");
-  let role = selectRole ? selectRole.value : "CLIENT";
-
-  if(!gmail || !pass) return alert("Mets Gmail et mot de passe - DEBUG: gmail trouvé = ["+gmail+"] - pass vide ? "+(!pass));
-
-  let d = getDataNetloto();
-  if(!d.clients) d.clients = [];
-  if(!d.users) d.users = [];
-
-  let existe = d.clients.find(c => (c.gmail||c.email||"").toLowerCase() === gmail);
-  if(existe) return alert("Ce Gmail existe déjà, connecte-toi.");
-
-  let nouveau = {gmail: gmail, email: gmail, whatsapp: wa, pass: pass, password: pass, role: role, soldeJeu: 0, soldeGain: 0};
-  d.clients.push(nouveau);
-  d.users.push(nouveau);
-  if(d.adminConnecte) delete d.adminConnecte;
-  d.clientConnecte = null;
-  saveDataNetloto(d);
-  alert("Inscription réussie ! " + gmail + " comme " + role + " - Maintenant connecte-toi.");
-  if(typeof showPage === "function") showPage('connexion');
-}
-
-function connecter(){
-  let {gmailInput, passInput} = trouverInputInscription();
-  let gmail = gmailInput ? gmailInput.value.trim().toLowerCase() : "";
-  let pass = passInput ? passInput.value : "";
-  if(!gmail || !pass) return alert("Mets Gmail et mot de passe pour te connecter - DEBUG: gmail = ["+gmail+"]");
-
-  let d = getDataNetloto();
-  localStorage.removeItem("netloto_admin_connecte");
-  sessionStorage.removeItem("netloto_admin_connecte");
-  if(d.adminConnecte) delete d.adminConnecte;
-
-  let emailAdmin = (d.adminEmail || "admin@netloto.com").toLowerCase();
-  let selectRole = document.querySelector("select");
-  let roleChoisi = selectRole ? selectRole.value.toUpperCase() : "";
-
-  if(gmail === emailAdmin || roleChoisi.includes("ADMIN")){
-    d.adminConnecte = true;
-    saveDataNetloto(d);
-    alert("Connexion ADMIN");
-    afficherZoneAdmin();
-    return;
-  }
-
-  let clients = d.clients || d.users || [];
-  let clientTrouve = clients.find(c => (c.gmail||c.email||"").toLowerCase() === gmail && (c.pass||c.password||c.motDePasse) === pass);
-  if(!clientTrouve) return alert("Coordonnées client introuvables pour " + gmail);
-
-  d.clientConnecte = clientTrouve;
-  d.utilisateurActuel = clientTrouve;
-  saveDataNetloto(d);
-
-  let zoneAdmin = document.getElementById("zoneAdmin");
-  if(zoneAdmin) zoneAdmin.style.display = "none";
-  let zoneClient = document.getElementById("zoneClient");
-  if(zoneClient) zoneClient.style.display = "block";
-
-  alert("Bienvenue " + gmail + " - Tu es connecté comme CLIENT");
-  if(typeof showPage === "function") showPage('accueil');
-}
-</script><!-- ===== CORRECTIF 5 - CONNEXION FORCE CLIENT ===== -->
-<script>
-function connecter(){
-  let tous = Array.from(document.querySelectorAll("input"));
-  let visibles = tous.filter(inp => inp.offsetParent !== null && inp.type !== "hidden" && inp.style.display !== "none");
-
-  let gmailInput = visibles.find(inp => (inp.value||"").includes("@")) || visibles.find(inp => (inp.placeholder||"").toLowerCase().includes("gmail"));
-  let passVisibles = visibles.filter(inp => inp.type === "password");
-  let passInput = passVisibles.find(inp => inp.value) || passVisibles[0];
-
-  let gmail = gmailInput ? gmailInput.value.trim().toLowerCase() : "";
-  let pass = passInput ? passInput.value : "";
-
-  if(!gmail || !pass) return alert("Mets Gmail et mot de passe - gmail = ["+gmail+"]");
-
-  let d = getDataNetloto();
-
-  // On efface ADMIN totalement
-  if(d.adminConnecte) delete d.adminConnecte;
-  localStorage.removeItem("netloto_admin_connecte");
-  sessionStorage.removeItem("netloto_admin_connecte");
-
-  // On regarde le menu jaune
-  let selectRole = document.querySelector("select");
-  let roleChoisi = selectRole ? selectRole.value.toUpperCase() : "CLIENT";
-  console.log("CONNEXION - gmail:", gmail, "role choisi:", roleChoisi);
-
-  // VRAI ADMIN = seulement si tu as choisi ADMIN ET que c'est l'email admin
-  let emailAdmin = (d.adminEmail || "admin@netloto.com").toLowerCase();
-  if(roleChoisi.includes("ADMIN") && gmail === emailAdmin){
-    d.adminConnecte = true;
-    saveDataNetloto(d);
-    alert("Connexion ADMIN");
-    afficherZoneAdmin();
-    return;
-  }
-
-  // Sinon, c'est un CLIENT, même si le menu dit ADMIN par erreur
-  let clients = d.clients || d.users || [];
-  let clientTrouve = clients.find(c => (c.gmail||c.email||"").toLowerCase() === gmail && (c.pass||c.password||c.motDePasse) === pass);
-  if(!clientTrouve) return alert("Coordonnées client introuvables pour " + gmail + "\nVérifie ton mot de passe.");
-
-  d.clientConnecte = clientTrouve;
-  d.utilisateurActuel = clientTrouve;
-  saveDataNetloto(d);
-
-  // FORCE CLIENT - on cache tout ce qui est ADMIN
-  let zoneAdmin = document.getElementById("zoneAdmin");
-  if(zoneAdmin) zoneAdmin.style.display = "none";
-  document.querySelectorAll('[id*="Admin"], [id*="admin"]').forEach(el => { if(el.id !== "zoneAdmin") el.style.display = "none"; });
-
-  let zoneClient = document.getElementById("zoneClient");
-  if(zoneClient) zoneClient.style.display = "block";
-
-  // On cache inscription / connexion / admin, on montre accueil client
-  ["page-inscription","page-connexion","page-admin","zoneAdmin"].forEach(id => {
-    let el = document.getElementById(id);
-    if(el) el.style.display = "none";
-  });
-  let pAcc = document.getElementById("page-accueil");
-  if(pAcc) pAcc.style.display = "block";
-
-  alert("Bienvenue " + gmail + " - Tu es connecté comme CLIENT, pas ADMIN");
-  if(typeof showPage === "function") showPage('accueil');
-  // On re-cache l'admin après showPage, au cas où showPage le rouvre
-  setTimeout(() => {
-    let z = document.getElementById("zoneAdmin");
-    if(z) z.style.display = "none";
-  }, 300);
-}
-
-// Au chargement, si c'est un client, on ne montre jamais l'admin
-window.addEventListener("load", function(){
-  setTimeout(function(){
-    let d = getDataNetloto();
-    if(d.clientConnecte && d.clientConnecte.gmail && !d.adminConnecte){
-      let z = document.getElementById("zoneAdmin");
-      if(z) z.style.display = "none";
-    }
-  }, 500);
-});
 </script></body></html>
