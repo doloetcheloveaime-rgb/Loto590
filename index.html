@@ -520,4 +520,106 @@ function deplacerVersCaisseAdmin(index){
 // On lance l'affichage quand la page charge
 setTimeout(afficherZoneAdmin, 500);
 </script>
-<!-- ===== FIN BLOC ADMIN ===== --></body></html>
+<!-- ===== FIN BLOC ADMIN ===== -->
+<!-- ===== SUITE - CE QU'ON A DIT AUJOURD'HUI ===== -->
+<script>
+// ===== 1. CHAMP TOTAL (pas Total Résultat) =====
+// 1 numéro, doit venir dans les 5 résultats
+// Mise 1000 F = Gain 13000 F
+function jouerChampTotal_Aujourdhui(){
+  const num = prompt("CHAMP TOTAL - Ton numéro (1-90) ?");
+  const mise = prompt("Mise en F ?");
+  if(!num || !mise) return;
+  alert("CHAMP TOTAL - Numéro: "+num+" - Mise: "+mise+" F - Doit venir dans les 5 résultats\n1000F = 13000F");
+}
+
+// ===== 2. ANAGRAMME =====
+// Numéro et son tourné : 1-10, 20-02, 30-03...
+// 37 couples = sans doubles, 53 couples = avec doubles, 45 couples = +45
+function genererAnagramme_Aujourdhui(type){
+  let liste = "";
+  if(type===37) liste = "37 Couples: 01-10, 02-20, 03-30, 04-40, 05-50, 06-60, 07-70, 08-80, 09-90, 12-21, 13-31... 78-87 (sans doubles)";
+  if(type===53) liste = "53 Couples: 37 + doubles 01-11, 10-11, 02-22, 20-22, 03-33, 30-33, 04-44, 40-44, 05-55, 50-55, 06-66, 60-66, 07-77, 70-77, 08-88, 80-88";
+  if(type===45) liste = "45 Couples: 01-46, 02-47, 03-48... 45-90 (+45)";
+  alert(liste + "\n\n1 couple gagnant = 7500 XOF\n37 couples = 277500 XOF\n53 couples = 397500 XOF");
+  return liste;
+}
+function jouerAnagramme_Aujourdhui(){
+  const mise = prompt("ANAGRAMME - Mise par couple en F ?");
+  if(!mise) return;
+  alert("ANAGRAMME joué - Mise par couple: "+mise+" F\n37 x "+mise+" = "+(37*mise)+" F");
+}
+
+// ===== 3. QUOTAS / PRIX - Mise 100 F =====
+const QUOTAS_AUJOURDHUI = {
+  nap1_direct: 1300,
+  nap1_first: 6000,
+  nap2: 30000,
+  nap3: 300000,
+  nap4: 800000,
+  nap5: 6000000
+};
+function voirQuotas_Aujourdhui(){
+  alert("QUOTAS - Mise 100 F\nNAP1 DIRECT: 1300 F\nNAP1 1ère POSITION: 6000 F\nNAP2: 30000 F\nNAP3: 300000 F\nNAP4: 800000 F\nNAP5: 6000000 F");
+}
+
+// ===== 4. SOLDE CLIENT - 2 SOLDES =====
+// Solde JEU = NON retirable, Solde GAIN = Retirable
+function demanderRetrait_Aujourdhui(){
+  let d = getDataNetloto();
+  const momo = prompt("RETRAIT - Ton numéro MoMo ?");
+  if(!momo) return;
+  const montant = parseInt(prompt("Montant à retirer ?")||"0");
+  if(montant<=0) return alert("Montant invalide");
+  // On vérifie le solde gain du client connecté - à adapter à ton système
+  // L'argent quitte compte GAIN -> va chez Admin en À VALIDER
+  // Ne s'ajoute PAS à la caisse
+  if(!d.retraitsAValider) d.retraitsAValider = [];
+  d.retraitsAValider.push({
+    momo: momo,
+    montant: montant,
+    date: new Date().toLocaleString(),
+    statut: "A VALIDER"
+  });
+  saveDataNetloto(d);
+  afficherZoneAdmin();
+  alert("Retrait demandé: "+montant+" F vers MoMo "+momo+" - En attente validation Admin");
+}
+
+// ===== 5. ADMIN - SOLDE GAIN À VALIDER / DÉJÀ VALIDÉ =====
+function marquerGainPaye_Aujourdhui(index){
+  let d = getDataNetloto();
+  if(!d.retraitsAValider) d.retraitsAValider = [];
+  if(!d.retraitsDejaValides) d.retraitsDejaValides = [];
+  let r = d.retraitsAValider[index];
+  if(!r) return;
+  if(!confirm("Tu as déjà payé "+r.montant+" F sur MoMo "+r.momo+" en dehors de l'application ?")) return;
+  // Passe de À VALIDER à DÉJÀ VALIDÉ
+  r.statut = "DÉJÀ VALIDÉ / GAIN PAYÉ";
+  r.datePaye = new Date().toLocaleString();
+  d.retraitsDejaValides.push(r);
+  d.retraitsAValider.splice(index,1);
+  saveDataNetloto(d);
+  afficherZoneAdmin();
+  alert("SOLDE PAYÉ / GAIN PAYÉ - "+r.montant+" F\nN'oublie pas : envoie le message WhatsApp au client.\nArchive reste chez admin + client comme preuve.");
+}
+
+// ===== 6. JEUX DU BÉNIN - 6 JEUX + DÉFILEMENT 6 SECONDES =====
+// Lundi 8h, 11h, 14h, 18h, 21h, 0h
+// 5 EN COURS, 1 À VENIR ex: Mardi 8h
+// Un jeu clôturé qui reprend demain -> À VENIR
+// Pas de Jeu Universel, Pas de NAM
+const HEURES_BENIN = ["8h","11h","14h","18h","21h","0h"];
+let idxCarrousel = 0;
+function afficherJeuxBenin_Aujourdhui(){
+  let el = document.getElementById("carrouselJeux");
+  if(!el) return;
+  el.innerHTML = "Lundi "+HEURES_BENIN[idxCarrousel]+" - EN COURS";
+  idxCarrousel = (idxCarrousel+1)%HEURES_BENIN.length;
+}
+setInterval(afficherJeuxBenin_Aujourdhui, 6000);
+</script>
+<!-- ===== FIN SUITE AUJOURD'HUI ===== -->
+</body>
+</html>
+</body></html>
