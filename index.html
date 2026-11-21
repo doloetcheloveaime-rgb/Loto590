@@ -713,4 +713,61 @@ function inscrire(){
   if(typeof showPage === "function") showPage('connexion');
 }
 </script>
-</body></html>
+<!-- ===== CORRECTIF 2 - FORCE CLIENT, PAS ADMIN ===== -->
+<script>
+// 1. Quand la page se charge, on vérifie qui est vraiment connecté
+window.addEventListener("load", function(){
+  setTimeout(function(){
+    let d = getDataNetloto();
+    console.log("DEBUG - clientConnecte:", d.clientConnecte);
+    console.log("DEBUG - adminConnecte:", d.adminConnecte);
+
+    // Si c'est un CLIENT qui est connecté, on FORCE l'affichage CLIENT
+    if(d.clientConnecte && d.clientConnecte.gmail){
+      let zoneAdmin = document.getElementById("zoneAdmin");
+      if(zoneAdmin) zoneAdmin.style.display = "none";
+      let zoneClient = document.getElementById("zoneClient");
+      if(zoneClient) zoneClient.style.display = "block";
+
+      // On cache toutes les pages admin / inscription / connexion
+      let pages = document.querySelectorAll('[id^="page-"]');
+      pages.forEach(p => p.style.display = "none");
+      let acc = document.getElementById("page-accueil");
+      if(acc) acc.style.display = "block";
+      alert("DEBUG : Tu es connecté comme CLIENT : " + d.clientConnecte.gmail + " - Je te mets sur CLIENT, pas ADMIN");
+    }
+  }, 500);
+});
+
+// 2. On bloque afficherZoneAdmin si c'est un client
+let ancienneAfficherAdmin = null;
+if(typeof afficherZoneAdmin === "function"){
+  ancienneAfficherAdmin = afficherZoneAdmin;
+  afficherZoneAdmin = function(){
+    let d = getDataNetloto();
+    // Si un client est connecté, on ne montre JAMAIS l'admin
+    if(d.clientConnecte && d.clientConnecte.gmail){
+      alert("BLOQUÉ : Tu es CLIENT ("+d.clientConnecte.gmail+"), je ne peux pas t'envoyer sur ADMIN");
+      let zoneAdmin = document.getElementById("zoneAdmin");
+      if(zoneAdmin) zoneAdmin.style.display = "none";
+      let acc = document.getElementById("page-accueil");
+      if(acc) acc.style.display = "block";
+      return;
+    }
+    // Sinon, c'est vraiment l'admin
+    return ancienneAfficherAdmin();
+  };
+}
+
+// 3. Bouton pour vraiment se déconnecter de l'ADMIN
+function deconnecterAdminTotal(){
+  let d = getDataNetloto();
+  delete d.adminConnecte;
+  d.clientConnecte = null;
+  localStorage.removeItem("netloto_admin_connecte");
+  sessionStorage.removeItem("netloto_admin_connecte");
+  saveDataNetloto(d);
+  alert("ADMIN déconnecté totalement. Maintenant reconnecte-toi comme CLIENT.");
+  location.reload();
+}
+</script></body></html>
