@@ -861,4 +861,104 @@ function connecter(){
   let pAcc = document.getElementById("page-accueil");
   if(pAcc) pAcc.style.display = "block";
 }
-      </script></body></html>
+      </script><!-- ===== CORRECTIF 4 - PRENDRE SEULEMENT LA CASE VISIBLE ===== -->
+<script>
+function trouverInputInscription(){
+  let tous = Array.from(document.querySelectorAll("input"));
+  // 1. On garde SEULEMENT les inputs visibles à l'écran
+  let visibles = tous.filter(inp => {
+    // Si l'input ou son parent est caché, on l'ignore
+    if(inp.offsetParent === null) return false;
+    if(inp.style.display === "none") return false;
+    if(inp.type === "hidden") return false;
+    return true;
+  });
+
+  console.log("Inputs visibles:", visibles.map(i => i.placeholder + " = " + i.value));
+
+  let gmailInput = null, passInput = null, waInput = null;
+
+  // 2. On cherche d'abord celui qui a déjà une valeur avec @
+  gmailInput = visibles.find(inp => (inp.value || "").includes("@"));
+
+  // 3. Sinon, on cherche par placeholder
+  if(!gmailInput) gmailInput = visibles.find(inp => (inp.placeholder||"").toLowerCase().includes("gmail") || (inp.placeholder||"").toLowerCase().includes("email"));
+  if(!gmailInput) gmailInput = visibles.find(inp => inp.type === "text" || inp.type === "email");
+
+  // Mot de passe : celui qui est visible et qui a une valeur
+  let passVisibles = visibles.filter(inp => inp.type === "password");
+  passInput = passVisibles.find(inp => inp.value) || passVisibles[0];
+
+  waInput = visibles.find(inp => (inp.placeholder||"").toLowerCase().includes("whatsapp") || (inp.placeholder||"").toLowerCase().includes("numéro") || (inp.placeholder||"").toLowerCase().includes("numero"));
+
+  return {gmailInput, passInput, waInput};
+}
+
+function inscrire(){
+  let {gmailInput, passInput, waInput} = trouverInputInscription();
+  let gmail = gmailInput ? gmailInput.value.trim().toLowerCase() : "";
+  let pass = passInput ? passInput.value : "";
+  let wa = waInput ? waInput.value.trim() : "";
+
+  let selectRole = document.querySelector("select");
+  let role = selectRole ? selectRole.value : "CLIENT";
+
+  if(!gmail || !pass) return alert("Mets Gmail et mot de passe - DEBUG: gmail trouvé = ["+gmail+"] - pass vide ? "+(!pass));
+
+  let d = getDataNetloto();
+  if(!d.clients) d.clients = [];
+  if(!d.users) d.users = [];
+
+  let existe = d.clients.find(c => (c.gmail||c.email||"").toLowerCase() === gmail);
+  if(existe) return alert("Ce Gmail existe déjà, connecte-toi.");
+
+  let nouveau = {gmail: gmail, email: gmail, whatsapp: wa, pass: pass, password: pass, role: role, soldeJeu: 0, soldeGain: 0};
+  d.clients.push(nouveau);
+  d.users.push(nouveau);
+  if(d.adminConnecte) delete d.adminConnecte;
+  d.clientConnecte = null;
+  saveDataNetloto(d);
+  alert("Inscription réussie ! " + gmail + " comme " + role + " - Maintenant connecte-toi.");
+  if(typeof showPage === "function") showPage('connexion');
+}
+
+function connecter(){
+  let {gmailInput, passInput} = trouverInputInscription();
+  let gmail = gmailInput ? gmailInput.value.trim().toLowerCase() : "";
+  let pass = passInput ? passInput.value : "";
+  if(!gmail || !pass) return alert("Mets Gmail et mot de passe pour te connecter - DEBUG: gmail = ["+gmail+"]");
+
+  let d = getDataNetloto();
+  localStorage.removeItem("netloto_admin_connecte");
+  sessionStorage.removeItem("netloto_admin_connecte");
+  if(d.adminConnecte) delete d.adminConnecte;
+
+  let emailAdmin = (d.adminEmail || "admin@netloto.com").toLowerCase();
+  let selectRole = document.querySelector("select");
+  let roleChoisi = selectRole ? selectRole.value.toUpperCase() : "";
+
+  if(gmail === emailAdmin || roleChoisi.includes("ADMIN")){
+    d.adminConnecte = true;
+    saveDataNetloto(d);
+    alert("Connexion ADMIN");
+    afficherZoneAdmin();
+    return;
+  }
+
+  let clients = d.clients || d.users || [];
+  let clientTrouve = clients.find(c => (c.gmail||c.email||"").toLowerCase() === gmail && (c.pass||c.password||c.motDePasse) === pass);
+  if(!clientTrouve) return alert("Coordonnées client introuvables pour " + gmail);
+
+  d.clientConnecte = clientTrouve;
+  d.utilisateurActuel = clientTrouve;
+  saveDataNetloto(d);
+
+  let zoneAdmin = document.getElementById("zoneAdmin");
+  if(zoneAdmin) zoneAdmin.style.display = "none";
+  let zoneClient = document.getElementById("zoneClient");
+  if(zoneClient) zoneClient.style.display = "block";
+
+  alert("Bienvenue " + gmail + " - Tu es connecté comme CLIENT");
+  if(typeof showPage === "function") showPage('accueil');
+}
+</script></body></html>
