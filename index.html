@@ -770,4 +770,95 @@ function deconnecterAdminTotal(){
   alert("ADMIN déconnecté totalement. Maintenant reconnecte-toi comme CLIENT.");
   location.reload();
 }
-</script></body></html>
+</script><!-- ===== CORRECTIF 3 - INSCRIPTION / CONNEXION PAR PLACEHOLDER ===== -->
+<script>
+// On trouve les inputs même si les IDs sont différents
+function trouverInputInscription(){
+  let inputs = document.querySelectorAll("input");
+  let gmailInput = null, passInput = null, waInput = null;
+  inputs.forEach(inp => {
+    let ph = (inp.placeholder || "").toLowerCase();
+    let type = inp.type;
+    if(ph.includes("gmail") || ph.includes("email")) gmailInput = inp;
+    if(ph.includes("whatsapp") || ph.includes("numéro") || ph.includes("numero")) waInput = inp;
+    if(type === "password") passInput = inp;
+  });
+  return {gmailInput, passInput, waInput};
+}
+
+function inscrire(){
+  let {gmailInput, passInput, waInput} = trouverInputInscription();
+  let gmail = gmailInput ? gmailInput.value.trim().toLowerCase() : "";
+  let pass = passInput ? passInput.value : "";
+  let wa = waInput ? waInput.value.trim() : "";
+
+  // On regarde aussi le choix CLIENT / ADMIN dans ton menu jaune
+  let selectRole = document.querySelector("select");
+  let role = selectRole ? selectRole.value : "CLIENT";
+  console.log("INSCRIPTION - gmail:", gmail, "role:", role);
+
+  if(!gmail || !pass) return alert("Mets Gmail et mot de passe - DEBUG: gmail trouvé = ["+gmail+"]");
+
+  let d = getDataNetloto();
+  if(!d.clients) d.clients = [];
+  if(!d.users) d.users = [];
+
+  let existe = d.clients.find(c => (c.gmail||c.email||"").toLowerCase() === gmail);
+  if(existe) return alert("Ce Gmail existe déjà, connecte-toi.");
+
+  let nouveau = {gmail: gmail, email: gmail, whatsapp: wa, pass: pass, password: pass, role: role, soldeJeu: 0, soldeGain: 0};
+  d.clients.push(nouveau);
+  d.users.push(nouveau);
+  if(d.adminConnecte) delete d.adminConnecte;
+  d.clientConnecte = null;
+  saveDataNetloto(d);
+  alert("Inscription réussie ! " + gmail + " comme " + role + " - Maintenant connecte-toi.");
+  if(typeof showPage === "function") showPage('connexion');
+  // On force l'affichage de la connexion
+  let pCon = document.getElementById("page-connexion");
+  if(pCon) pCon.style.display = "block";
+}
+
+function connecter(){
+  let {gmailInput, passInput} = trouverInputInscription();
+  let gmail = gmailInput ? gmailInput.value.trim().toLowerCase() : "";
+  let pass = passInput ? passInput.value : "";
+  if(!gmail || !pass) return alert("Mets Gmail et mot de passe pour te connecter - DEBUG: gmail = ["+gmail+"]");
+
+  let d = getDataNetloto();
+  localStorage.removeItem("netloto_admin_connecte");
+  sessionStorage.removeItem("netloto_admin_connecte");
+  if(d.adminConnecte) delete d.adminConnecte;
+
+  let emailAdmin = (d.adminEmail || "admin@netloto.com").toLowerCase();
+  // Si tu as choisi ADMIN dans le menu jaune, on te met admin
+  let selectRole = document.querySelector("select");
+  let roleChoisi = selectRole ? selectRole.value.toUpperCase() : "";
+
+  if(gmail === emailAdmin || roleChoisi.includes("ADMIN")){
+    d.adminConnecte = true;
+    saveDataNetloto(d);
+    alert("Connexion ADMIN");
+    afficherZoneAdmin();
+    return;
+  }
+
+  let clients = d.clients || d.users || [];
+  let clientTrouve = clients.find(c => (c.gmail||c.email||"").toLowerCase() === gmail && (c.pass||c.password||c.motDePasse) === pass);
+  if(!clientTrouve) return alert("Coordonnées client introuvables pour " + gmail);
+
+  d.clientConnecte = clientTrouve;
+  d.utilisateurActuel = clientTrouve;
+  saveDataNetloto(d);
+
+  let zoneAdmin = document.getElementById("zoneAdmin");
+  if(zoneAdmin) zoneAdmin.style.display = "none";
+  let zoneClient = document.getElementById("zoneClient");
+  if(zoneClient) zoneClient.style.display = "block";
+
+  alert("Bienvenue " + gmail + " - Tu es connecté comme CLIENT");
+  if(typeof showPage === "function") showPage('accueil');
+  let pAcc = document.getElementById("page-accueil");
+  if(pAcc) pAcc.style.display = "block";
+}
+      </script></body></html>
