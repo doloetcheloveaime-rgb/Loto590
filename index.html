@@ -663,4 +663,20 @@ function afficherJeuxBenin_Aujourdhui(){
 }
 setInterval(afficherJeuxBenin_Aujourdhui, 6000);
 <!-- ===== FIN SUITE AUJOURD'HUI ===== -->
-  </script></body></html>
+  </script><!-- CACHE 2 BOUTONS POUR CLIENT -->
+<script>
+setInterval(function(){
+  try{
+    let role = document.getElementById('roleTxt');
+    if(!role) return;
+    if(role.innerText.includes('pas ADMIN')){
+      document.querySelectorAll('button').forEach(function(b){
+        let t = (b.innerText||"").toUpperCase();
+        if(t.includes('RECHARGER CAISSE') || t.includes('CONTROLE') || t.includes('CONTRÔLE')){
+          b.style.display = 'none';
+        }
+      });
+    }
+  }catch(e){}
+}, 1000);
+</script></body></html>
