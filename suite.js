@@ -112,11 +112,12 @@ window.ouvrirDepot = function(){
   <div id="listeRevendeurs" style="padding:0 12px">Chargement des revendeurs...</div>
   <div style="padding:12px;font-weight:bold">2. Recharge Automatique - Momo ADMIN</div>
   <div style="margin:0 12px;background:#fff;border:2px solid #0b4fd8;border-radius:14px;padding:12px">
-    <div>🇧🇯 MTN Bénin ADMIN : <b id="momoBenin">+229 01 XX XX XX XX</b></div>
-    <div>🇹🇬 Moov Togo ADMIN : <b id="momoTogo">+228 XX XX XX XX</b></div>
-    <div>🇨🇮 Orange CI ADMIN : <b id="momoCI">+225 XX XX XX XX</b></div>
-    <div>🇬🇭 MTN Ghana ADMIN : <b id="momoGhana">+233 XX XX XX XX</b></div>
-    <p style="font-size:13px;color:#555">1. Fais le transfert sur le numéro de ton pays.<br>2. Mets le montant ici, et appuie sur J'AI PAYÉ.<br>3. Le message arrive chez ADMIN, il recharge ton Gmail.</p>
+    <div>🇧🇯 BÉNIN - ADMIN : <b>+229 01 66 72 69 58</b></div>
+<div>🇹🇬 TOGO - REVENDEUR : <b>+228 0000</b> <span style="font-size:12px;color:#888">(à changer après)</span></div>
+<div>🇨🇮 CÔTE D'IVOIRE - REVENDEUR : <b>+225 0000</b> <span style="font-size:12px;color:#888">(à changer après)</span></div>
+<div>🇬🇭 GHANA - REVENDEUR : <b>+233 0000</b> <span style="font-size:12px;color:#888">(à changer après)</span></div>
+<div>🇳🇬 NIGÉRIA - REVENDEUR : <b>+234 0000</b> <span style="font-size:12px;color:#888">(à changer après)</span></div>
+<div>🇫🇷 FRANCE - REVENDEUR : <b>+33 0000</b> <span style="font-size:12px;color:#888">(à changer après)</span></div>   <p style="font-size:13px;color:#555">1. Fais le transfert sur le numéro de ton pays.<br>2. Mets le montant ici, et appuie sur J'AI PAYÉ.<br>3. Le message arrive chez ADMIN, il recharge ton Gmail.</p>
     <input id="depMontant" type="number" placeholder="Montant ex: 5000" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;margin-bottom:8px">
     <input id="depNomMomo" placeholder="Ton nom sur Momo" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;margin-bottom:8px">
     <input id="depRef" placeholder="Référence Momo (si tu as)" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;margin-bottom:8px">
