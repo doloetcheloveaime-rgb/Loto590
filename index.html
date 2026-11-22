@@ -626,12 +626,4 @@ setTimeout(afficherZoneAdmin, 500);
 
 <script>
 function ouvrirDepotClient(){ alert('Dépôt - on va le brancher à l Etape 2'); }
-function montrerClientHome(u){
-  try{
-    if(!u || u.role === 'ADMIN') return;
-    document.getElementById('clientHome').style.display='block';
-    let nom = document.getElementById('chNom'); if(nom) nom.innerText = u.gmail || 'Client';
-    let s = document.getElementById('chSolde'); if(s) s.innerText = u.soldeJeu || 0;
-  }catch(e){}
-}
 </script></body></html>
