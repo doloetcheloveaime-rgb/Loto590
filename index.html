@@ -143,20 +143,7 @@ function showDash(u){
   render();
 montrerClientHome(u);
 }
-  function montrerClientHome(u){ return; }
-    // CLIENT : on cache TOUT le body sauf la page bleue CLIENT
-    let enfants = document.body.children;
-    for(let i=0;i<enfants.length;i++){
-      let el = enfants[i];
-      if(el.id === 'clientHome') continue;
-      if(el.tagName === 'SCRIPT' || el.tagName === 'STYLE') continue;
-      el.style.display = 'none';
-    }
-    if(clientDiv) clientDiv.style.display='block';
-    let nom = document.getElementById('chNom'); if(nom) nom.innerText = u.gmail || 'Client';
-    let s = document.getElementById('chSolde'); if(s) s.innerText = u.soldeJeu || 0;
-  }catch(e){}
-  }
+function montrerClientHome(u){ return; } 
 function goBack(){history.back();window.scrollTo(0,0)}
 function show(id){document.getElementById('menu').style.display='none';let el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'})}
 function rechargerCaisse(){let m=prompt('Montant à ajouter à la Caisse ADMIN ?');if(m){DB.caisse+=parseInt(m);DB.archives.push('Caisse rechargée: '+m+' - '+new Date().toLocaleString());save()}}
