@@ -47,7 +47,7 @@
   <div class="ch-titre">Choisir un pays</div>
   <div class="ch-pays">
     <button onclick="ouvrirPaysBenin()">🇧🇯 BÉNIN - 6 tirages ouverts ▶</button>
-    <button onclick="ouvrirPaysCôteIvoire()">🇨🇮 CÔTE D'IVOIRE ▶</button>
+    <button onclick="ouvrirPaysCoteIvoire()">🇨🇮 CÔTE D'IVOIRE ▶</button>
     <button onclick="ouvrirPaysFrance()">🇫🇷 FRANCE ▶</button>
     <button onclick="ouvrirPaysGhana()">🇬🇭 GHANA ▶</button>
     <button onclick="ouvrirPaysNigeria()">🇳🇬 NIGÉRIA ▶</button>
