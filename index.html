@@ -145,16 +145,18 @@ function showDash(u){
   function montrerClientHome(u){
   try{
     let clientDiv = document.getElementById('clientHome');
-    let dash = document.getElementById('dashboard');
-    let auth = document.getElementById('auth');
-    if(u && u.role === 'ADMIN'){
+    if(!u || u.role === 'ADMIN'){
       if(clientDiv) clientDiv.style.display='none';
-      if(dash) dash.classList.remove('hide');
       return;
     }
-    // CLIENT ou REVENDEUR : on enlève catégoriquement l'ancienne page ADMIN + LOTO
-    if(auth) auth.style.display='none';
-    if(dash) dash.style.display='none';
+    // CLIENT : on cache TOUT le body sauf la page bleue CLIENT
+    let enfants = document.body.children;
+    for(let i=0;i<enfants.length;i++){
+      let el = enfants[i];
+      if(el.id === 'clientHome') continue;
+      if(el.tagName === 'SCRIPT' || el.tagName === 'STYLE') continue;
+      el.style.display = 'none';
+    }
     if(clientDiv) clientDiv.style.display='block';
     let nom = document.getElementById('chNom'); if(nom) nom.innerText = u.gmail || 'Client';
     let s = document.getElementById('chSolde'); if(s) s.innerText = u.soldeJeu || 0;
