@@ -538,4 +538,80 @@ function deplacerVersCaisseAdmin(index){
 setTimeout(afficherZoneAdmin, 500);
 </script>
 <!-- ===== FIN BLOC ADMIN ===== -->
+</script><!-- ETAPE 1 CLIENT - ACCUEIL BLEU - TOUT EN BOUTON -->
+<style>
+#clientHome{display:none;font-family:Arial;background:#f2f6ff;padding-bottom:90px}
+.ch-top{display:flex;justify-content:space-between;align-items:center;background:#0b4fd8;color:#fff;padding:12px}
+.ch-top button{background:#fff;color:#0b4fd8;border:0;border-radius:20px;padding:8px 14px;font-weight:bold;cursor:pointer}
+.ch-salut{padding:12px;font-weight:bold}
+.ch-marquee{background:#0b4fd8;color:#fff;padding:8px;overflow:hidden;white-space:nowrap}
+.ch-marquee span{display:inline-block;animation:defile 12s linear infinite}
+@keyframes defile{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+.ch-3{display:flex;gap:8px;padding:12px}
+.ch-3 button{flex:1;background:#0b4fd8;color:#fff;border:0;border-radius:12px;padding:12px;font-weight:bold;cursor:pointer}
+.ch-titre{padding:0 12px;font-weight:bold}
+.ch-cards{display:flex;gap:10px;overflow-x:auto;padding:12px}
+.ch-cards button{min-width:150px;background:#fff;border:2px solid #0b4fd8;border-radius:14px;padding:12px;text-align:left;cursor:pointer}
+.ch-pays{padding:12px}
+.ch-pays button{width:100%;background:#fff;border:2px solid #0b4fd8;border-radius:14px;padding:14px;text-align:left;margin-bottom:10px;cursor:pointer;font-weight:bold}
+.ch-bottom{position:fixed;bottom:0;left:0;right:0;display:flex;background:#0b4fd8;padding:8px}
+.ch-bottom button{flex:1;background:transparent;color:#fff;border:0;font-weight:bold;cursor:pointer}
+</style>
+
+<div id="clientHome">
+  <div class="ch-top">
+    <button onclick="alert('Message Admin - on va le brancher apres')">✉️ Message</button>
+    <button onclick="ouvrirDepotClient()">SOLDE <span id="chSolde">0</span> XOF +</button>
+    <button onclick="alert('Menu - on va le brancher apres')">☰ Menu</button>
+  </div>
+  <div class="ch-salut">Salut <span id="chNom">Client</span></div>
+  <div class="ch-marquee"><span>NET LOTO AT 590 partout dans le monde ! Bonne chance !</span></div>
+  <div class="ch-3">
+    <button onclick="ouvrirDepotClient()">+ Dépôt</button>
+    <button onclick="alert('Historique - on va le brancher apres')">Historique</button>
+    <button onclick="alert('Retrait - on va le brancher apres')">Retrait</button>
+  </div>
+  <div class="ch-titre">Ferme bientôt ⏳</div>
+  <div class="ch-cards">
+    <button onclick="alert('CHANCE 8H - on va le brancher apres')">CHANCE 8H<br>8:00<br>Ferme dans...</button>
+    <button onclick="alert('CHANCE 11H - on va le brancher apres')">CHANCE 11H<br>11:00<br>Ferme dans...</button>
+    <button onclick="alert('CHANCE 14H - on va le brancher apres')">CHANCE 14H<br>14:00<br>Ferme dans...</button>
+    <button onclick="alert('CHANCE 18H - on va le brancher apres')">CHANCE 18H<br>18:00<br>Ferme dans...</button>
+    <button onclick="alert('CHANCE 21H - on va le brancher apres')">CHANCE 21H<br>21:00<br>Ferme dans...</button>
+    <button onclick="alert('CHANCE 0H - on va le brancher apres')">CHANCE 0H<br>00:00<br>Ferme dans...</button>
+  </div>
+  <div class="ch-titre">Choisir un pays</div>
+  <div class="ch-pays">
+    <button onclick="alert('BENIN - 6 tirages - on va le brancher apres')">🇧🇯 BÉNIN - 6 tirages ouverts ▶</button>
+    <button onclick="alert('COTE D IVOIRE - on va le brancher apres')">🇨🇮 CÔTE D'IVOIRE - 9 tirages ouverts ▶</button>
+    <button onclick="alert('FRANCE - on va le brancher apres')">🇫🇷 FRANCE ▶</button>
+    <button onclick="alert('GHANA - on va le brancher apres')">🇬🇭 GHANA ▶</button>
+    <button onclick="alert('NIGERIA - on va le brancher apres')">🇳🇬 NIGÉRIA ▶</button>
+    <button onclick="alert('TOGO - on va le brancher apres')">🇹🇬 TOGO ▶</button>
+  </div>
+  <div class="ch-3">
+    <button onclick="alert('Mes tickets')">Mes tickets</button>
+    <button onclick="alert('Resultats')">Résultats</button>
+    <button onclick="alert('Pronostics')">Pronostics</button>
+    <button onclick="alert('Aide')">Aide</button>
+  </div>
+  <div class="ch-bottom">
+    <button onclick="alert('Accueil')">Accueil</button>
+    <button onclick="alert('Tirages')">Tirages</button>
+    <button onclick="alert('Coupon')">Coupon</button>
+    <button onclick="alert('Tickets')">Tickets</button>
+    <button onclick="alert('Solde')">Solde</button>
+  </div>
+</div>
+
+<script>
+function ouvrirDepotClient(){ alert('Dépôt - on va le brancher à l Etape 2'); }
+function montrerClientHome(u){
+  try{
+    if(!u || u.role === 'ADMIN') return;
+    document.getElementById('clientHome').style.display='block';
+    let nom = document.getElementById('chNom'); if(nom) nom.innerText = u.gmail || 'Client';
+    let s = document.getElementById('chSolde'); if(s) s.innerText = u.soldeJeu || 0;
+  }catch(e){}
+}
 </script></body></html>
