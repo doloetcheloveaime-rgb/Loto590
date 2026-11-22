@@ -143,13 +143,6 @@ function showDash(u){
   render();
 montrerClientHome(u);
 }
-  function montrerClientHome(u){
-  try{
-    let clientDiv = document.getElementById('clientHome');
-    if(!u || u.role === 'ADMIN'){
-      if(clientDiv) clientDiv.style.display='none';
-      return;
-    }
     // CLIENT : on cache TOUT le body sauf la page bleue CLIENT
     let enfants = document.body.children;
     for(let i=0;i<enfants.length;i++){
