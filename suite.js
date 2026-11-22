@@ -25,13 +25,13 @@
   </style>
   <div class="ch-top">
     <button onclick="alert('Message Admin - Etape 2')">✉️ Message</button>
-    <button onclick="alert('Depot - Etape 2')">SOLDE <span id="chSolde">0</span> XOF +</button>
+    <button onclick="alert(onclick="ouvrirDepot()")">SOLDE <span id="chSolde">0</span> XOF +</button>
     <button onclick="alert('Menu - Etape 2')">☰ Menu</button>
   </div>
   <div class="ch-salut">Salut <span id="chNom">Client</span></div>
   <div class="ch-marquee"><span>NET LOTO AT 590 partout dans le monde ! Bonne chance !</span></div>
   <div class="ch-3">
-    <button onclick="alert('Depot - Etape 2')">+ Dépôt</button>
+    <button onclick="alert(onclick="ouvrirDepot()")">+ Dépôt</button>
     <button onclick="alert('Historique - Etape 2')">Historique</button>
     <button onclick="alert('Retrait - Etape 2')">Retrait</button>
   </div>
@@ -97,4 +97,78 @@
     }
     if(essai > 50) clearInterval(timer);
   }, 200);
+  // --- DEPOT ---
+window.ouvrirDepot = function(){
+  let vieux = document.getElementById('pageDepot'); if(vieux) vieux.remove();
+  let d = document.createElement('div');
+  d.id = 'pageDepot';
+  d.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:#f2f6ff;z-index:9999;overflow:auto;padding-bottom:20px;font-family:Arial';
+  d.innerHTML = `
+  <div style="background:#0b4fd8;color:#fff;padding:12px;display:flex;justify-content:space-between;align-items:center">
+    <button onclick="document.getElementById('pageDepot').remove()" style="background:#fff;color:#0b4fd8;border:0;border-radius:20px;padding:8px 14px;font-weight:bold">← Retour</button>
+    <b>DÉPÔT</b><span>SOLDE <span id="depSolde">0</span></span>
+  </div>
+  <div style="padding:12px;font-weight:bold">1. Choisir un revendeur par pays</div>
+  <div id="listeRevendeurs" style="padding:0 12px">Chargement des revendeurs...</div>
+  <div style="padding:12px;font-weight:bold">2. Recharge Automatique - Momo ADMIN</div>
+  <div style="margin:0 12px;background:#fff;border:2px solid #0b4fd8;border-radius:14px;padding:12px">
+    <div>🇧🇯 MTN Bénin ADMIN : <b id="momoBenin">+229 01 XX XX XX XX</b></div>
+    <div>🇹🇬 Moov Togo ADMIN : <b id="momoTogo">+228 XX XX XX XX</b></div>
+    <div>🇨🇮 Orange CI ADMIN : <b id="momoCI">+225 XX XX XX XX</b></div>
+    <div>🇬🇭 MTN Ghana ADMIN : <b id="momoGhana">+233 XX XX XX XX</b></div>
+    <p style="font-size:13px;color:#555">1. Fais le transfert sur le numéro de ton pays.<br>2. Mets le montant ici, et appuie sur J'AI PAYÉ.<br>3. Le message arrive chez ADMIN, il recharge ton Gmail.</p>
+    <input id="depMontant" type="number" placeholder="Montant ex: 5000" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;margin-bottom:8px">
+    <input id="depNomMomo" placeholder="Ton nom sur Momo" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;margin-bottom:8px">
+    <input id="depRef" placeholder="Référence Momo (si tu as)" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;margin-bottom:8px">
+    <button onclick="envoyerDemandeDepot()" style="width:100%;background:#0b4fd8;color:#fff;border:0;border-radius:12px;padding:14px;font-weight:bold">J'AI PAYÉ - PRÉVENIR ADMIN</button>
+  </div>
+  `;
+  document.body.appendChild(d);
+  try{
+    let u = window.__userActuel || JSON.parse(localStorage.getItem('netloto_user')||'{}');
+    let s = document.getElementById('depSolde'); if(s) s.innerText = u.soldeJeu || 0;
+  }catch(e){}
+  chargerRevendeurs();
+};
+
+window.chargerRevendeurs = async function(){
+  let box = document.getElementById('listeRevendeurs'); if(!box) return;
+  try{
+    // On lit les revendeurs dans ta base : collection utilisateurs, role = REVENDEUR
+    let snap = await db.collection('utilisateurs').where('role','==','REVENDEUR').get();
+    if(snap.empty){ box.innerHTML = 'Aucun revendeur pour le moment. Utilise la Recharge Automatique en bas.'; return; }
+    let html = '';
+    snap.forEach(function(doc){
+      let r = doc.data();
+      let pays = r.pays || r.paysRevendeur || 'PAYS';
+      let nom = r.nom || r.gmail || 'Revendeur';
+      let wa = r.whatsapp || r.telephone || '';
+      html += `<div style="background:#fff;border:2px solid #0b4fd8;border-radius:14px;padding:12px;margin-bottom:8px">
+        <b>${pays} - ${nom}</b><br><span style="font-size:13px;color:#555">${r.gmail||''} ${wa ? ' - '+wa : ''}</span><br>
+        <button onclick="window.open('https://wa.me/${wa.replace(/[^0-9]/g,'')}','_blank')" style="margin-top:8px;background:#25D366;color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:bold">Contacter WhatsApp</button>
+      </div>`;
+    });
+    box.innerHTML = html;
+  }catch(e){ box.innerHTML = 'Impossible de charger les revendeurs. Utilise la Recharge Automatique en bas.'; }
+};
+
+window.envoyerDemandeDepot = async function(){
+  let montant = document.getElementById('depMontant').value;
+  let nomMomo = document.getElementById('depNomMomo').value;
+  let ref = document.getElementById('depRef').value;
+  if(!montant || montant <= 0){ alert('Mets le montant, boss'); return; }
+  try{
+    let u = window.__userActuel || JSON.parse(localStorage.getItem('netloto_user')||'{}');
+    await db.collection('demandesRecharge').add({
+      gmailClient: u.gmail || '',
+      montant: Number(montant),
+      nomMomo: nomMomo || '',
+      reference: ref || '',
+      statut: 'EN ATTENTE',
+      date: new Date()
+    });
+    alert('Demande envoyée ! ADMIN a reçu le message. Il va recharger ton Gmail : ' + (u.gmail||''));
+    document.getElementById('pageDepot').remove();
+  }catch(e){ alert('Erreur, réessaie : ' + e.message); }
+};
 })();
