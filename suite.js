@@ -26,8 +26,8 @@
   <div class="ch-top">
     <button onclick="alert('Message Admin - Etape 2')">✉️ Message</button>
     <button onclick="alert('Depot - Etape 2')">SOLDE <span id="chSolde">0</span> XOF +</button>
-    <button onclick="alert('Menu - Etape 2')">☰ Menu</button>
-  </div>
+<button onclick="alert('Menu - Etape 2')">☰ Menu</button>
+<button onclick="localStorage.clear();location.reload()" style="background:#ff3b30;color:#fff">Déconnexion</button>
   <div class="ch-salut">Salut <span id="chNom">Client</span></div>
   <div class="ch-marquee"><span>NET LOTO AT 590 partout dans le monde ! Bonne chance !</span></div>
   <div class="ch-3">
