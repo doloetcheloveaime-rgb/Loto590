@@ -127,10 +127,12 @@
       let p = document.getElementById('pageDepot'); if(p) p.remove();
     }catch(e){ alert('Erreur, réessaie : ' + e.message); }
   };
-
-  // Si l'utilisateur est déjà connecté, on affiche la page
+  // Si l'utilisateur est déjà connecté, on affiche la page SEULEMENT si c'est un CLIENT
+  // Si c'est ADMIN, on ne touche à rien, on laisse ta page ADMIN s'afficher
   try{
     let u = getUser();
-    if(u && u.gmail){ setTimeout(function(){ window.afficherPageClient(u); }, 500); }
+    if(u && u.gmail && u.role !== 'ADMIN' && u.role !== 'admin'){
+      setTimeout(function(){ window.afficherPageClient(u); }, 500);
+    }
   }catch(e){}
 })();
