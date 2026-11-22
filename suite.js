@@ -96,8 +96,7 @@
       clearInterval(timer);
     }
     if(essai > 50) clearInterval(timer);
-  }, 200);
-  // --- PAYS BENIN - 6 TIRAGES ---
+  }, 200); // --- PAYS BENIN - 6 TIRAGES ---
 window.ouvrirPaysBenin = function(){
   let vieux = document.getElementById('pageBenin'); if(vieux) vieux.remove();
   let d = document.createElement('div');
@@ -119,7 +118,6 @@ window.ouvrirPaysBenin = function(){
   document.body.appendChild(d);
   afficherTiragesBenin('auj');
 };
-
 window.afficherTiragesBenin = function(type){
   let box = document.getElementById('listeTiragesBenin'); if(!box) return;
   let bA = document.getElementById('btnAuj'); let bV = document.getElementById('btnVen');
