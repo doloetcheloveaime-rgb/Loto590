@@ -46,12 +46,12 @@
   </div>
   <div class="ch-titre">Choisir un pays</div>
   <div class="ch-pays">
-    <button onclick="alert('BENIN')">🇧🇯 BÉNIN - 6 tirages ouverts ▶</button>
-    <button onclick="alert('COTE D IVOIRE')">🇨🇮 CÔTE D'IVOIRE ▶</button>
-    <button onclick="alert('FRANCE')">🇫🇷 FRANCE ▶</button>
-    <button onclick="alert('GHANA')">🇬🇭 GHANA ▶</button>
-    <button onclick="alert('NIGERIA')">🇳🇬 NIGÉRIA ▶</button>
-    <button onclick="alert('TOGO')">🇹🇬 TOGO ▶</button>
+    <button onclick="ouvrirPaysBenin()">🇧🇯 BÉNIN - 6 tirages ouverts ▶</button>
+    <button onclick="ouvrirPaysCôted'ivoire()">🇨🇮 CÔTE D'IVOIRE ▶</button>
+    <button onclick="ouvrirPaysFrance()">🇫🇷 FRANCE ▶</button>
+    <button onclick="ouvrirPaysGhana()">🇬🇭 GHANA ▶</button>
+    <button onclick="ouvrirPaysNigeria()">🇳🇬 NIGÉRIA ▶</button>
+    <button onclick="ouvrirPaysTogo()">🇹🇬 TOGO ▶</button>
   </div>
   <div class="ch-3">
     <button onclick="alert('Mes tickets')">Mes tickets</button>
@@ -97,4 +97,57 @@
     }
     if(essai > 50) clearInterval(timer);
   }, 200);
+  // --- PAYS BENIN - 6 TIRAGES ---
+window.ouvrirPaysBenin = function(){
+  let vieux = document.getElementById('pageBenin'); if(vieux) vieux.remove();
+  let d = document.createElement('div');
+  d.id = 'pageBenin';
+  d.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:#f2f6ff;z-index:9999;overflow:auto;padding-bottom:20px;font-family:Arial';
+  d.innerHTML = `
+  <div style="background:#0b4fd8;color:#fff;padding:12px;display:flex;align-items:center;gap:10px">
+    <button onclick="document.getElementById('pageBenin').remove()" style="background:#fff;color:#0b4fd8;border:0;border-radius:20px;padding:8px 14px;font-weight:bold">←</button>
+    <b>Bénin</b>
+  </div>
+  <div style="padding:12px">
+    <div style="background:#fff;border-radius:14px;padding:6px;display:flex;gap:6px">
+      <button id="btnAuj" onclick="afficherTiragesBenin('auj')" style="flex:1;background:#0b4fd8;color:#fff;border:0;border-radius:10px;padding:12px;font-weight:bold">Aujourd'hui 5</button>
+      <button id="btnVen" onclick="afficherTiragesBenin('venir')" style="flex:1;background:#fff;color:#0b4fd8;border:0;border-radius:10px;padding:12px;font-weight:bold">À venir 1</button>
+    </div>
+    <div id="listeTiragesBenin" style="margin-top:12px"></div>
+  </div>
+  `;
+  document.body.appendChild(d);
+  afficherTiragesBenin('auj');
+};
+
+window.afficherTiragesBenin = function(type){
+  let box = document.getElementById('listeTiragesBenin'); if(!box) return;
+  let bA = document.getElementById('btnAuj'); let bV = document.getElementById('btnVen');
+  if(type === 'auj'){
+    if(bA){ bA.style.background = '#0b4fd8'; bA.style.color = '#fff'; }
+    if(bV){ bV.style.background = '#fff'; bV.style.color = '#0b4fd8'; }
+    box.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      ${carteTirageBenin('VENDREDI 11H','Auj. 09:50','27 min')}
+      ${carteTirageBenin('VENDREDI 14H','Auj. 12:50','3h27')}
+      ${carteTirageBenin('VENDREDI 18H','Auj. 16:50','7h27')}
+      ${carteTirageBenin('VENDREDI 21H','Auj. 18:50','9h27')}
+      ${carteTirageBenin('VENDREDI 00H','Auj. 22:50','13h27')}
+    </div>`;
+  } else {
+    if(bA){ bA.style.background = '#fff'; bA.style.color = '#0b4fd8'; }
+    if(bV){ bV.style.background = '#0b4fd8'; bV.style.color = '#fff'; }
+    box.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      ${carteTirageBenin('SAMEDI 08H','Dem. 06:50','21h27')}
+    </div>`;
+  }
+};
+
+function carteTirageBenin(nom, heure, reste){
+  return `<div onclick="alert('Jouer ${nom} - on fait ça juste après, boss')" style="background:#fff;border-radius:14px;padding:12px;border:1px solid #ddd">
+    <div style="font-weight:bold">🇧🇯 ${nom}</div>
+    <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:13px;color:#555"><span>${heure}</span><span style="background:#eee;border-radius:10px;padding:3px 8px">${reste}</span></div>
+  </div>`;
+}
 })();
