@@ -10,7 +10,6 @@
 
 <div id="splash">NET LOTO<br><span style="font-size:14px;color:#fff">Chargement... Simple • Rapide • Beau</span></div>
 
-<!-- MENU 3 BARRES -->
 <div class="menu" id="menu">
 <h3>☰ MENU <button onclick="document.getElementById('menu').style.display='none'" style="float:right;background:#fff;color:#000;border:0;border-radius:8px;padding:5px 10px">X Fermer</button></h3>
 <a href="#" onclick="show('profil')">👤 Profil</a>
@@ -27,7 +26,6 @@
 <button onclick="logout()">Déconnexion</button>
 </div>
 
-<!-- AUTH -->
 <div id="auth" class="card">
 <h2 id="authTitle">Connexion</h2>
 <div id="insc" class="hide">
@@ -45,52 +43,47 @@
 <p class="small">Test ADMIN : admin@netloto.com / Admin123! <br>Test 1 à 100 personnes : chacun s'inscrit, ADMIN contrôle.</p>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard" class="hide">
-<div class="card"><b>👑 TABLEAU DE BORD - <span id="roleTxt"></span></b><br><span id="userTxt"></span><br><br>
+<div class="card" id="cardTableau"><b>👑 TABLEAU DE BORD - <span id="roleTxt"></span></b><br><span id="userTxt"></span><br><br>
+<div id="adminTableau">
 <b>Utilisateurs :</b> <span id="nbUsers">0</span> | <b>Clients :</b> <span id="nbClients">0</span> | <b>Revendeurs :</b> <span id="nbRev">0</span><br>
 <b>Ventes :</b> <span id="ventes">0</span> FCFA | <b>Gains :</b> <span id="gains">0</span> FCFA<br>
 <b>Solde Caisse ADMIN :</b> <span id="caisse">0</span> FCFA
 <div class="flex"><button class="btn orange" onclick="rechargerCaisse()">RECHARGER CAISSE</button><button class="btn" onclick="show('controle')">🎯 CONTRÔLE</button></div>
+</div>
 <p class="small">Sécurité : Mot de passe fort + Rôle + Sauvegarde automatique ✓</p></div>
 
-<div class="card"><h3>🎰 Types de LOTO - Page d'Accueil</h3><div class="loto"><div>LOTO<br>5/90</div><div>LOTO<br>FORTUNE</div><div>LOTO<br>NAP 2</div><div>LOTO<br>NAP 3</div><div>PERMUTATION</div></div></div>
+<div class="card" id="cardLoto"><h3>🎰 Types de LOTO - Page d'Accueil</h3><div class="loto"><div>LOTO<br>5/90</div><div>LOTO<br>FORTUNE</div><div>LOTO<br>NAP 2</div><div>LOTO<br>NAP 3</div><div>PERMUTATION</div></div></div>
 
-<!-- PRONOSTIC -->
-<div class="card"><h3>🔮 Pronostic du Jour</h3>
+<div class="card" id="cardPronostic"><h3>🔮 Pronostic du Jour</h3>
 <select id="prType"><option>Nappe 2</option><option>Nappe 3</option><option>Permutation</option></select>
 <input id="prNums" placeholder="Ex: 12 - 45 - 07">
 <button class="btn orange" onclick="publierPronostic()">PUBLIER PRONOSTIC</button><div id="prList"></div></div>
 
-<!-- PUBLIER RESULTAT -->
-<div class="card"><h3>🏆 Publier Résultat</h3>
+<div class="card" id="cardPublierResultat"><h3>🏆 Publier Résultat</h3>
 <input id="rJeu" placeholder="Jeu ex: LOTO 5/90"><input id="rDate" type="date"><input id="rTirage" placeholder="Numéro de tirage">
 <input id="rNormal" placeholder="Numéro Gagnant NORMAL (en haut)"><input id="rDouble" placeholder="Numéro Gagnant DOUBLE CHANCE (en bas)">
 <select id="rType"><option>Normale Publiée</option><option>Double Chance Publiée</option></select>
 <button class="btn green" onclick="publierResultat()">PUBLIER RÉSULTAT</button><div id="resList"></div></div>
 
-<!-- CREER REVENDEUR -->
 <div class="card" id="creerRevBox"><h3>🧑‍💼 Créer Revendeur - ADMIN seul</h3>
 <input id="etab" placeholder="Nom établissement revendeur"><input id="rNom" placeholder="Nom du revendeur"><input id="rGmail" placeholder="Gmail du revendeur"><input id="rWa" placeholder="Numéro WhatsApp revendeur"><input id="rPass" placeholder="Mot de passe revendeur">
 <button class="btn" onclick="creerRevendeur()">+ CRÉER REVENDEUR</button><div id="revList"></div></div>
 
-<!-- RECHARGER -->
-<div class="card"><h3>💰 Recharger Client / Revendeur avec Code WhatsApp</h3>
+<div class="card" id="cardRecharger"><h3>💰 Recharger Client / Revendeur avec Code WhatsApp</h3>
 <input id="rechWa" placeholder="WhatsApp à recharger"><input id="rechMontant" type="number" placeholder="Montant FCFA">
 <div class="flex"><button class="btn orange" onclick="genererCode('client')">CODE CLIENT</button><button class="btn" onclick="genererCode('revendeur')">CODE REVENDEUR</button></div>
 <input id="codeClient" placeholder="Client tape son Code reçu sur WhatsApp">
 <button class="btn green" onclick="validerCode()">VALIDER CODE - SOLDE VALIDÉ</button>
 <p class="small">Client aura : Solde Jeu + Solde Gain | Revendeur aura : Solde Revendeur</p><div id="rechMsg"></div></div>
 
-<!-- CONTROLE -->
 <div class="card" id="controle"><h3>🎯 CONTRÔLE - Tickets Gagnants</h3>
 <p class="small">Exemple : 50 tickets joués, 10 tickets ont gagné. Appuie CONTRÔLE, les 10 sortent.</p>
 <button class="btn" onclick="faireControle()">CONTRÔLE</button><div id="controleList"></div>
 <button class="btn orange" onclick="validerTickets()">VALIDER</button>
 <button class="btn green" onclick="payerGains()">PAYER - Gain vers Solde Gain du Client</button></div>
 
-<!-- RETRAIT + CLIENT PAYÉ -->
-<div class="card"><h3>💸 Retrait Client</h3>
+<div class="card" id="cardRetrait"><h3>💸 Retrait Client</h3>
 <input id="retMontant" type="number" placeholder="Montant à retirer">
 <button class="btn red" onclick="demandeRetrait()">RETRAIT - Gain quitte Client vers Caisse ADMIN</button>
 <h3>✅ Confirmer Paiement MoMo - ADMIN</h3>
@@ -98,17 +91,14 @@
 <div class="flex"><button class="btn green" onclick="enregistrerPaiement()">ENREGISTRER</button><button class="btn" onclick="alert('Fermé')">FERMER</button></div>
 <p class="small">ADMIN dit : CLIENT PAYÉ. Ça reste dans Archive. Si client dit "On ne m'a pas payé", on sort preuve : payé à telle heure, telle date, tel prix, coupon tant, joué sur NET LOTO à 5/90.</p></div>
 
-<!-- GESTION UTILISATEURS -->
-<div class="card"><h3>👥 Gestion des Utilisateurs</h3><div id="usersList"></div></div>
+<div class="card" id="cardUsers"><h3>👥 Gestion des Utilisateurs</h3><div id="usersList"></div></div>
 
-<!-- GESTION CONTENU -->
-<div class="card"><h3>📝 Gestion du Contenu - Client</h3>
+<div class="card" id="cardContenu"><h3>📝 Gestion du Contenu - Client</h3>
 <input id="contenuTxt" placeholder="Contenu à ajouter / modifier">
 <div class="flex"><button class="btn green" onclick="ajoutContenu()">AJOUTER</button><button class="btn orange" onclick="modifContenu()">MODIFIER</button><button class="btn red" onclick="suppContenu()">SUPPRIMER</button></div><div id="contenuList"></div></div>
 
-<!-- ARCHIVES -->
 <div class="card" id="archive"><h3>📁 Archives</h3>
-<p><b>Archive Globale - ADMIN seul :</b> Tout ce qui se passe sur le site.</p>
+<p id="archiveAdminTxt"><b>Archive Globale - ADMIN seul :</b> Tout ce qui se passe sur le site.</p>
 <p><b>Archive Revendeur :</b> Activité revendeur seul.</p>
 <p><b>Archive Client :</b> Activité client seul.</p><div id="archiveList"></div></div>
 
@@ -130,18 +120,27 @@ function showDash(u){
   document.getElementById('roleTxt').innerText=u.role;
   document.getElementById('userTxt').innerText=u.gmail+' | WhatsApp: '+u.wa+' | Solde Jeu: '+u.soldeJeu+' | Solde Gain: '+u.soldeGain+' | Solde Revendeur: '+u.soldeRev;
   document.getElementById('profilTxt').innerText='Nom: '+u.gmail+' | Rôle: '+u.role+' | WhatsApp: '+u.wa;
-
   let estAdmin = (u.role === 'ADMIN');
-  let cards = document.querySelectorAll('#dashboard .card');
-  cards.forEach(function(card){
-    let titre = (card.innerText || "").toUpperCase();
-    if(titre.includes('TABLEAU DE BORD')){ card.style.display='block'; return; }
-    if(titre.includes('TYPES DE LOTO')){ card.style.display='block'; return; }
-    if(titre.includes('PROFIL') || titre.includes('RESULTAT') || titre.includes('RÉSULTAT') || titre.includes('AIDE') || titre.includes('ARCHIVES')){ card.style.display='block'; return; }
-    if(estAdmin){ card.style.display='block'; } else { card.style.display='none'; }
+  let estRev = (u.role === 'REVENDEUR');
+  // CORRECTION : on cache par ID, pas par titre. Sinon PUBLIER RESULTAT passe pour RESULTAT.
+  let visibleClient = ['cardTableau','cardLoto','archive','profil','resultat','aide'];
+  let visibleRev = ['cardTableau','cardLoto','archive','profil','resultat','aide','cardRecharger'];
+  let toutes = ['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
+  toutes.forEach(function(id){
+    let el=document.getElementById(id);
+    if(!el) return;
+    if(estAdmin){ el.style.display='block'; }
+    else if(estRev){ el.style.display = visibleRev.includes(id) ? 'block' : 'none'; }
+    else { el.style.display = visibleClient.includes(id) ? 'block' : 'none'; }
   });
+  // CORRECTION : cacher la partie ADMIN à l'intérieur du TABLEAU DE BORD
+  let at=document.getElementById('adminTableau');
+  if(at) at.style.display = estAdmin ? 'block' : 'none';
+  let aat=document.getElementById('archiveAdminTxt');
+  if(aat) aat.style.display = estAdmin ? 'block' : 'none';
+  window._currentUser = u;
   render();
-montrerClientHome(u);
+  montrerClientHome(u);
 }
 function montrerClientHome(u){ return; } 
 function goBack(){history.back();window.scrollTo(0,0)}
@@ -163,532 +162,6 @@ function suppContenu(){DB.contenus.pop();save()}
 function bloquer(g){let u=DB.users.find(x=>x.gmail==g);if(u){u.bloque=true;save()}}
 function debloquer(g){let u=DB.users.find(x=>x.gmail==g);if(u){u.bloque=false;save()}}
 function supprimer(g){DB.users=DB.users.filter(x=>x.gmail!=g);save()}
-function render(){document.getElementById('nbUsers').innerText=DB.users.length;document.getElementById('nbClients').innerText=DB.users.filter(x=>x.role=='CLIENT').length;document.getElementById('nbRev').innerText=DB.revendeurs.length;document.getElementById('ventes').innerText=DB.ventes;document.getElementById('gains').innerText=DB.gains;document.getElementById('caisse').innerText=DB.caisse;document.getElementById('prList').innerHTML=DB.pronostics.map(p=>'<div>🔮 '+p+'</div>').join('');document.getElementById('resList').innerHTML=DB.resultats.map(r=>'<div>🏆 '+r+'</div>').join('');document.getElementById('revList').innerHTML=DB.revendeurs.map(r=>'<div>'+r.nom+' - '+r.etab+' - Code: '+r.code+' - Solde Rev: '+r.soldeRev+'</div>').join('');document.getElementById('archiveList').innerHTML=DB.archives.map(a=>'<div>📁 '+a+'</div>').join('');document.getElementById('contenuList').innerHTML=DB.contenus.map(c=>'<div>'+c+'</div>').join('');document.getElementById('usersList').innerHTML=DB.users.map(u=>'<div>'+u.gmail+' - '+u.role+' '+(u.bloque?'(BLOQUÉ)':'')+' <button onclick="bloquer(\''+u.gmail+'\')">BLOQUER</button> <button onclick="debloquer(\''+u.gmail+'\')">DÉBLOQUER</button> <button onclick="supprimer(\''+u.gmail+'\')">SUPPRIMER</button></div>').join('');document.getElementById('resultatTxt').innerHTML=DB.resultats.map(r=>'<div>'+r+'</div>').join('')}
+function render(){document.getElementById('nbUsers').innerText=DB.users.length;document.getElementById('nbClients').innerText=DB.users.filter(x=>x.role=='CLIENT').length;document.getElementById('nbRev').innerText=DB.revendeurs.length;document.getElementById('ventes').innerText=DB.ventes;document.getElementById('gains').innerText=DB.gains;document.getElementById('caisse').innerText=DB.caisse;document.getElementById('prList').innerHTML=DB.pronostics.map(p=>'<div>🔮 '+p+'</div>').join('');document.getElementById('resList').innerHTML=DB.resultats.map(r=>'<div>🏆 '+r+'</div>').join('');document.getElementById('revList').innerHTML=DB.revendeurs.map(r=>'<div>'+r.nom+' - '+r.etab+' - Code: '+r.code+' - Solde Rev: '+r.soldeRev+'</div>').join('');let cur=window._currentUser;let arch=DB.archives;if(cur && cur.role!=='ADMIN'){arch=DB.archives.filter(a=>a.includes(cur.gmail) || a.includes('Résultat publié') || a.includes('Inscription: '+cur.gmail));}document.getElementById('archiveList').innerHTML=arch.map(a=>'<div>📁 '+a+'</div>').join('');document.getElementById('contenuList').innerHTML=DB.contenus.map(c=>'<div>'+c+'</div>').join('');document.getElementById('usersList').innerHTML=DB.users.map(u=>'<div>'+u.gmail+' - '+u.role+' '+(u.bloque?'(BLOQUÉ)':'')+' <button onclick="bloquer(\''+u.gmail+'\')">BLOQUER</button> <button onclick="debloquer(\''+u.gmail+'\')">DÉBLOQUER</button> <button onclick="supprimer(\''+u.gmail+'\')">SUPPRIMER</button></div>').join('');document.getElementById('resultatTxt').innerHTML=DB.resultats.map(r=>'<div>'+r+'</div>').join('')}
 setTimeout(()=>{document.getElementById('splash').style.display='none';render();let s=localStorage.getItem('session');if(s){let u=DB.users.find(x=>x.gmail==s);if(u)showDash(u)}},1500);
-</script><!-- ===== DEBUT CODE REVENDEUR SEUL - A COLLER APRES CODE ADMIN ===== -->
-<div id="pageRevendeur" style="display:none">
-<div class="card"><b>🧑‍💼 PAGE REVENDEUR - <span id="revNomTxt"></span></b><br><span id="revInfoTxt"></span></div>
-
-<div class="card" style="background:#ffe600"><h3>💰 SOLDE REVENDEUR</h3><h1 id="soldeRevTxt2">0 FCFA</h1><p class="small">Tu te recharges avec code ADMIN, puis tu recharges tes clients.</p></div>
-
-<div class="card"><h3>🔑 1 - RECHARGER REVENDEUR avec Code WhatsApp ADMIN</h3>
-<p class="small">Le code que tu as reçu de l'ADMINISTRATION, de l'ADMIN. Tu mets ça là, tu te recharges ton compte.</p>
-<input id="codeRevInput2" placeholder="Colle ici le Code reçu de l'ADMIN sur WhatsApp">
-<button class="btn orange" onclick="revRechargerMoi2()">RECHARGER MON COMPTE REVENDEUR</button><div id="msgRevMoi2"></div></div>
-
-<div class="card"><h3>💰 2 - RECHARGER CLIENT avec Code WhatsApp</h3>
-<p class="small">C'est de TOI que les clients vont recevoir ces codes. Tu crées le code, tu envoies au client sur WhatsApp.</p>
-<input id="clientWaRev2" placeholder="WhatsApp du CLIENT à recharger">
-<input id="montantClientRev2" type="number" placeholder="Montant FCFA pour le client">
-<button class="btn green" onclick="revCreerCodeClient2()">CRÉER CODE CLIENT + ENVOYER SUR WHATSAPP</button><div id="msgRevClient2"></div></div>
-
-<div class="card"><h3>📁 Archive Revendeur - Mes activités seules</h3><div id="archiveRev2"></div></div>
-
-<div class="card"><h3>❓ Aide Revendeur - Comment recharger les clients</h3>
-<p>1. Le client te demande recharge.<br>2. Tu mets son WhatsApp + Montant.<br>3. Tu appuies CRÉER CODE CLIENT.<br>4. Le client reçoit le code sur WhatsApp.<br>5. Le client tape le code dans son appli, son Solde Jeu est validé.</p>
-<button class="btn" onclick="alert('Fermé')">FERMER</button></div>
-</div>
-
-<script>
-// --- FONCTIONS REVENDEUR SEUL ---
-function revRechargerMoi2(){
-  let c=document.getElementById('codeRevInput2').value;
-  let DB2=JSON.parse(localStorage.getItem('netloto')||'{}');
-  let info=DB2.codes?DB2.codes[c]:null;
-  if(!info) return alert('Code faux - Demande code à ADMIN');
-  let s=localStorage.getItem('session');
-  let u=DB2.users.find(x=>x.gmail==s);
-  if(!u || info.wa!=u.wa) return alert("Ce code n'est pas pour toi");
-  u.soldeRev+=info.montant; DB2.caisse-=info.montant;
-  DB2.archives.push('Revendeur rechargé: '+u.gmail+' wa:'+u.wa+' montant '+info.montant+' code '+c);
-  delete DB2.codes[c];
-  localStorage.setItem('netloto',JSON.stringify(DB2));
-  document.getElementById('msgRevMoi2').innerHTML='<b>RECHARGÉ ! '+info.montant+' FCFA ajouté.</b>';
-  document.getElementById('soldeRevTxt2').innerText=u.soldeRev+' FCFA';
-  alert('Tu t\'es rechargé ! Solde Revendeur: '+u.soldeRev);
-  location.reload();
-}
-function revCreerCodeClient2(){
-  let wa=document.getElementById('clientWaRev2').value;
-  let m=parseInt(document.getElementById('montantClientRev2').value);
-  let DB2=JSON.parse(localStorage.getItem('netloto')||'{}');
-  let s=localStorage.getItem('session');
-  let u=DB2.users.find(x=>x.gmail==s);
-  if(!wa||!m) return alert('Mets WhatsApp client + Montant');
-  if(u.soldeRev < m) return alert("Ton Solde Revendeur est insuffisant. Recharge-toi d'abord avec code ADMIN.");
-  u.soldeRev-=m;
-  let code='NET-'+Math.floor(10000+Math.random()*90000);
-  if(!DB2.codes) DB2.codes={};
-  DB2.codes[code]={wa:wa,montant:m,type:'client',fromRev:u.gmail};
-  DB2.archives.push('Revendeur '+u.gmail+' wa:'+u.wa+' a créé code client '+code+' pour wa:'+wa+' montant '+m);
-  localStorage.setItem('netloto',JSON.stringify(DB2));
-  document.getElementById('msgRevClient2').innerHTML='Code <b>'+code+'</b> créé pour client '+wa+' - '+m+' FCFA';
-  document.getElementById('soldeRevTxt2').innerText=u.soldeRev+' FCFA';
-  window.open('https://wa.me/'+wa.replace(/\D/g,'')+'?text='+encodeURIComponent('Bonjour, ton code NET LOTO de ton Revendeur: '+code+' Montant: '+m+' FCFA. Tape-le dans l\'appli pour valider ton solde.'),'_blank');
-}
-// --- AFFICHER PAGE REVENDEUR SI C'EST UN REVENDEUR ---
-setTimeout(()=>{
-  let DB2=JSON.parse(localStorage.getItem('netloto')||'{}');
-  let s=localStorage.getItem('session');
-  let u=DB2.users?DB2.users.find(x=>x.gmail==s):null;
-  if(u && u.role=='REVENDEUR'){
-    document.getElementById('pageRevendeur').style.display='block';
-    document.getElementById('revNomTxt').innerText=u.gmail;
-    document.getElementById('revInfoTxt').innerText=u.gmail+' | WhatsApp: '+u.wa;
-    document.getElementById('soldeRevTxt2').innerText=(u.soldeRev||0)+' FCFA';
-    // Archive : que ses activités
-    let arch=(DB2.archives||[]).filter(a=>a.includes(u.gmail)||a.includes(u.wa)||a.includes('Revendeur'));
-    document.getElementById('archiveRev2').innerHTML=arch.map(a=>'<div>📁 '+a+'</div>').join('');
-    // On cache la partie ADMIN si elle s'affiche
-    let adminBox=document.getElementById('pageAdmin'); if(adminBox) adminBox.style.display='none';
-  }
-},1800);
 </script>
-<!-- ===== FIN CODE REVENDEUR SEUL ===== --><!-- ===== CORRECTIF REVENDEUR NE VOIT PAS PAGE ADMIN ===== -->
-<script>
-setTimeout(()=>{
-  let DB2=JSON.parse(localStorage.getItem('netloto')||'{}');
-  let s=localStorage.getItem('session');
-  let u=DB2.users?DB2.users.find(x=>x.gmail==s):null;
-  if(u && u.role=='REVENDEUR'){
-    // 1. On cache TOUT le dashboard ADMIN
-    let dash=document.getElementById('dashboard');
-    if(dash) dash.style.display='none';
-    // 2. On cache la partie AUTH aussi
-    let auth=document.getElementById('auth');
-    if(auth) auth.style.display='none';
-    // 3. On montre SEULEMENT la page REVENDEUR
-    let rev=document.getElementById('pageRevendeur');
-    if(rev){ rev.style.display='block'; rev.style.marginTop='10px'; }
-    // 4. On remet son solde
-    let sol=document.getElementById('soldeRevTxt2');
-    if(sol) sol.innerText=(u.soldeRev||0)+' FCFA';
-    document.getElementById('revNomTxt').innerText=u.gmail;
-    document.getElementById('revInfoTxt').innerText=u.gmail+' | WhatsApp: '+u.wa;
-  }
-  if(u && u.role=='ADMIN'){
-    // ADMIN lui, il ne voit PAS la page revendeur
-    let rev=document.getElementById('pageRevendeur');
-    if(rev) rev.style.display='none';
-  }
-},2000);
-</script>
-<!-- ===== FIN CORRECTIF ===== --><!-- ===== CORRECTIF MENU REVENDEUR : CACHER, AFFICHER AU CLIC ===== -->
-<script>
-setTimeout(()=>{
-  let DB2=JSON.parse(localStorage.getItem('netloto')||'{}');
-  let s=localStorage.getItem('session');
-  let u=DB2.users?DB2.users.find(x=>x.gmail==s):null;
-  if(!u || u.role!='REVENDEUR') return;
-
-  // 1. On repère les cartes de la page revendeur
-  let cards=document.querySelectorAll('#pageRevendeur .card');
-  // cards[0]=Titre, [1]=Solde, [2]=Recharger Revendeur, [3]=Recharger Client, [4]=Archive, [5]=Aide
-  cards.forEach((c,i)=>{
-    if(i==0||i==1) c.style.display='block'; // Titre + Solde restent toujours
-    else c.style.display='none'; // Le reste est CACHÉ au début
-    // On donne un id pour pouvoir l'afficher
-    if(i==2) c.id='revBoxRechargerMoi';
-    if(i==3) c.id='revBoxRechargerClient';
-    if(i==4) c.id='revBoxArchive';
-    if(i==5) c.id='revBoxAide';
-  });
-
-  // 2. Fonction pour afficher UNE SEULE section à la fois
-  window.showRevSection=function(nom){
-    ['revBoxRechargerMoi','revBoxRechargerClient','revBoxArchive','revBoxAide'].forEach(id=>{
-      let el=document.getElementById(id); if(el) el.style.display='none';
-    });
-    // On cache aussi le Profil / Résultat ADMIN qui ne sont pas pour revendeur
-    let p=document.getElementById('profil'); if(p) p.style.display='none';
-    let r=document.getElementById('resultat'); if(r) r.style.display='none';
-    if(nom=='archive'){ let el=document.getElementById('revBoxArchive'); if(el){el.style.display='block'; el.scrollIntoView({behavior:'smooth'});} }
-    if(nom=='aide'){ let el=document.getElementById('revBoxAide'); if(el){el.style.display='block'; el.scrollIntoView({behavior:'smooth'});} }
-    if(nom=='rechargerMoi'){ let el=document.getElementById('revBoxRechargerMoi'); if(el){el.style.display='block'; el.scrollIntoView({behavior:'smooth'});} }
-    if(nom=='rechargerClient'){ let el=document.getElementById('revBoxRechargerClient'); if(el){el.style.display='block'; el.scrollIntoView({behavior:'smooth'});} }
-    if(nom=='profil'){
-      // Profil revendeur : on montre un petit popup avec ses infos
-      alert('👤 PROFIL REVENDEUR\n\nNom: '+u.gmail+'\nWhatsApp: '+u.wa+'\nRôle: REVENDEUR\nSolde Revendeur: '+(u.soldeRev||0)+' FCFA');
-    }
-    if(nom=='resultat'){
-      // Résultat : on va chercher les résultats publiés par ADMIN
-      let res=DB2.resultats||[];
-      if(res.length==0) alert('🏆 RÉSULTAT\n\nPas encore de résultat publié par ADMIN.');
-      else alert('🏆 RÉSULTAT\n\n'+res.join('\n\n'));
-    }
-    // Fermer le menu
-    let menu=document.getElementById('menu'); if(menu) menu.style.display='none';
-  };
-
-  // 3. On branche les boutons du menu ☰
-  // Le menu d'origine appelle show('profil') etc. On le remplace pour revendeur
-  window.show=function(id){
-    let menu=document.getElementById('menu'); if(menu) menu.style.display='none';
-    if(id=='profil') showRevSection('profil');
-    if(id=='resultat') showRevSection('resultat');
-    if(id=='archive') showRevSection('archive');
-    if(id=='aide') showRevSection('aide');
-    if(id=='dashboard'){ window.scrollTo(0,0); }
-  };
-
-  // 4. On ajoute 2 boutons rapides sous le solde pour recharger
-  let soldeCard=cards[1];
-  if(soldeCard && !document.getElementById('btnRevMenu')){
-    soldeCard.innerHTML += '<br><div style="display:flex;gap:8px"><button class="btn orange" id="btnRevMenu" onclick="showRevSection(\'rechargerMoi\')">🔑 ME RECHARGER</button><button class="btn green" onclick="showRevSection(\'rechargerClient\')">💰 RECHARGER CLIENT</button></div>';
-  }
-
-},2500);
-</script>
-<!-- ===== FIN CORRECTIF MENU ===== --><!-- ===== CORRECTIF CONNEXION : CHOIX CLIENT / REVENDEUR + CODE ===== -->
-<div id="boxChoixRole" style="display:none"></div>
-<script>
-setTimeout(()=>{
-  // 1. Si on vient d'ouvrir le lien, on force à se déconnecter une fois pour tester la vraie connexion
-  // On ne déconnecte que si l'utilisateur appuie sur Déconnexion, mais on ajoute le choix
-  let auth=document.getElementById('auth');
-  if(!auth) return;
-
-  // 2. On ajoute le petit cadre CHOIX + CODE dans la page connexion, si pas déjà là
-  if(!document.getElementById('choixRoleRev')){
-    let div=document.createElement('div');
-    div.innerHTML=`
-    <div style="background:#ffe600;padding:12px;border-radius:10px;margin-top:10px">
-      <b>Qui es-tu ? Choisis :</b><br><br>
-      <select id="choixRoleRev" style="padding:12px">
-        <option value="CLIENT">Je suis CLIENT</option>
-        <option value="REVENDEUR">Je suis REVENDEUR</option>
-      </select>
-      <div id="boxCodeRev" style="display:none;margin-top:8px">
-        <input id="codeConnexionRev" placeholder="Mets ici le CODE que l'ADMIN t'a envoyé ex: REV-12345">
-        <p style="font-size:12px">Le code que l'ADMIN t'a envoyé sur WhatsApp quand il a créé ton compte.</p>
-      </div>
-      <button class="btn red" onclick="localStorage.removeItem('session');location.reload()" style="margin-top:8px">🔒 DÉCONNECTER POUR TESTER VRAIE CONNEXION</button>
-    </div>`;
-    auth.appendChild(div);
-    document.getElementById('choixRoleRev').addEventListener('change', function(){
-      document.getElementById('boxCodeRev').style.display = this.value=='REVENDEUR' ? 'block' : 'none';
-    });
-  }
-
-  // 3. On remplace la fonction connecter pour vérifier le CODE REVENDEUR
-  window.connecterOrig = window.connecter;
-  window.connecter = function(){
-    let g=document.getElementById('cGmail').value;
-    let p=document.getElementById('cPass').value;
-    let choix=document.getElementById('choixRoleRev') ? document.getElementById('choixRoleRev').value : 'CLIENT';
-    let DB2=JSON.parse(localStorage.getItem('netloto')||'{}');
-    let u=(DB2.users||[]).find(x=>x.gmail==g && x.pass==p);
-    if(!u) return alert('Gmail ou mot de passe faux. Vérifie bien.');
-    if(u.bloque) return alert('Compte bloqué par ADMIN');
-
-    if(choix=='REVENDEUR'){
-      if(u.role!='REVENDEUR') return alert('Ce compte n\'est pas un REVENDEUR. Choisis CLIENT ou crée un compte Revendeur avec ADMIN.');
-      let code=document.getElementById('codeConnexionRev').value;
-      if(!code) return alert('Mets le CODE que l\'ADMIN t\'a envoyé sur WhatsApp.');
-      let rev=(DB2.revendeurs||[]).find(r=>r.gmail==g && r.code==code);
-      if(!rev) return alert('CODE FAUX. Demande le bon code à l\'ADMIN. Code ex: '+((DB2.revendeurs||[]).find(r=>r.gmail==g)?.code||'REV-?????'));
-      // CODE BON -> on va sur page revendeur
-      localStorage.setItem('session',g);
-      alert('CODE BON ! Bienvenue Revendeur '+g);
-      location.reload();
-      return;
-    }
-    // CLIENT
-    if(choix=='CLIENT' && u.role=='REVENDEUR') return alert('Tu es REVENDEUR, choisis REVENDEUR en haut et mets ton CODE.');
-    localStorage.setItem('session',g);
-    location.reload();
-  };
-
-  // 4. Si tu es déjà connecté comme ADMIN, on te montre un bouton pour te déconnecter et tester revendeur
-  let s=localStorage.getItem('session');
-  if(s){
-    let u=(JSON.parse(localStorage.getItem('netloto')||'{}').users||[]).find(x=>x.gmail==s);
-    if(u && u.role=='ADMIN'){
-      // On ne force pas la déconnexion, mais on prévient
-      console.log('Connecté comme ADMIN, utilise Déconnexion pour tester Revendeur');
-    }
-  }
-},1500);
-</script>
-</script><!-- ===== NET LOTO AT 590 - ADMIN : SUPPRIMER + SOLDE BLOQUÉ + DÉPLACER ===== -->
-<div id="zoneAdminBloque" style="display:none; padding:15px; background:#fff5f5; border:2px solid red; margin:15px; border-radius:12px;">
-  <h2>👥 REVENDEURS ACTIFS</h2>
-  <div id="listeRevendeursAdmin"></div>
-
-  <h2>🔒 SOLDE REVENDEUR BLOQUÉ : <span id="totalBloqueAdmin">0</span> F</h2>
-  <div id="listeBloqueAdmin"></div>
-</div>
-
-<div id="popupBloquerRev" style="display:none; position:fixed; top:20%; left:5%; right:5%; background:white; border:2px solid red; padding:15px; border-radius:12px; z-index:9999;">
-  <h3>Pourquoi tu bloques ce revendeur ?</h3>
-  <label><input type="radio" name="raisonBloque" value="Ne vend plus"> Ne vend plus</label><br>
-  <label><input type="radio" name="raisonBloque" value="Erreur"> Erreur</label><br>
-  <label><input type="radio" name="raisonBloque" value="Fraude"> Fraude</label><br>
-  <label><input type="radio" name="raisonBloque" value="Autre"> Autre</label><br>
-  <input id="raisonAutreInput" placeholder="Écris raison si Autre" style="width:100%; padding:8px; margin-top:8px;"><br><br>
-  <button onclick="confirmerBlocageRev()" style="padding:10px; background:red; color:white;">✅ BLOQUER</button>
-  <button onclick="fermerPopupBloquer()" style="padding:10px;">❌ ANNULER</button>
-</div>
-
-<script>
-let gmailABloquer = null;
-
-function getDataNetloto(){
-  return JSON.parse(localStorage.getItem('netloto')||'{}');
-}
-function saveDataNetloto(d){
-  localStorage.setItem('netloto', JSON.stringify(d));
-}
-
-function afficherZoneAdmin(){
-  let d = getDataNetloto();
-  let session = JSON.parse(localStorage.getItem('session')||'null');
-  let zone = document.getElementById('zoneAdminBloque');
-  if(!zone) return;
-  // On montre seulement si ADMIN connecté
-  if(session && session.role === 'ADMIN'){
-    zone.style.display = 'block';
-  } else {
-    zone.style.display = 'none';
-    return;
-  }
-  let users = d.users || [];
-  let bloques = d.soldeBloque || [];
-
-  // 1. REVENDEURS ACTIFS
-  let html = "";
-  let revs = users.filter(u => u.role === 'REVENDEUR');
-  if(revs.length === 0) html = "<p>Aucun revendeur pour le moment.</p>";
-  revs.forEach(r => {
-    html += `<div style="border:1px solid #ccc; padding:10px; margin:5px; border-radius:8px;">
-      <b>${r.nom || r.gmail}</b><br>
-      Gmail: ${r.gmail}<br>
-      Code: ${r.code || '---'}<br>
-      Solde: <b>${r.solde || 0} F</b><br>
-      <button onclick="ouvrirPopupBloquer('${r.gmail}')" style="padding:8px; background:red; color:white; margin-top:5px;">🗑️ SUPPRIMER / BLOQUER</button>
-    </div>`;
-  });
-  document.getElementById('listeRevendeursAdmin').innerHTML = html;
-
-  // 2. SOLDE BLOQUÉ
-  let total = 0;
-  let html2 = "";
-  if(bloques.length === 0) html2 = "<p>Aucun solde bloqué.</p>";
-  bloques.forEach((b, i) => {
-    total += parseInt(b.solde||0);
-    html2 += `<div style="border:1px solid red; padding:10px; margin:5px; border-radius:8px; background:#ffecec;">
-      <b>${b.nom}</b> - ${b.gmail} - Code: ${b.code}<br>
-      Solde bloqué: <b>${b.solde} F</b> - Date: ${b.date} - Raison: ${b.raison}<br>
-      <button onclick="deplacerVersCaisseAdmin(${i})" style="padding:8px; background:green; color:white; margin-top:5px;">💰 DÉPLACER GAIN VERS CAISSE</button>
-    </div>`;
-  });
-  document.getElementById('listeBloqueAdmin').innerHTML = html2;
-  document.getElementById('totalBloqueAdmin').innerText = total;
-}
-
-function ouvrirPopupBloquer(gmail){
-  gmailABloquer = gmail;
-  document.getElementById('popupBloquerRev').style.display = 'block';
-}
-function fermerPopupBloquer(){
-  document.getElementById('popupBloquerRev').style.display = 'none';
-  gmailABloquer = null;
-}
-
-function confirmerBlocageRev(){
-  let r = document.querySelector('input[name="raisonBloque"]:checked');
-  if(!r){ alert("Choisis une raison !"); return; }
-  let raison = r.value;
-  if(raison === "Autre"){
-    raison = document.getElementById('raisonAutreInput').value || "Autre";
-  }
-  let d = getDataNetloto();
-  let users = d.users || [];
-  let rev = users.find(x => x.gmail === gmailABloquer);
-  if(!rev){ alert("Revendeur introuvable"); return; }
-
-  if(!d.soldeBloque) d.soldeBloque = [];
-  d.soldeBloque.push({
-    nom: rev.nom || rev.gmail,
-    gmail: rev.gmail,
-    code: rev.code || '',
-    solde: rev.solde || 0,
-    date: new Date().toLocaleDateString(),
-    raison: raison
-  });
-
-  // On supprime le revendeur des actifs - son solde ne va PAS dans la caisse
-  d.users = users.filter(x => x.gmail !== gmailABloquer);
-  saveDataNetloto(d);
-  fermerPopupBloquer();
-  afficherZoneAdmin();
-  alert("Revendeur bloqué ! Son solde " + (rev.solde||0) + " F est dans SOLDE BLOQUÉ.");
-}
-
-function deplacerVersCaisseAdmin(index){
-  let d = getDataNetloto();
-  let b = d.soldeBloque[index];
-  if(!confirm("Déplacer " + b.solde + " F de " + b.nom + " vers CAISSE ADMIN ?")) return;
-  d.caisseAdmin = (parseInt(d.caisseAdmin||0) + parseInt(b.solde||0));
-  d.soldeBloque.splice(index, 1);
-  saveDataNetloto(d);
-  afficherZoneAdmin();
-  alert(b.solde + " F déplacé vers CAISSE. Nouvelle caisse: " + d.caisseAdmin + " F");
-}
-  
-// On lance l'affichage quand la page charge
-setTimeout(afficherZoneAdmin, 500);
-<!-- ===== FIN BLOC ADMIN ===== -->
-  alert('SUITE.JS CHARGE');
-// SUITE.JS - PAGE CLIENT BLEUE - NET LOTO AT 590
-(function(){
-  // 1. On crée la page CLIENT
-  let div = document.createElement('div');
-  div.id = 'clientHome';
-  div.style.display = 'none';
-  div.innerHTML = `
-  <style>
-  #clientHome{font-family:Arial;background:#f2f6ff;padding-bottom:90px}
-  .ch-top{display:flex;justify-content:space-between;align-items:center;background:#0b4fd8;color:#fff;padding:12px}
-  .ch-top button{background:#fff;color:#0b4fd8;border:0;border-radius:20px;padding:8px 14px;font-weight:bold;cursor:pointer}
-  .ch-salut{padding:12px;font-weight:bold}
-  .ch-marquee{background:#0b4fd8;color:#fff;padding:8px;overflow:hidden;white-space:nowrap}
-  .ch-marquee span{display:inline-block;animation:defile 12s linear infinite}
-  @keyframes defile{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
-  .ch-3{display:flex;gap:8px;padding:12px}
-  .ch-3 button{flex:1;background:#0b4fd8;color:#fff;border:0;border-radius:12px;padding:12px;font-weight:bold;cursor:pointer}
-  .ch-titre{padding:0 12px;font-weight:bold}
-  .ch-cards{display:flex;gap:10px;overflow-x:auto;padding:12px}
-  .ch-cards button{min-width:150px;background:#fff;border:2px solid #0b4fd8;border-radius:14px;padding:12px;text-align:left;cursor:pointer}
-  .ch-pays{padding:12px}
-  .ch-pays button{width:100%;background:#fff;border:2px solid #0b4fd8;border-radius:14px;padding:14px;text-align:left;margin-bottom:10px;cursor:pointer;font-weight:bold}
-  .ch-bottom{position:fixed;bottom:0;left:0;right:0;display:flex;background:#0b4fd8;padding:8px}
-  .ch-bottom button{flex:1;background:transparent;color:#fff;border:0;font-weight:bold;cursor:pointer}
-  </style>
-  <div class="ch-top">
-    <button onclick="alert('Message Admin - Etape 2')">✉️ Message</button>
-    <button onclick="alert('Depot - Etape 2')">SOLDE <span id="chSolde">0</span> XOF +</button>
-<button onclick="alert('Menu - Etape 2')">☰ Menu</button>
-<button onclick="localStorage.clear();location.reload()" style="background:#ff3b30;color:#fff">Déconnexion</button>
-  <div class="ch-salut">Salut <span id="chNom">Client</span></div>
-  <div class="ch-marquee"><span>NET LOTO AT 590 partout dans le monde ! Bonne chance !</span></div>
-  <div class="ch-3">
-    <button onclick="alert('Depot - Etape 2')">+ Dépôt</button>
-    <button onclick="alert('Historique - Etape 2')">Historique</button>
-    <button onclick="alert('Retrait - Etape 2')">Retrait</button>
-  </div>
-  <div class="ch-titre">Ferme bientôt ⏳</div>
-  <div class="ch-cards">
-    <button onclick="alert('CHANCE 8H')">CHANCE 8H<br>8:00</button>
-    <button onclick="alert('CHANCE 11H')">CHANCE 11H<br>11:00</button>
-    <button onclick="alert('CHANCE 14H')">CHANCE 14H<br>14:00</button>
-    <button onclick="alert('CHANCE 18H')">CHANCE 18H<br>18:00</button>
-    <button onclick="alert('CHANCE 21H')">CHANCE 21H<br>21:00</button>
-    <button onclick="alert('CHANCE 0H')">CHANCE 0H<br>00:00</button>
-  </div>
-  <div class="ch-titre">Choisir un pays</div>
-  <div class="ch-pays">
-    <button onclick="ouvrirPaysBenin()">🇧🇯 BÉNIN - 6 tirages ouverts ▶</button>
-    <button onclick="ouvrirPaysCoteDivoire()">🇨🇮 CÔTE D'IVOIRE ▶</button>
-    <button onclick="ouvrirPaysFrance()">🇫🇷 FRANCE ▶</button>
-    <button onclick="ouvrirPaysGhana()">🇬🇭 GHANA ▶</button>
-    <button onclick="ouvrirPaysNigeria()">🇳🇬 NIGÉRIA ▶</button>
-    <button onclick="ouvrirPaysTogo()">🇹🇬 TOGO ▶</button>
-  </div>
-  <div class="ch-3">
-    <button onclick="alert('Mes tickets')">Mes tickets</button>
-    <button onclick="alert('Resultats')">Résultats</button>
-    <button onclick="alert('Pronostics')">Pronostics</button>
-    <button onclick="alert('Aide')">Aide</button>
-  </div>
-  <div class="ch-bottom">
-    <button>Accueil</button><button>Tirages</button><button>Coupon</button><button>Tickets</button><button>Solde</button>
-  </div>
-  `;
-  document.body.appendChild(div);
-
-  // 2. Fonction qui montre CLIENT et cache TOUT le reste
-  window.montrerClientHome = function(u){
-    let c = document.getElementById('clientHome');
-    if(!u || u.role === 'ADMIN'){ if(c) c.style.display='none'; return; }
-    let enfants = document.body.children;
-    for(let i=0;i<enfants.length;i++){
-      let el = enfants[i];
-      if(el.id === 'clientHome') continue;
-      if(el.tagName === 'SCRIPT' || el.tagName === 'STYLE') continue;
-      el.style.display = 'none';
-    }
-    if(c) c.style.display='block';
-    let nom = document.getElementById('chNom'); if(nom) nom.innerText = u.gmail || 'Client';
-    let s = document.getElementById('chSolde'); if(s) s.innerText = u.soldeJeu || 0;
-  };
-
-  // 3. On branche automatiquement sur showDash, sans toucher à index
-  let essai = 0;
-  let timer = setInterval(function(){
-    essai++;
-    if(typeof window.showDash === 'function' && !window.showDash._clientBranche){
-      let ancien = window.showDash;
-      window.showDash = function(u){
-        let r = ancien(u);
-        try{ window.montrerClientHome(u); }catch(e){}
-        return r;
-      };
-      window.showDash._clientBranche = true;
-      clearInterval(timer);
-    }
-    if(essai > 50) clearInterval(timer);
-  }, 200); // --- PAYS BENIN - 6 TIRAGES ---
-window.ouvrirPaysBenin = function(){
-  let vieux = document.getElementById('pageBenin'); if(vieux) vieux.remove();
-  let d = document.createElement('div');
-  d.id = 'pageBenin';
-  d.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:#f2f6ff;z-index:9999;overflow:auto;padding-bottom:20px;font-family:Arial';
-  d.innerHTML = `
-  <div style="background:#0b4fd8;color:#fff;padding:12px;display:flex;align-items:center;gap:10px">
-    <button onclick="document.getElementById('pageBenin').remove()" style="background:#fff;color:#0b4fd8;border:0;border-radius:20px;padding:8px 14px;font-weight:bold">←</button>
-    <b>Bénin</b>
-  </div>
-  <div style="padding:12px">
-    <div style="background:#fff;border-radius:14px;padding:6px;display:flex;gap:6px">
-      <button id="btnAuj" onclick="afficherTiragesBenin('auj')" style="flex:1;background:#0b4fd8;color:#fff;border:0;border-radius:10px;padding:12px;font-weight:bold">Aujourd'hui 5</button>
-      <button id="btnVen" onclick="afficherTiragesBenin('venir')" style="flex:1;background:#fff;color:#0b4fd8;border:0;border-radius:10px;padding:12px;font-weight:bold">À venir 1</button>
-    </div>
-    <div id="listeTiragesBenin" style="margin-top:12px"></div>
-  </div>
-  `;
-  document.body.appendChild(d);
-  afficherTiragesBenin('auj');
-};
-window.afficherTiragesBenin = function(type){
-  let box = document.getElementById('listeTiragesBenin'); if(!box) return;
-  let bA = document.getElementById('btnAuj'); let bV = document.getElementById('btnVen');
-  if(type === 'auj'){
-    if(bA){ bA.style.background = '#0b4fd8'; bA.style.color = '#fff'; }
-    if(bV){ bV.style.background = '#fff'; bV.style.color = '#0b4fd8'; }
-    box.innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      ${carteTirageBenin('VENDREDI 11H','Auj. 09:50','27 min')}
-      ${carteTirageBenin('VENDREDI 14H','Auj. 12:50','3h27')}
-      ${carteTirageBenin('VENDREDI 18H','Auj. 16:50','7h27')}
-      ${carteTirageBenin('VENDREDI 21H','Auj. 18:50','9h27')}
-      ${carteTirageBenin('VENDREDI 00H','Auj. 22:50','13h27')}
-    </div>`;
-  } else {
-    if(bA){ bA.style.background = '#fff'; bA.style.color = '#0b4fd8'; }
-    if(bV){ bV.style.background = '#0b4fd8'; bV.style.color = '#fff'; }
-    box.innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      ${carteTirageBenin('SAMEDI 08H','Dem. 06:50','21h27')}
-    </div>`;
-  }
-};
-
-function carteTirageBenin(nom, heure, reste){
-  return `<div onclick="alert('Jouer ${nom} - on fait ça juste après, boss')" style="background:#fff;border-radius:14px;padding:12px;border:1px solid #ddd">
-    <div style="font-weight:bold">🇧🇯 ${nom}</div>
-    <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:13px;color:#555"><span>${heure}</span><span style="background:#eee;border-radius:10px;padding:3px 8px">${reste}</span></div>
-  </div>`;
-}
-})();
-<script src="</script></body></html>
