@@ -223,6 +223,40 @@ function motOublie(){
   if(!u){ alert("Ce Gmail nexiste pas"); return; }
   alert("Ton mot de passe est : "+u.pass);
 }
+function ouvrirJeu(nom){
+  var sess=localStorage.getItem("session");
+  if(!sess||!window._currentUser){
+    alert("Connecte-toi d abord pour jouer a "+nom);
+    document.getElementById("clientHome").classList.add("hide");
+    document.getElementById("connexion").classList.remove("hide");
+    window.scrollTo(0,0);
+    return;
+  }
+  alert(nom+" - Choisis ton jeu, bonne chance");
+}
+function show(id){
+  document.getElementById("menu").style.display="none";
+  var ch=document.getElementById("clientHome");
+  var d=document.getElementById("dashboard");
+  if(ch) ch.classList.add("hide");
+  if(d){ d.classList.remove("hide"); d.style.display="block"; }
+  var liste=["cardTableau","cardLoto","cardPronostic","cardPublierResultat","creerRevBox","cardRecharger","controle","cardRetrait","cardUsers","cardContenu","archive","profil","resultat","aide"];
+  for(var i=0;i<liste.length;i++){ var el=document.getElementById(liste[i]); if(el) el.style.display="none"; }
+  var cible=document.getElementById(id);
+  if(cible){ cible.style.display="block"; cible.scrollIntoView(); }
+  if(!document.getElementById("btnRetourClient")){
+    var b=document.createElement("button");
+    b.id="btnRetourClient"; b.innerText="RETOUR ACCUEIL";
+    b.className="btn"; b.style.margin="12px";
+    b.onclick=function(){ document.getElementById("dashboard").classList.add("hide"); document.getElementById("clientHome").classList.remove("hide"); window.scrollTo(0,0); };
+    d.prepend(b);
+  }
+}
+function showClientHome(){
+  document.getElementById("dashboard").classList.add("hide");
+  document.getElementById("clientHome").classList.remove("hide");
+  window.scrollTo(0,0);
+}
 </script>
 </script>
 </body>
