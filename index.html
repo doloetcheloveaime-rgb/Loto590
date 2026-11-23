@@ -256,55 +256,19 @@ function show(id){
   }
 }
 function showClientHome(){
+  closeMenu();
   document.getElementById("dashboard").classList.add("hide");
+  document.getElementById("dashboard").style.display='none';
   document.getElementById("clientHome").classList.remove("hide");
+  document.getElementById("clientHome").style.display='block';
   window.scrollTo(0,0);
 }
 function motOublie(){
   var g=prompt("Mets ton Gmail :");
   if(!g) return;
-  var u=DB.users.find(x=>x.gmail==g);
+  var u=DB.users.find(x=>x.gmail.toLowerCase()==g.toLowerCase());
   if(!u){ alert("Ce Gmail nexiste pas"); return; }
   alert("Ton mot de passe est : "+u.pass);
-}
-  function connecter(){
-  var g=document.getElementById('cGmail').value.trim();
-  var p=document.getElementById('cPass').value;
-  if(!g||!p){ alert('Mets Gmail et mot de passe'); return; }
-  var u=DB.users.find(x=>x.gmail==g && x.pass==p);
-  if(!u){ alert('Gmail ou mot de passe faux'); return; }
-  if(u.bloque){ alert('Compte bloque par ADMIN'); return; }
-  window._currentUser=u;
-  localStorage.setItem('session',g);
-
-  // 1. CACHE CONNEXION - pour toujours
-  document.getElementById('auth').style.display='none';
-  document.getElementById('auth').classList.add('hide');
-
-  // 2. MONTRE LA BONNE PAGE
-  if(u.role=='CLIENT'){
-    document.getElementById('clientHome').classList.remove('hide');
-    document.getElementById('clientHome').style.display='block';
-    document.getElementById('dashboard').classList.add('hide');
-    document.getElementById('dashboard').style.display='none';
-    document.getElementById('bottomNav').classList.remove('hide');
-    document.getElementById('chNom').innerText=g.split('@')[0];
-    document.getElementById('chSolde').innerText=(u.soldeJeu+u.soldeGain)+' XOF';
-    document.getElementById('roleTxt').innerText=u.role;
-    document.getElementById('userTxt').innerText=u.gmail+' | WhatsApp: '+u.wa;
-    document.getElementById('profilTxt').innerText='Nom: '+u.gmail+' | Role: '+u.role+' | WhatsApp: '+u.wa;
-  } else {
-    document.getElementById('clientHome').classList.add('hide');
-    document.getElementById('clientHome').style.display='none';
-    document.getElementById('dashboard').classList.remove('hide');
-    document.getElementById('dashboard').style.display='block';
-    document.getElementById('bottomNav').classList.add('hide');
-    document.getElementById('roleTxt').innerText=u.role;
-    document.getElementById('userTxt').innerText=u.gmail+' | WhatsApp: '+u.wa;
-  }
-  render();
-  window.scrollTo(0,0);
-  alert('Bienvenue '+g);
   }function connecter(){
   var g=document.getElementById('cGmail').value.trim();
   var p=document.getElementById('cPass').value;
@@ -326,15 +290,14 @@ function motOublie(){
   localStorage.setItem('session',g);
   showDash(u);
   alert('Bienvenue '+g);
-}
-
-function showDash(u){
+  }function showDash(u){
   window._currentUser=u;
   document.getElementById('auth').style.display='none';
   document.getElementById('auth').classList.add('hide');
   document.getElementById('roleTxt').innerText=u.role;
   document.getElementById('userTxt').innerText=u.gmail+' | WhatsApp: '+u.wa+' | Solde Jeu: '+u.soldeJeu+' | Solde Gain: '+u.soldeGain;
   document.getElementById('profilTxt').innerText='Nom: '+u.gmail+' | Role: '+u.role+' | WhatsApp: '+u.wa;
+  var mt=document.getElementById('menuTableau');
   if(u.role=='CLIENT'){
     document.getElementById('clientHome').classList.remove('hide');
     document.getElementById('clientHome').style.display='block';
@@ -343,14 +306,14 @@ function showDash(u){
     document.getElementById('bottomNav').classList.remove('hide');
     document.getElementById('chNom').innerText=u.gmail.split('@')[0];
     document.getElementById('chSolde').innerText=(u.soldeJeu+u.soldeGain)+' XOF';
-    var mt=document.getElementById('menuTableau'); if(mt) mt.style.display='none';
-    var mt2=document.getElementById('menuTableau'); if(mt2) mt2.style.display='block';
+    if(mt) mt.style.display='none';
   } else {
     document.getElementById('clientHome').classList.add('hide');
     document.getElementById('clientHome').style.display='none';
     document.getElementById('dashboard').classList.remove('hide');
     document.getElementById('dashboard').style.display='block';
     document.getElementById('bottomNav').classList.add('hide');
+    if(mt) mt.style.display='block';
   }
   render();
 }
