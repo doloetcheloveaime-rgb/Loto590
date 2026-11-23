@@ -62,6 +62,7 @@
 <input id="iGmail" placeholder="Gmail">
 <div style="display:flex;gap:5px"><input id="cPass" type="password" placeholder="Mot de passe" style="flex:1"><button type="button" onclick="let e=document.getElementById('cPass');e.type=e.type=='password'?'text':'password'" style="padding:10px;border-radius:10px">👁️</button></div>
 <button class="btn" onclick="connecter()">CONNECTER</button>
+<p onclick="motOublie()" style="text-align:center;color:#6aa9ff;cursor:pointer;margin-top:10px"><u>Mot de passe oublié ?</u></p>
 </div>
 <p style="text-align:center"><a href="#" onclick="toggleAuth()">Inscription / Connexion</a></p>
 <p class="small">Test ADMIN : admin@netloto.com / Admin123!</p>
@@ -213,6 +214,40 @@ function show(id){
   let el2=document.getElementById(id); if(el2) el2.scrollIntoView();
 }
 function openPays(nom){ alert(nom+' - Bientôt disponible. Choisis ton jeu.'); }
+  // FIX INSCRIPTION + CONNEXION - ANCIENS COMPTES
+function inscrire(){
+  let nom=document.getElementById('iNom')?.value||'';
+  let prenom=document.getElementById('iPrenom')?.value||'';
+  let naiss=document.getElementById('iNaiss')?.value||'';
+  let gmail=document.getElementById('iGmail')?.value||'';
+  let wa=document.getElementById('iWhatsApp')?.value||document.getElementById('iPhone')?.value||'';
+  let pass=document.getElementById('iPass')?.value||'';
+  if(!gmail||!pass){ alert('Mets Gmail et mot de passe'); return; }
+  let users=JSON.parse(localStorage.getItem('users')||'[]');
+  users.push({nom:nom,prenom:prenom,naiss:naiss,gmail:gmail,whatsapp:wa,phone:wa,pass:pass,role:'CLIENT',solde:0});
+  localStorage.setItem('users',JSON.stringify(users));
+  alert('Inscription réussie ! Connecte-toi maintenant.');
+  showPage('connexion');
+}
+function connecter(){
+  let gmail=document.getElementById('cGmail')?.value||'';
+  let pass=document.getElementById('cPass')?.value||'';
+  let users=JSON.parse(localStorage.getItem('users')||'[]');
+  let u=users.find(x=>x.gmail==gmail && x.pass==pass);
+  if(!u){ alert('Gmail ou mot de passe incorrect. Si tu as oublié, touche Mot de passe oublié.'); return; }
+  // Ancien compte sans nom = on accepte quand même
+  window._currentUser=u;
+  localStorage.setItem('session',JSON.stringify(u));
+  if(u.role=='ADMIN'){ showDash('ADMIN'); } else { showDash('CLIENT'); }
+}
+function motOublie(){
+  let g=prompt('Mets ton Gmail pour récupérer ton mot de passe :');
+  if(!g) return;
+  let users=JSON.parse(localStorage.getItem('users')||'[]');
+  let u=users.find(x=>x.gmail==g);
+  if(!u){ alert('Ce Gmail n\'existe pas. Inscris-toi.'); return; }
+  alert('Ton mot de passe est : '+u.pass+' - Note-le et connecte-toi.');
+}
 </script>
 </script>
 </body>
