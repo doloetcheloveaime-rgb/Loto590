@@ -15,8 +15,91 @@
 .ch-plus{background:#f7c948;border:0;width:28px;height:28px;border-radius:50%;font-weight:bold;font-size:18px}
 .ch-salut{padding:12px 12px 0;font-size:18px;font-weight:bold}
 .ch-defil{background:#e11d2e;color:#fff;margin:10px 12px;padding:8px 12px;border-radius:20px;font-size:13px;white-space:nowrap;overflow:hidden}
-.ch-actions{display:flex;gap:10px;padding:10px 
-<div id="dashboard" class="hide">
+.ch-actions{display:flex;gap:10px;padding:10px 12px}
+.ch-actions button{flex:1;border:0;border-radius:12px;padding:13px;font-weight:bold;font-size:15px}
+.ch-depot{background:#fff8b0}.ch-hist{background:#fff}.ch-retrait{background:#ffe8e8}
+.ch-sec{padding:10px 12px 0;display:flex;justify-content:space-between;align-items:center}
+.ch-sec b{font-size:16px}.ch-sec span{color:#e11d2e;font-weight:bold;font-size:13px}
+.ch-row{display:flex;gap:10px;overflow:auto;padding:10px 12px}
+.ch-jeu{min-width:160px;background:#fff;border-radius:14px;padding:12px}
+.ch-jeu b{font-size:14px}.ch-jeu small{color:#888}.ch-jeu .rouge{color:#e11d2e;font-weight:bold}
+.ch-pays{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 12px}
+.ch-pays div{background:#fff;border-radius:14px;padding:12px}
+.ch-pays b{font-size:14px}.ch-pays small{color:#888}
+.ch-menu4{display:flex;gap:8px;padding:6px 12px;text-align:center}
+.ch-menu4 div{flex:1;background:#fff;border-radius:14px;padding:12px 4px;font-size:13px;font-weight:bold}
+.ch-bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;display:flex;justify-content:space-around;padding:8px 0 10px;border-top:1px solid #ddd;z-index:50}
+.ch-bottom div{text-align:center;font-size:12px;font-weight:bold;color:#555}
+.ch-bottom .act{color:#e11d2e}.ch-coupon{background:#e11d2e;color:#fff;width:52px;height:52px;border-radius:50%;margin-top:-28px;display:flex;align-items:center;justify-content:center;font-size:20px}
+</style></head><body>
+<div id="splash" onclick="this.style.display='none'">NET LOTO<br><span style="font-size:14px;color:#fff">Chargement... Simple • Rapide • Beau</span><br><span style="font-size:12px;color:#fff">Touche pour continuer</span></div>
+<div class="menu" id="menu">
+<h3>☰ MENU <button onclick="document.getElementById('menu').style.display='none'" style="float:right;background:#fff;color:#000;border:0;border-radius:8px;padding:5px 10px">X Fermer</button></h3>
+<a href="#" onclick="show('profil')">👤 Profil</a>
+<a href="#" onclick="show('resultat')">🏆 Résultat</a>
+<a href="#" onclick="show('archive')">📁 Archive</a>
+<a href="#" onclick="show('aide')">❓ Aide</a>
+<a href="#" onclick="show('dashboard')">📊 Tableau de Bord</a>
+</div>
+<div class="top">
+<button onclick="document.getElementById('menu').style.display='block'">☰</button>
+<button onclick="goBack()">←</button>
+<b style="flex:1">NET LOTO</b>
+<button onclick="logout()">Déconnexion</button>
+</div>
+<div id="auth" class="card">
+<h2 id="authTitle">Connexion</h2>
+<div id="insc" class="hide">
+<input id="iGmail" placeholder="Gmail">
+<input id="iPass" type="password" placeholder="Mot de passe très fort ex: Nom123!">
+<input id="iWa" placeholder="Numéro WhatsApp ex: 22990000000">
+<button class="btn green" onclick="inscrire()">VALIDER - INSCRIPTION</button>
+</div>
+<div id="conn">
+<input id="cGmail" placeholder="Gmail">
+<input id="cPass" type="password" placeholder="Mot de passe">
+<button class="btn" onclick="connecter()">CONNECTER</button>
+</div>
+<p style="text-align:center"><a href="#" onclick="toggleAuth()">Inscription / Connexion</a></p>
+<p class="small">Test ADMIN : admin@netloto.com / Admin123!</p>
+</div>
+<div id="clientHome" class="hide">
+<div class="ch-top"><span style="font-size:22px">✉️</span><div class="ch-solde">💰 SOLDE <b id="chSolde">0 XOF</b> <button class="ch-plus" onclick="show('cardRecharger')">+</button></div><button onclick="document.getElementById('menu').style.display='block'" style="border:0;background:none;font-size:22px">☰</button></div>
+<div class="ch-salut">Salut <span id="chNom">Client</span> 👋</div>
+<div class="ch-defil">📢 NET LOTO partout dans le monde ! Simple • Rapide • Beau</div>
+<div class="ch-actions">
+<button class="ch-depot" onclick="show('cardRecharger')">➕ Dépôt</button>
+<button class="ch-hist" onclick="show('archive')">⇄ Historique</button>
+<button class="ch-retrait" onclick="show('cardRetrait')">💸 Retrait</button>
+</div>
+<div class="ch-sec"><b>⏰ Ferme bientôt</b><span>Voir tout ></span></div>
+<div class="ch-row">
+<div class="ch-jeu">🇧🇯 <b>CHANCE 13H</b><br><small>Auj. 12:55</small> <span class="rouge">3h38</span></div>
+<div class="ch-jeu">🌍 <b>BOOSTER 30</b><br><small>Auj. 09:30</small> <span class="rouge">13 min</span></div>
+<div class="ch-jeu">🌍 <b>JACKPOT</b><br><small>Auj. 10:00</small> <span class="rouge">43 min</span></div>
+</div>
+<div class="ch-sec"><b>🌍 Choisir un pays</b><span>29 ouverts &nbsp; Voir tous ></span></div>
+<div class="ch-pays">
+<div onclick="alert('BENIN - LOTO 5/90')">🇧🇯 <b>BENIN</b><br><small>6 tirages ouverts ></small></div>
+<div onclick="alert('COTE DIVOIRE')">🇨🇮 <b>COTE DIVOIRE</b><br><small>9 tirages ouverts ></small></div>
+<div onclick="alert('FRANCE')">🇫🇷 <b>FRANCE</b><br><small>2 tirages ouverts ></small></div>
+<div onclick="alert('GHANA')">🇬🇭 <b>GHANA</b><br><small>2 tirages ouverts ></small></div>
+<div onclick="alert('NIGERIA')">🇳🇬 <b>NIGERIA</b><br><small>4 tirages ouverts ></small></div>
+<div onclick="alert('TOGO')">🇹🇬 <b>TOGO</b><br><small>3 tirages ouverts ></small></div>
+<div onclick="alert('UNIVERSEL')">🌍 <b>UNIVERSEL</b><br><small>3 tirages ouverts ></small></div>
+<div onclick="alert('NAMS')">🎮 <b>NAMS</b><br><small>A la une - Jouer ></small></div>
+</div>
+<div class="ch-menu4">
+<div onclick="show('archive')">🎟️<br>Mes tickets</div>
+<div onclick="show('resultat')">📊<br>Résultats</div>
+<div onclick="show('cardPronostic')">🔮<br>Pronostics</div>
+<div onclick="show('aide')">❓<br>Aide</div>
+</div>
+<div class="ch-sec"><b>🎮 E-games</b><span>Tous les jeux ></span></div>
+<div class="card"><b>🎰 Types de LOTO</b><div class="loto"><div>LOTO<br>5/90</div><div>LOTO<br>FORTUNE</div><div>LOTO<br>NAP 2</div><div>LOTO<br>NAP 3</div><div>PERMUTATION</div></div></div>
+<div class="card"><h3>🏆 Résultat du jour</h3><div id="resultatTxt2"></div></div>
+<div class="card"><h3>👤 Mon Profil</h3><div id="profilTxt2"></div></div>
+</div><div id="dashboard" class="hide">
 <div class="card" id="cardTableau"><b>👑 TABLEAU DE BORD - <span id="roleTxt"></span></b><br><span id="userTxt"></span><br><br>
 <div id="adminTableau"><b>Utilisateurs :</b> <span id="nbUsers">0</span> | <b>Clients :</b> <span id="nbClients">0</span> | <b>Revendeurs :</b> <span id="nbRev">0</span><br><b>Ventes :</b> <span id="ventes">0</span> FCFA | <b>Gains :</b> <span id="gains">0</span> FCFA<br><b>Solde Caisse ADMIN :</b> <span id="caisse">0</span> FCFA<div class="flex"><button class="btn orange" onclick="rechargerCaisse()">RECHARGER CAISSE</button><button class="btn" onclick="show('controle')">🎯 CONTRÔLE</button></div></div></div>
 <div class="card" id="cardLoto"><h3>🎰 Types de LOTO</h3><div class="loto"><div>LOTO<br>5/90</div><div>LOTO<br>FORTUNE</div><div>LOTO<br>NAP 2</div><div>LOTO<br>NAP 3</div><div>PERMUTATION</div></div></div>
