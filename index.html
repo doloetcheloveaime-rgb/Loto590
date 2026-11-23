@@ -132,7 +132,7 @@ function showDash(u){
   document.getElementById('profilTxt').innerText='Nom: '+u.gmail+' | Rôle: '+u.role+' | WhatsApp: '+u.wa;
 
   let estAdmin = (u.role === 'ADMIN');
-  let cards = document.querySelectorAll('#dashboard > .card');
+  let cards = document.querySelectorAll('#dashboard .card');
   cards.forEach(function(card){
     let titre = (card.innerText || "").toUpperCase();
     if(titre.includes('TABLEAU DE BORD')){ card.style.display='block'; return; }
