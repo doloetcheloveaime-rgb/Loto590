@@ -56,9 +56,6 @@
 <button class="btn green" onclick="inscrire()">VALIDER - INSCRIPTION</button>
 </div>
 <div id="conn">
-<input id="iNom" placeholder="Nom">
-<input id="iPrenom" placeholder="Prénom">
-<input id="iNaiss" type="date">
 <input id="iGmail" placeholder="Gmail">
 <div style="display:flex;gap:5px"><input id="cPass" type="password" placeholder="Mot de passe" style="flex:1"><button type="button" onclick="let e=document.getElementById('cPass');e.type=e.type=='password'?'text':'password'" style="padding:10px;border-radius:10px">👁️</button></div>
 <button class="btn" onclick="connecter()">CONNECTER</button>
@@ -247,6 +244,13 @@ function motOublie(){
   let u=users.find(x=>x.gmail==g);
   if(!u){ alert('Ce Gmail n\'existe pas. Inscris-toi.'); return; }
   alert('Ton mot de passe est : '+u.pass+' - Note-le et connecte-toi.');
+}
+  // AFFICHER PROFIL COMPLET
+function afficherProfil(){
+  let u=window._currentUser; if(!u) return;
+  let el=document.getElementById('profilTxt');
+  if(!el) return;
+  el.innerHTML='<b>Nom :</b> '+(u.nom||'Non rempli')+'<br><b>Prénom :</b> '+(u.prenom||'Non rempli')+'<br><b>Date de naissance :</b> '+(u.naiss||'Non rempli')+'<br><b>Gmail :</b> '+(u.gmail||'')+'<br><b>WhatsApp :</b> '+(u.whatsapp||u.phone||'')+'<br><b>Mot de passe :</b> <span id="passProfil">****</span> <button onclick="let s=document.getElementById(\'passProfil\');s.innerText=s.innerText==\'****\'?window._currentUser.pass:\'****\'">👁️</button>';
 }
 </script>
 </script>
