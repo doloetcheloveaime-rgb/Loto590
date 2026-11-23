@@ -252,6 +252,29 @@ function afficherProfil(){
   if(!el) return;
   el.innerHTML='<b>Nom :</b> '+(u.nom||'Non rempli')+'<br><b>Prénom :</b> '+(u.prenom||'Non rempli')+'<br><b>Date de naissance :</b> '+(u.naiss||'Non rempli')+'<br><b>Gmail :</b> '+(u.gmail||'')+'<br><b>WhatsApp :</b> '+(u.whatsapp||u.phone||'')+'<br><b>Mot de passe :</b> <span id="passProfil">****</span> <button onclick="let s=document.getElementById(\'passProfil\');s.innerText=s.innerText==\'****\'?window._currentUser.pass:\'****\'">👁️</button>';
 }
+// CONNEXION SIMPLE QUI MARCHE
+function connecter(){
+  let g=document.getElementById('cGmail');
+  let p=document.getElementById('cPass');
+  if(!g||!p){ alert('Champs introuvables - recharge'); return; }
+  let gmail=g.value.trim();
+  let pass=p.value;
+  if(!gmail||!pass){ alert('Mets Gmail et mot de passe'); return; }
+  let users=JSON.parse(localStorage.getItem('users')||'[]');
+  // On cherche sans être strict sur les espaces / majuscules
+  let u=users.find(x=> (x.gmail||'').trim().toLowerCase()==gmail.toLowerCase() && (x.pass||'')==pass);
+  if(!u){ alert('Gmail ou mot de passe incorrect. Touche Mot de passe oublié.'); return; }
+  window._currentUser=u;
+  localStorage.setItem('session',JSON.stringify(u));
+  alert('Connexion réussie, bienvenue '+(u.prenom||u.nom||u.gmail));
+  // On montre la page bleue directement
+  let acc=document.getElementById('accueil'); if(acc) acc.classList.add('hide');
+  let con=document.getElementById('connexion'); if(con) con.classList.add('hide');
+  let ins=document.getElementById('inscription'); if(ins) ins.classList.add('hide');
+  let ch=document.getElementById('clientHome'); if(ch) ch.classList.remove('hide');
+  let dash=document.getElementById('dashboard'); if(dash) dash.classList.add('hide');
+  window.scrollTo(0,0);
+}
 </script>
 </script>
 </body>
