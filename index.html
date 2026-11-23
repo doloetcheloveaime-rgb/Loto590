@@ -51,13 +51,16 @@
 <h2 id="authTitle">Connexion</h2>
 <div id="insc" class="hide">
 <input id="iGmail" placeholder="Gmail">
-<input id="iPass" type="password" placeholder="Mot de passe très fort ex: Nom123!">
+<div style="display:flex;gap:5px"><input id="iPass" type="password" placeholder="Mot de passe très fort ex: Nom123!" style="flex:1"><button type="button" onclick="let e=document.getElementById('iPass');e.type=e.type=='password'?'text':'password'" style="padding:10px;border-radius:10px">👁️</button></div>
 <input id="iWa" placeholder="Numéro WhatsApp ex: 22990000000">
 <button class="btn green" onclick="inscrire()">VALIDER - INSCRIPTION</button>
 </div>
 <div id="conn">
-<input id="cGmail" placeholder="Gmail">
-<input id="cPass" type="password" placeholder="Mot de passe">
+<input id="iNom" placeholder="Nom">
+<input id="iPrenom" placeholder="Prénom">
+<input id="iNaiss" type="date">
+<input id="iGmail" placeholder="Gmail">
+<div style="display:flex;gap:5px"><input id="cPass" type="password" placeholder="Mot de passe" style="flex:1"><button type="button" onclick="let e=document.getElementById('cPass');e.type=e.type=='password'?'text':'password'" style="padding:10px;border-radius:10px">👁️</button></div>
 <button class="btn" onclick="connecter()">CONNECTER</button>
 </div>
 <p style="text-align:center"><a href="#" onclick="toggleAuth()">Inscription / Connexion</a></p>
@@ -106,7 +109,7 @@
 <div class="card" id="cardUsers"><h3>👥 Gestion Utilisateurs</h3><div id="usersList"></div></div>
 <div class="card" id="cardContenu"><h3>📝 Gestion Contenu</h3><input id="contenuTxt" placeholder="Contenu"><div class="flex"><button class="btn green" onclick="ajoutContenu()">AJOUTER</button><button class="btn orange" onclick="modifContenu()">MODIFIER</button><button class="btn red" onclick="suppContenu()">SUPPRIMER</button></div><div id="contenuList"></div></div>
 <div class="card" id="archive"><h3>📁 Archives</h3><div id="archiveList"></div></div>
-<div class="card" id="profil"><h3>👤 Profil</h3><div id="profilTxt"></div></div>
+<div class="card" id="profil"><h3>👤 Profil</h3><div id="profilTxt"></div><br><b>Mot de passe :</b> <span id="profilPass">****</span> <button onclick="let s=document.getElementById('profilPass');s.innerText=s.innerText=='****'?window._currentUser.pass:'****'">👁️ Voir</button></div>
 <div class="card" id="resultat"><h3>🏆 Résultat</h3><div id="resultatTxt"></div></div>
 <div class="card" id="aide"><h3>❓ Aide</h3><p>ADMIN controle tout. Pour aide, contact ADMIN sur WhatsApp.</p></div>
 </div>
