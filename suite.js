@@ -1,3 +1,4 @@
+alert('SUITE.JS CHARGE');
 // SUITE.JS - PAGE CLIENT BLEUE - NET LOTO AT 590
 (function(){
   // 1. On crée la page CLIENT
