@@ -39,7 +39,7 @@
 <a href="#" onclick="show('resultat')">🏆 Résultat</a>
 <a href="#" onclick="show('archive')">📁 Archive</a>
 <a href="#" onclick="show('aide')">❓ Aide</a>
-<a href="#" onclick="show('dashboard')">📊 Tableau de Bord</a>
+<a id="menuTableau" href="#" onclick="show('dashboard')">📊 Tableau de Bord</a>
 </div>
 <div class="top">
 <button onclick="document.getElementById('menu').style.display='block'">☰</button>
@@ -348,6 +348,8 @@ function showDash(u){
     document.getElementById('bottomNav').classList.remove('hide');
     document.getElementById('chNom').innerText=u.gmail.split('@')[0];
     document.getElementById('chSolde').innerText=(u.soldeJeu+u.soldeGain)+' XOF';
+    var mt=document.getElementById('menuTableau'); if(mt) mt.style.display='none';
+    var mt2=document.getElementById('menuTableau'); if(mt2) mt2.style.display='block';
   } else {
     document.getElementById('clientHome').classList.add('hide');
     document.getElementById('clientHome').style.display='none';
