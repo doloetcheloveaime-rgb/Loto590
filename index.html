@@ -1,15 +1,39 @@
 <!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NET LOTO - ADMIN</title>
+<title>NET LOTO</title>
 <style>
-*{box-sizing:border-box} body{margin:0;font-family:sans-serif;background:#0f0f0f;color:#111} 
+*{box-sizing:border-box} body{margin:0;font-family:sans-serif;background:#f2f2f2;color:#111}
 .top{background:#000;color:#fff;padding:12px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
 .top button{background:#222;color:#fff;border:0;padding:10px 12px;border-radius:8px;font-size:18px}
-.card{background:#fff;margin:12px;padding:14px;border-radius:14px} input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ccc;border-radius:10px} button.btn{width:100%;padding:13px;border:0;border-radius:10px;background:#000;color:#fff;font-weight:bold;margin:6px 0} button.green{background:#0a7a2f} button.orange{background:#e67e00} button.red{background:#c00} .flex{display:flex;gap:8px} .flex>*{flex:1} .small{font-size:13px;color:#555} .badge{background:#ffe600;padding:4px 8px;border-radius:20px;font-weight:bold} .menu{position:fixed;left:0;top:0;bottom:0;width:260px;background:#111;color:#fff;padding:15px;display:none;z-index:99} .menu a{display:block;color:#fff;text-decoration:none;padding:12px;border-bottom:1px solid #333} .loto{display:flex;gap:8px;overflow:auto} .loto div{min-width:110px;background:#ffe600;padding:14px;border-radius:12px;text-align:center;font-weight:bold} #splash{position:fixed;inset:0;background:#000;color:#ffe600;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:200;font-size:28px;font-weight:bold} .hide{display:none!important}
+.card{background:#fff;margin:12px;padding:14px;border-radius:14px} input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ccc;border-radius:10px} button.btn{width:100%;padding:13px;border:0;border-radius:10px;background:#000;color:#fff;font-weight:bold;margin:6px 0} button.green{background:#0a7a2f} button.orange{background:#e67e00} button.red{background:#c00} .flex{display:flex;gap:8px} .flex>*{flex:1} .small{font-size:13px;color:#555} .hide{display:none!important}
+.menu{position:fixed;left:0;top:0;bottom:0;width:260px;background:#111;color:#fff;padding:15px;display:none;z-index:99} .menu a{display:block;color:#fff;text-decoration:none;padding:12px;border-bottom:1px solid #333}
+.loto{display:flex;gap:8px;overflow:auto} .loto div{min-width:110px;background:#ffe600;padding:14px;border-radius:12px;text-align:center;font-weight:bold}
+#splash{position:fixed;inset:0;background:#000;color:#ffe600;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:200;font-size:28px;font-weight:bold}
+/* ===== PAGE CLIENT BLEUE / ELOTO STYLE ===== */
+#clientHome{background:#eef2f7;padding-bottom:90px}
+.ch-top{display:flex;align-items:center;gap:10px;padding:12px;background:#fff}
+.ch-solde{margin-left:auto;background:#fff8d6;border-radius:20px;padding:6px 10px;font-weight:bold;display:flex;align-items:center;gap:6px}
+.ch-solde b{font-size:14px}.ch-plus{background:#f7c948;border:0;width:28px;height:28px;border-radius:50%;font-weight:bold;font-size:18px}
+.ch-salut{padding:12px 12px 0;font-size:18px;font-weight:bold}
+.ch-defil{background:#e11d2e;color:#fff;margin:10px 12px;padding:8px 12px;border-radius:20px;font-size:13px;white-space:nowrap;overflow:hidden}
+.ch-actions{display:flex;gap:10px;padding:10px 12px}
+.ch-actions button{flex:1;border:0;border-radius:12px;padding:13px;font-weight:bold;font-size:15px}
+.ch-depot{background:#fff8b0}.ch-hist{background:#fff}.ch-retrait{background:#ffe8e8}
+.ch-sec{padding:10px 12px 0;display:flex;justify-content:space-between;align-items:center}
+.ch-sec b{font-size:16px}.ch-sec span{color:#e11d2e;font-weight:bold;font-size:13px}
+.ch-row{display:flex;gap:10px;overflow:auto;padding:10px 12px}
+.ch-jeu{min-width:160px;background:#fff;border-radius:14px;padding:12px}
+.ch-jeu b{font-size:14px}.ch-jeu small{color:#888}.ch-jeu .rouge{color:#e11d2e;font-weight:bold}
+.ch-pays{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 12px}
+.ch-pays div{background:#fff;border-radius:14px;padding:12px}
+.ch-pays b{font-size:14px}.ch-pays small{color:#888}
+.ch-menu4{display:flex;gap:8px;padding:6px 12px;text-align:center}
+.ch-menu4 div{flex:1;background:#fff;border-radius:14px;padding:12px 4px;font-size:13px;font-weight:bold}
+.ch-bottom{position:fixed;left:0;right:0;bottom:0;background:#fff;display:flex;justify-content:space-around;padding:8px 0 10px;border-top:1px solid #ddd;z-index:50}
+.ch-bottom div{text-align:center;font-size:12px;font-weight:bold;color:#555}
+.ch-bottom .act{color:#e11d2e}.ch-coupon{background:#e11d2e;color:#fff;width:52px;height:52px;border-radius:50%;margin-top:-28px;display:flex;align-items:center;justify-content:center;font-size:20px}
 </style></head><body>
-
 <div id="splash">NET LOTO<br><span style="font-size:14px;color:#fff">Chargement... Simple • Rapide • Beau</span></div>
-
 <div class="menu" id="menu">
 <h3>☰ MENU <button onclick="document.getElementById('menu').style.display='none'" style="float:right;background:#fff;color:#000;border:0;border-radius:8px;padding:5px 10px">X Fermer</button></h3>
 <a href="#" onclick="show('profil')">👤 Profil</a>
@@ -18,7 +42,6 @@
 <a href="#" onclick="show('aide')">❓ Aide</a>
 <a href="#" onclick="show('dashboard')">📊 Tableau de Bord</a>
 </div>
-
 <div class="top">
 <button onclick="document.getElementById('menu').style.display='block'">☰</button>
 <button onclick="goBack()">←</button>
@@ -40,128 +63,134 @@
 <button class="btn" onclick="connecter()">CONNECTER</button>
 </div>
 <p style="text-align:center"><a href="#" onclick="toggleAuth()">Inscription / Connexion</a></p>
-<p class="small">Test ADMIN : admin@netloto.com / Admin123! <br>Test 1 à 100 personnes : chacun s'inscrit, ADMIN contrôle.</p>
+<p class="small">Test ADMIN : admin@netloto.com / Admin123!</p>
 </div>
 
+<!-- ===== PAGE CLIENT BLEUE - COMME ELOTO ===== -->
+<div id="clientHome" class="hide">
+<div class="ch-top"><span style="font-size:22px">✉️</span><div class="ch-solde">💰 SOLDE <b id="chSolde">0 XOF</b> <button class="ch-plus" onclick="show('cardRecharger')">+</button></div><button onclick="document.getElementById('menu').style.display='block'" style="border:0;background:none;font-size:22px">☰</button></div>
+<div class="ch-salut">Salut <span id="chNom">Client</span> 👋</div>
+<div class="ch-defil">📢 Eloto partout dans le monde ! NET LOTO - Simple • Rapide • Beau</div>
+<div class="ch-actions">
+<button class="ch-depot" onclick="show('cardRecharger')">➕ Dépôt</button>
+<button class="ch-hist" onclick="show('archive')">⇄ Historique</button>
+<button class="ch-retrait" onclick="show('cardRetrait')">💸 Retrait</button>
+</div>
+<div class="ch-sec"><b>⏰ Ferme bientôt</b><span>Voir tout ></span></div>
+<div class="ch-row">
+<div class="ch-jeu">🇧🇯 <b>CHANCE 13H</b><br><small>Auj. 12:55</small> <span class="rouge">3h38</span></div>
+<div class="ch-jeu">🌍 <b>BOOSTER 30</b><br><small>Auj. 09:30</small> <span class="rouge">13 min</span></div>
+<div class="ch-jeu">🌍 <b>JACKPOT</b><br><small>Auj. 10:00</small> <span class="rouge">43 min</span></div>
+</div>
+<div class="ch-sec"><b>🌍 Choisir un pays</b><span>29 ouverts &nbsp; Voir tous ></span></div>
+<div class="ch-pays">
+<div onclick="alert('BÉNIN - LOTO 5/90')">🇧🇯 <b>BÉNIN</b><br><small>6 tirages ouverts ></small></div>
+<div onclick="alert('CÔTE D\'IVOIRE')">🇨🇮 <b>CÔTE D'IVOIRE</b><br><small>9 tirages ouverts ></small></div>
+<div onclick="alert('FRANCE')">🇫🇷 <b>FRANCE</b><br><small>2 tirages ouverts ></small></div>
+<div onclick="alert('GHANA')">🇬🇭 <b>GHANA</b><br><small>2 tirages ouverts ></small></div>
+<div onclick="alert('NIGÉRIA')">🇳🇬 <b>NIGÉRIA</b><br><small>4 tirages ouverts ></small></div>
+<div onclick="alert('TOGO')">🇹🇬 <b>TOGO</b><br><small>3 tirages ouverts ></small></div>
+<div onclick="alert('UNIVERSEL')">🌍 <b>UNIVERSEL</b><br><small>3 tirages ouverts ></small></div>
+<div onclick="alert('NAMS - À la une')">🎮 <b>NAMS</b><br><small>À la une • Jouer ></small></div>
+</div>
+<div class="ch-menu4">
+<div onclick="show('archive')">🎟️<br>Mes tickets</div>
+<div onclick="show('resultat')">📊<br>Résultats</div>
+<div onclick="show('cardPronostic')">🔮<br>Pronostics</div>
+<div onclick="show('aide')">❓<br>Aide</div>
+</div>
+<div class="ch-sec"><b>🎮 E-games</b><span>Tous les jeux ></span></div>
+<div class="card"><b>🎰 Types de LOTO</b><div class="loto"><div>LOTO<br>5/90</div><div>LOTO<br>FORTUNE</div><div>LOTO<br>NAP 2</div><div>LOTO<br>NAP 3</div><div>PERMUTATION</div></div></div>
+<div class="card" id="chResultat"><h3>🏆 Résultat du jour</h3><div id="resultatTxt2"></div></div>
+<div class="card"><h3>👤 Mon Profil</h3><div id="profilTxt2"></div></div>
+</div>
+
+<!-- ===== DASHBOARD ADMIN / REVENDEUR ===== -->
 <div id="dashboard" class="hide">
 <div class="card" id="cardTableau"><b>👑 TABLEAU DE BORD - <span id="roleTxt"></span></b><br><span id="userTxt"></span><br><br>
-<div id="adminTableau">
-<b>Utilisateurs :</b> <span id="nbUsers">0</span> | <b>Clients :</b> <span id="nbClients">0</span> | <b>Revendeurs :</b> <span id="nbRev">0</span><br>
-<b>Ventes :</b> <span id="ventes">0</span> FCFA | <b>Gains :</b> <span id="gains">0</span> FCFA<br>
-<b>Solde Caisse ADMIN :</b> <span id="caisse">0</span> FCFA
-<div class="flex"><button class="btn orange" onclick="rechargerCaisse()">RECHARGER CAISSE</button><button class="btn" onclick="show('controle')">🎯 CONTRÔLE</button></div>
-</div>
-<p class="small">Sécurité : Mot de passe fort + Rôle + Sauvegarde automatique ✓</p></div>
-
-<div class="card" id="cardLoto"><h3>🎰 Types de LOTO - Page d'Accueil</h3><div class="loto"><div>LOTO<br>5/90</div><div>LOTO<br>FORTUNE</div><div>LOTO<br>NAP 2</div><div>LOTO<br>NAP 3</div><div>PERMUTATION</div></div></div>
-
-<div class="card" id="cardPronostic"><h3>🔮 Pronostic du Jour</h3>
-<select id="prType"><option>Nappe 2</option><option>Nappe 3</option><option>Permutation</option></select>
-<input id="prNums" placeholder="Ex: 12 - 45 - 07">
-<button class="btn orange" onclick="publierPronostic()">PUBLIER PRONOSTIC</button><div id="prList"></div></div>
-
-<div class="card" id="cardPublierResultat"><h3>🏆 Publier Résultat</h3>
-<input id="rJeu" placeholder="Jeu ex: LOTO 5/90"><input id="rDate" type="date"><input id="rTirage" placeholder="Numéro de tirage">
-<input id="rNormal" placeholder="Numéro Gagnant NORMAL (en haut)"><input id="rDouble" placeholder="Numéro Gagnant DOUBLE CHANCE (en bas)">
-<select id="rType"><option>Normale Publiée</option><option>Double Chance Publiée</option></select>
-<button class="btn green" onclick="publierResultat()">PUBLIER RÉSULTAT</button><div id="resList"></div></div>
-
-<div class="card" id="creerRevBox"><h3>🧑‍💼 Créer Revendeur - ADMIN seul</h3>
-<input id="etab" placeholder="Nom établissement revendeur"><input id="rNom" placeholder="Nom du revendeur"><input id="rGmail" placeholder="Gmail du revendeur"><input id="rWa" placeholder="Numéro WhatsApp revendeur"><input id="rPass" placeholder="Mot de passe revendeur">
-<button class="btn" onclick="creerRevendeur()">+ CRÉER REVENDEUR</button><div id="revList"></div></div>
-
-<div class="card" id="cardRecharger"><h3>💰 Recharger Client / Revendeur avec Code WhatsApp</h3>
-<input id="rechWa" placeholder="WhatsApp à recharger"><input id="rechMontant" type="number" placeholder="Montant FCFA">
-<div class="flex"><button class="btn orange" onclick="genererCode('client')">CODE CLIENT</button><button class="btn" onclick="genererCode('revendeur')">CODE REVENDEUR</button></div>
-<input id="codeClient" placeholder="Client tape son Code reçu sur WhatsApp">
-<button class="btn green" onclick="validerCode()">VALIDER CODE - SOLDE VALIDÉ</button>
-<p class="small">Client aura : Solde Jeu + Solde Gain | Revendeur aura : Solde Revendeur</p><div id="rechMsg"></div></div>
-
-<div class="card" id="controle"><h3>🎯 CONTRÔLE - Tickets Gagnants</h3>
-<p class="small">Exemple : 50 tickets joués, 10 tickets ont gagné. Appuie CONTRÔLE, les 10 sortent.</p>
-<button class="btn" onclick="faireControle()">CONTRÔLE</button><div id="controleList"></div>
-<button class="btn orange" onclick="validerTickets()">VALIDER</button>
-<button class="btn green" onclick="payerGains()">PAYER - Gain vers Solde Gain du Client</button></div>
-
-<div class="card" id="cardRetrait"><h3>💸 Retrait Client</h3>
-<input id="retMontant" type="number" placeholder="Montant à retirer">
-<button class="btn red" onclick="demandeRetrait()">RETRAIT - Gain quitte Client vers Caisse ADMIN</button>
-<h3>✅ Confirmer Paiement MoMo - ADMIN</h3>
-<input id="payNom" placeholder="Nom du client"><input id="payMontant" type="number" placeholder="Montant payé"><input id="payDate" type="date"><input id="payCoupon" placeholder="Numéro du coupon gagnant">
-<div class="flex"><button class="btn green" onclick="enregistrerPaiement()">ENREGISTRER</button><button class="btn" onclick="alert('Fermé')">FERMER</button></div>
-<p class="small">ADMIN dit : CLIENT PAYÉ. Ça reste dans Archive. Si client dit "On ne m'a pas payé", on sort preuve : payé à telle heure, telle date, tel prix, coupon tant, joué sur NET LOTO à 5/90.</p></div>
-
-<div class="card" id="cardUsers"><h3>👥 Gestion des Utilisateurs</h3><div id="usersList"></div></div>
-
-<div class="card" id="cardContenu"><h3>📝 Gestion du Contenu - Client</h3>
-<input id="contenuTxt" placeholder="Contenu à ajouter / modifier">
-<div class="flex"><button class="btn green" onclick="ajoutContenu()">AJOUTER</button><button class="btn orange" onclick="modifContenu()">MODIFIER</button><button class="btn red" onclick="suppContenu()">SUPPRIMER</button></div><div id="contenuList"></div></div>
-
-<div class="card" id="archive"><h3>📁 Archives</h3>
-<p id="archiveAdminTxt"><b>Archive Globale - ADMIN seul :</b> Tout ce qui se passe sur le site.</p>
-<p><b>Archive Revendeur :</b> Activité revendeur seul.</p>
-<p><b>Archive Client :</b> Activité client seul.</p><div id="archiveList"></div></div>
-
+<div id="adminTableau"><b>Utilisateurs :</b> <span id="nbUsers">0</span> | <b>Clients :</b> <span id="nbClients">0</span> | <b>Revendeurs :</b> <span id="nbRev">0</span><br><b>Ventes :</b> <span id="ventes">0</span> FCFA | <b>Gains :</b> <span id="gains">0</span> FCFA<br><b>Solde Caisse ADMIN :</b> <span id="caisse">0</span> FCFA<div class="flex"><button class="btn orange" onclick="rechargerCaisse()">RECHARGER CAISSE</button><button class="btn" onclick="show('controle')">🎯 CONTRÔLE</button></div></div></div>
+<div class="card" id="cardLoto"><h3>🎰 Types de LOTO</h3><div class="loto"><div>LOTO<br>5/90</div><div>LOTO<br>FORTUNE</div><div>LOTO<br>NAP 2</div><div>LOTO<br>NAP 3</div><div>PERMUTATION</div></div></div>
+<div class="card" id="cardPronostic"><h3>🔮 Pronostic du Jour</h3><select id="prType"><option>Nappe 2</option><option>Nappe 3</option><option>Permutation</option></select><input id="prNums" placeholder="Ex: 12 - 45 - 07"><button class="btn orange" onclick="publierPronostic()">PUBLIER PRONOSTIC</button><div id="prList"></div></div>
+<div class="card" id="cardPublierResultat"><h3>🏆 Publier Résultat</h3><input id="rJeu" placeholder="Jeu ex: LOTO 5/90"><input id="rDate" type="date"><input id="rTirage" placeholder="Numéro de tirage"><input id="rNormal" placeholder="Numéro Gagnant NORMAL"><input id="rDouble" placeholder="Numéro Gagnant DOUBLE CHANCE"><select id="rType"><option>Normale Publiée</option><option>Double Chance Publiée</option></select><button class="btn green" onclick="publierResultat()">PUBLIER RÉSULTAT</button><div id="resList"></div></div>
+<div class="card" id="creerRevBox"><h3>🧑‍💼 Créer Revendeur - ADMIN seul</h3><input id="etab" placeholder="Nom établissement"><input id="rNom" placeholder="Nom revendeur"><input id="rGmail" placeholder="Gmail revendeur"><input id="rWa" placeholder="WhatsApp revendeur"><input id="rPass" placeholder="Mot de passe revendeur"><button class="btn" onclick="creerRevendeur()">+ CRÉER REVENDEUR</button><div id="revList"></div></div>
+<div class="card" id="cardRecharger"><h3>💰 Recharger avec Code WhatsApp</h3><input id="rechWa" placeholder="WhatsApp à recharger"><input id="rechMontant" type="number" placeholder="Montant FCFA"><div class="flex"><button class="btn orange" onclick="genererCode('client')">CODE CLIENT</button><button class="btn" onclick="genererCode('revendeur')">CODE REVENDEUR</button></div><input id="codeClient" placeholder="Client tape son Code reçu"><button class="btn green" onclick="validerCode()">VALIDER CODE</button><div id="rechMsg"></div></div>
+<div class="card" id="controle"><h3>🎯 CONTRÔLE - Tickets Gagnants</h3><button class="btn" onclick="faireControle()">CONTRÔLE</button><div id="controleList"></div><button class="btn orange" onclick="validerTickets()">VALIDER</button><button class="btn green" onclick="payerGains()">PAYER - Gain vers Solde Gain</button></div>
+<div class="card" id="cardRetrait"><h3>💸 Retrait Client</h3><input id="retMontant" type="number" placeholder="Montant à retirer"><button class="btn red" onclick="demandeRetrait()">RETRAIT</button><h3>✅ Confirmer Paiement MoMo - ADMIN</h3><input id="payNom" placeholder="Nom client"><input id="payMontant" type="number" placeholder="Montant payé"><input id="payDate" type="date"><input id="payCoupon" placeholder="Numéro coupon"><div class="flex"><button class="btn green" onclick="enregistrerPaiement()">ENREGISTRER</button><button class="btn" onclick="alert('Fermé')">FERMER</button></div></div>
+<div class="card" id="cardUsers"><h3>👥 Gestion Utilisateurs</h3><div id="usersList"></div></div>
+<div class="card" id="cardContenu"><h3>📝 Gestion Contenu</h3><input id="contenuTxt" placeholder="Contenu"><div class="flex"><button class="btn green" onclick="ajoutContenu()">AJOUTER</button><button class="btn orange" onclick="modifContenu()">MODIFIER</button><button class="btn red" onclick="suppContenu()">SUPPRIMER</button></div><div id="contenuList"></div></div>
+<div class="card" id="archive"><h3>📁 Archives</h3><div id="archiveList"></div></div>
 <div class="card" id="profil"><h3>👤 Profil</h3><div id="profilTxt"></div></div>
 <div class="card" id="resultat"><h3>🏆 Résultat</h3><div id="resultatTxt"></div></div>
 <div class="card" id="aide"><h3>❓ Aide</h3><p>ADMIN contrôle tout. Pour aide, contact ADMIN sur WhatsApp.</p></div>
+</div>
+
+<!-- MENU BAS CLIENT -->
+<div id="bottomNav" class="ch-bottom hide">
+<div class="act" onclick="showClientHome()">🏠<br>Accueil</div>
+<div onclick="show('cardLoto')">🎮<br>Tirages</div>
+<div><div class="ch-coupon">🎟️</div>Coupon</div>
+<div onclick="show('archive')">🎫<br>Tickets</div>
+<div onclick="show('cardRecharger')">💰<br>Solde</div>
 </div>
 
 <script>
 let DB=JSON.parse(localStorage.getItem('netloto')||'{"users":[{"gmail":"admin@netloto.com","pass":"Admin123!","wa":"22990000000","role":"ADMIN","soldeJeu":0,"soldeGain":0,"soldeRev":0,"bloque":false}],"revendeurs":[],"codes":{},"pronostics":[],"resultats":[],"tickets":[],"archives":[],"contenus":[],"caisse":500000,"ventes":0,"gains":0}');
 function save(){localStorage.setItem('netloto',JSON.stringify(DB));render()}
 function toggleAuth(){document.getElementById('insc').classList.toggle('hide');document.getElementById('conn').classList.toggle('hide');document.getElementById('authTitle').innerText=document.getElementById('insc').classList.contains('hide')?'Connexion':'Inscription'}
-function inscrire(){let g=document.getElementById('iGmail').value,p=document.getElementById('iPass').value,w=document.getElementById('iWa').value;if(!g||!p||!w)return alert('Remplis Gmail + Mot de passe + WhatsApp');if(p.length<6)return alert('Mot de passe très fort : 6 caractères minimum');DB.users.push({gmail:g,pass:p,wa:w,role:'CLIENT',soldeJeu:0,soldeGain:0,soldeRev:0,bloque:false});DB.archives.push('Inscription: '+g+' - '+new Date().toLocaleString());save();alert('Inscription réussie ! Connecte-toi maintenant.');toggleAuth()}
+function inscrire(){let g=document.getElementById('iGmail').value,p=document.getElementById('iPass').value,w=document.getElementById('iWa').value;if(!g||!p||!w)return alert('Remplis Gmail + Mot de passe + WhatsApp');if(p.length<6)return alert('Mot de passe 6 caractères minimum');DB.users.push({gmail:g,pass:p,wa:w,role:'CLIENT',soldeJeu:0,soldeGain:0,soldeRev:0,bloque:false});DB.archives.push('Inscription: '+g+' - '+new Date().toLocaleString());save();alert('Inscription réussie ! Connecte-toi.');toggleAuth()}
 function connecter(){let g=document.getElementById('cGmail').value,p=document.getElementById('cPass').value;let u=DB.users.find(x=>x.gmail==g&&x.pass==p);if(!u)return alert('Gmail ou mot de passe faux');if(u.bloque)return alert('Compte bloqué par ADMIN');localStorage.setItem('session',g);showDash(u)}
 function logout(){localStorage.removeItem('session');location.reload()}
+function showClientHome(){document.getElementById('clientHome').classList.remove('hide');document.getElementById('dashboard').classList.add('hide');window.scrollTo(0,0)}
 function showDash(u){
   document.getElementById('auth').style.display='none';
-  document.getElementById('dashboard').classList.remove('hide');
   document.getElementById('roleTxt').innerText=u.role;
   document.getElementById('userTxt').innerText=u.gmail+' | WhatsApp: '+u.wa+' | Solde Jeu: '+u.soldeJeu+' | Solde Gain: '+u.soldeGain+' | Solde Revendeur: '+u.soldeRev;
   document.getElementById('profilTxt').innerText='Nom: '+u.gmail+' | Rôle: '+u.role+' | WhatsApp: '+u.wa;
-  let estAdmin = (u.role === 'ADMIN');
-  let estRev = (u.role === 'REVENDEUR');
-  // CORRECTION : on cache par ID, pas par titre. Sinon PUBLIER RESULTAT passe pour RESULTAT.
-  let visibleClient = ['cardTableau','cardLoto','archive','profil','resultat','aide'];
-  let visibleRev = ['cardTableau','cardLoto','archive','profil','resultat','aide','cardRecharger'];
-  let toutes = ['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
-  toutes.forEach(function(id){
-    let el=document.getElementById(id);
-    if(!el) return;
-    if(estAdmin){ el.style.display='block'; }
-    else if(estRev){ el.style.display = visibleRev.includes(id) ? 'block' : 'none'; }
-    else { el.style.display = visibleClient.includes(id) ? 'block' : 'none'; }
-  });
-  // CORRECTION : cacher la partie ADMIN à l'intérieur du TABLEAU DE BORD
-  let at=document.getElementById('adminTableau');
-  if(at) at.style.display = estAdmin ? 'block' : 'none';
-  let aat=document.getElementById('archiveAdminTxt');
-  if(aat) aat.style.display = estAdmin ? 'block' : 'none';
-  window._currentUser = u;
+  let estAdmin=(u.role==='ADMIN'); let estRev=(u.role==='REVENDEUR');
+  window._currentUser=u;
+  // CLIENT = page bleue Eloto
+  if(!estAdmin && !estRev){
+    document.getElementById('clientHome').classList.remove('hide');
+    document.getElementById('bottomNav').classList.remove('hide');
+    document.getElementById('dashboard').classList.remove('hide');
+    // On cache les cartes ADMIN dans dashboard, mais on garde Recharger / Retrait / Archives / Profil / Resultat accessibles via boutons
+    let toutes=['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
+    toutes.forEach(function(id){let el=document.getElementById(id); if(!el) return; el.style.display='none';});
+    // On montre dashboard mais vide au départ, les boutons vont ouvrir la carte demandée
+    document.getElementById('chNom').innerText=u.gmail.split('@')[0];
+    document.getElementById('chSolde').innerText=(u.soldeJeu+u.soldeGain)+' XOF';
+    document.getElementById('profilTxt2').innerText='Nom: '+u.gmail+' | Rôle: '+u.role+' | WhatsApp: '+u.wa+' | Solde Jeu: '+u.soldeJeu+' | Solde Gain: '+u.soldeGain;
+    render(); return;
+  }
+  // ADMIN / REVENDEUR = ancien dashboard
+  document.getElementById('clientHome').classList.add('hide');
+  document.getElementById('bottomNav').classList.add('hide');
+  document.getElementById('dashboard').classList.remove('hide');
+  let visibleRev=['cardTableau','cardLoto','archive','profil','resultat','aide','cardRecharger'];
+  let toutes2=['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
+  toutes2.forEach(function(id){let el=document.getElementById(id); if(!el) return; if(estAdmin) el.style.display='block'; else el.style.display=visibleRev.includes(id)?'block':'none';});
+  let at=document.getElementById('adminTableau'); if(at) at.style.display=estAdmin?'block':'none';
   render();
-  montrerClientHome(u);
 }
-function montrerClientHome(u){ return; } 
+function montrerClientHome(u){return;}
 function goBack(){history.back();window.scrollTo(0,0)}
-function show(id){document.getElementById('menu').style.display='none';let el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'})}
+function show(id){
+  // Si CLIENT clique sur une carte, on l'affiche seule
+  let cur=window._currentUser;
+  if(cur && cur.role==='CLIENT'){
+    document.getElementById('clientHome').classList.add('hide');
+    document.getElementById('dashboard').classList.remove('hide');
+    let toutes=['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
+    toutes.forEach(function(x){let el=document.getElementById(x); if(el) el.style.display='none';});
+    let el=document.getElementById(id); if(el){el.style.display='block'; el.scrollIntoView({behavior:'smooth'});}
+    // Bouton retour vers Accueil
+    if(!document.getElementById('btnRetourClient')){
+      let b=document.createElement('button'); b.id='btnRetourClient'; b.className='btn'; b.innerText='← RETOUR ACCUEIL CLIENT'; b.onclick=showClientHome; b.style.margin='12px'; document.getElementById('dashboard').prepend(b);
+    }
+    document.getElementById('menu').style.display='none'; return;
+  }
+  document.getElementById('menu').style.display='none';let el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'})
+}
 function rechargerCaisse(){let m=prompt('Montant à ajouter à la Caisse ADMIN ?');if(m){DB.caisse+=parseInt(m);DB.archives.push('Caisse rechargée: '+m+' - '+new Date().toLocaleString());save()}}
-function creerRevendeur(){let e=document.getElementById('etab').value,n=document.getElementById('rNom').value,g=document.getElementById('rGmail').value,w=document.getElementById('rWa').value,p=document.getElementById('rPass').value;if(!e||!n||!g||!w||!p)return alert('Remplis tout : Établissement + Nom + Gmail + WhatsApp + Mot de passe');let code='REV-'+Math.floor(10000+Math.random()*90000);DB.revendeurs.push({etab:e,nom:n,gmail:g,wa:w,pass:p,code:code,soldeRev:0});DB.users.push({gmail:g,pass:p,wa:w,role:'REVENDEUR',soldeJeu:0,soldeGain:0,soldeRev:0,bloque:false});DB.archives.push('Revendeur créé: '+n+' '+e+' Code '+code);save();alert('REVENDEUR CRÉÉ ! Code: '+code);window.open('https://wa.me/'+w.replace(/\D/g,'')+'?text='+encodeURIComponent('Bonjour '+n+', ton compte NET LOTO créé. Établissement: '+e+' Code: '+code+' Mot de passe: '+p),'_blank')}
-function genererCode(type){let wa=document.getElementById('rechWa').value,m=document.getElementById('rechMontant').value;if(!wa||!m)return alert('Mets WhatsApp + Montant');let code='NET-'+Math.floor(10000+Math.random()*90000);DB.codes[code]={wa:wa,montant:parseInt(m),type:type};save();document.getElementById('rechMsg').innerHTML='Code <b>'+code+'</b> pour '+type+' - '+m+' FCFA';window.open('https://wa.me/'+wa.replace(/\D/g,'')+'?text='+encodeURIComponent('Ton code NET LOTO: '+code+' Montant: '+m+' FCFA. Tape-le dans l\'appli pour valider ton solde.'),'_blank')}
-function validerCode(){let c=document.getElementById('codeClient').value;let info=DB.codes[c];if(!info)return alert('Code faux');let u=DB.users.find(x=>x.wa==info.wa);if(u){if(info.type=='client'){u.soldeJeu+=info.montant}else{u.soldeRev+=info.montant}DB.caisse-=info.montant;DB.ventes+=info.montant;DB.archives.push('Recharge validée: '+info.type+' '+info.wa+' '+info.montant+' Code '+c);delete DB.codes[c];save();alert('SOLDE VALIDÉ ! '+info.montant+' FCFA ajouté.')}else alert('Utilisateur introuvable')}
-function publierPronostic(){let t=document.getElementById('prType').value,n=document.getElementById('prNums').value;if(!n)return alert('Mets les numéros');DB.pronostics.push(t+': '+n+' - '+new Date().toLocaleDateString());save();alert('Pronostic publié ! Ça passe.')}
-function publierResultat(){let j=document.getElementById('rJeu').value,d=document.getElementById('rDate').value,ti=document.getElementById('rTirage').value,no=document.getElementById('rNormal').value,doub=document.getElementById('rDouble').value,ty=document.getElementById('rType').value;if(!j||!no)return alert('Mets Jeu + Numéro Gagnant Normal');DB.resultats.push(j+' | Date: '+d+' | Tirage: '+ti+' | NORMAL: '+no+' | DOUBLE CHANCE: '+doub+' | '+ty);DB.archives.push('Résultat publié: '+j+' Tirage '+ti);save();alert('RÉSULTAT PUBLIÉ !')}
-function faireControle(){if(DB.tickets.length==0){for(let i=1;i<=50;i++)DB.tickets.push({num:'TICKET-'+i,gagnant:i<=10,gain:i<=10?5000:0,client:'client'+i+'@gmail.com'})}let g=DB.tickets.filter(t=>t.gagnant);document.getElementById('controleList').innerHTML='<b>50 tickets joués, '+g.length+' gagnants sortent :</b><br>'+g.map(t=>t.num+' - Gain: '+t.gain+' - '+t.client).join('<br>');DB.archives.push('Contrôle fait: '+g.length+' gagnants');save()}
-function validerTickets(){alert('Tickets validés ! Maintenant appuie PAYER.')}
-function payerGains(){let g=DB.tickets.filter(t=>t.gagnant);let total=g.reduce((a,t)=>a+t.gain,0);DB.gains+=total;let u=DB.users.find(x=>x.role=='CLIENT');if(u)u.soldeGain+=total;DB.archives.push('Paiement gains: '+total+' vers Solde Gain Client');save();alert('PAYÉ ! '+total+' FCFA renvoyé dans Solde Gain du Client.')}
-function demandeRetrait(){let m=parseInt(document.getElementById('retMontant').value);let s=localStorage.getItem('session');let u=DB.users.find(x=>x.gmail==s);if(!u)return alert('Connecte-toi');if(!m||u.soldeGain<m)return alert('Solde Gain insuffisant');u.soldeGain-=m;DB.caisse+=m;DB.archives.push('Retrait demandé: '+u.gmail+' '+m+' - Gain vers Caisse ADMIN');save();alert('RETRAIT : '+m+' FCFA quitte Client vers Caisse ADMIN. ADMIN va payer par MoMo hors appli.')}
-function enregistrerPaiement(){let n=document.getElementById('payNom').value,m=document.getElementById('payMontant').value,d=document.getElementById('payDate').value,c=document.getElementById('payCoupon').value;if(!n||!m)return alert('Mets Nom + Montant');DB.archives.push('CLIENT PAYÉ: '+n+' | Montant: '+m+' | Date: '+d+' | Coupon gagnant: '+c+' | Joué sur NET LOTO à 5/90');save();alert('ENREGISTRÉ ! CLIENT PAYÉ. Preuve dans Archive.')}
-function ajoutContenu(){let t=document.getElementById('contenuTxt').value;if(!t)return;DB.contenus.push(t);save()}
-function modifContenu(){if(DB.contenus.length>0){DB.contenus[DB.contenus.length-1]=document.getElementById('contenuTxt').value;save()}}
-function suppContenu(){DB.contenus.pop();save()}
-function bloquer(g){let u=DB.users.find(x=>x.gmail==g);if(u){u.bloque=true;save()}}
-function debloquer(g){let u=DB.users.find(x=>x.gmail==g);if(u){u.bloque=false;save()}}
-function supprimer(g){DB.users=DB.users.filter(x=>x.gmail!=g);save()}
-function render(){document.getElementById('nbUsers').innerText=DB.users.length;document.getElementById('nbClients').innerText=DB.users.filter(x=>x.role=='CLIENT').length;document.getElementById('nbRev').innerText=DB.revendeurs.length;document.getElementById('ventes').innerText=DB.ventes;document.getElementById('gains').innerText=DB.gains;document.getElementById('caisse').innerText=DB.caisse;document.getElementById('prList').innerHTML=DB.pronostics.map(p=>'<div>🔮 '+p+'</div>').join('');document.getElementById('resList').innerHTML=DB.resultats.map(r=>'<div>🏆 '+r+'</div>').join('');document.getElementById('revList').innerHTML=DB.revendeurs.map(r=>'<div>'+r.nom+' - '+r.etab+' - Code: '+r.code+' - Solde Rev: '+r.soldeRev+'</div>').join('');let cur=window._currentUser;let arch=DB.archives;if(cur && cur.role!=='ADMIN'){arch=DB.archives.filter(a=>a.includes(cur.gmail) || a.includes('Résultat publié') || a.includes('Inscription: '+cur.gmail));}document.getElementById('archiveList').innerHTML=arch.map(a=>'<div>📁 '+a+'</div>').join('');document.getElementById('contenuList').innerHTML=DB.contenus.map(c=>'<div>'+c+'</div>').join('');document.getElementById('usersList').innerHTML=DB.users.map(u=>'<div>'+u.gmail+' - '+u.role+' '+(u.bloque?'(BLOQUÉ)':'')+' <button onclick="bloquer(\''+u.gmail+'\')">BLOQUER</button> <button onclick="debloquer(\''+u.gmail+'\')">DÉBLOQUER</button> <button onclick="supprimer(\''+u.gmail+'\')">SUPPRIMER</button></div>').join('');document.getElementById('resultatTxt').innerHTML=DB.resultats.map(r=>'<div>'+r+'</div>').join('')}
-setTimeout(()=>{document.getElementById('splash').style.display='none';render();let s=localStorage.getItem('session');if(s){let u=DB.users.find(x=>x.gmail==s);if(u)showDash(u)}},1500);
-</script>
+function creerRevendeur(){let e=document.getElementById('etab').value,n=document.getElementById('rNom').value,g=document.getElementById('rGmail').value,w=document.getElementById('rWa').value,p=document.getElementById('rPass').value;if(!e||!n||!g||!w||!p)return alert('Remplis tout');let code='REV-'+Math.floor(10000+Math.random()*90000);DB.revendeurs.push({etab:e,nom:n,gmail:g,wa:w,pass:p,code:code,soldeRev:0});DB.users.push({gmail:g,pass:p,wa:w,role:'REVENDEUR',soldeJeu:0,soldeGain:0,soldeRev:0,bloque:false});DB.archives.push('Revendeur créé: '+n+' '+e+' Code '+code);save();alert('REVENDEUR CRÉÉ ! Code: '+code);window.open('https://wa.me/'+w.replace(/\D/g,'')+'?text='+encodeURIComponent('Bonjour '+n+', ton compte NET LOTO créé. Établissement: '+e+' Code: '+code+' Mot de passe: '+p),'_blank')}
+function genererCode(type){let wa=document.getElementById('rechWa').value,m=document.getElementById('rechMontant').value;if(!wa||!m)return alert('Mets WhatsApp + Montant');let code='NET-'+Math.floor(10000+Math.random()*90000);DB.codes[code]={wa:wa,montant:parseInt(m),type:type};save();document.getElementById('rechMsg').innerHTML='Code <b>'+code+'</b> pour '+type+' - '+m+' FCFA';window.open('https://wa.me/'+wa.replace(/\D/g,'')+'?text='+encodeURIComponent('Ton code NET LOTO: '+code+' Montant: '+m+' FCFA. Tape-le
