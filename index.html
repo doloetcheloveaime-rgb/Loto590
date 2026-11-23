@@ -187,31 +187,30 @@ function supprimer(g){DB.users=DB.users.filter(x=>x.gmail!=g);save()}
 function render(){document.getElementById('nbUsers').innerText=DB.users.length;document.getElementById('nbClients').innerText=DB.users.filter(x=>x.role=='CLIENT').length;document.getElementById('nbRev').innerText=DB.revendeurs.length;document.getElementById('ventes').innerText=DB.ventes;document.getElementById('gains').innerText=DB.gains;document.getElementById('caisse').innerText=DB.caisse;document.getElementById('prList').innerHTML=DB.pronostics.map(p=>'<div>'+p+'</div>').join('');document.getElementById('resList').innerHTML=DB.resultats.map(r=>'<div>'+r+'</div>').join('');document.getElementById('revList').innerHTML=DB.revendeurs.map(r=>'<div>'+r.nom+' - '+r.etab+' - Code: '+r.code+'</div>').join('');let cur=window._currentUser;let arch=DB.archives;if(cur&&cur.role!=='ADMIN'){arch=DB.archives.filter(a=>a.includes(cur.gmail)||a.includes('Resultat publie'));}document.getElementById('archiveList').innerHTML=arch.map(a=>'<div>'+a+'</div>').join('');document.getElementById('contenuList').innerHTML=DB.contenus.map(c=>'<div>'+c+'</div>').join('');document.getElementById('usersList').innerHTML=DB.users.map(u=>'<div>'+u.gmail+' - '+u.role+' '+(u.bloque?'(BLOQUE)':'')+' <button onclick="bloquer(\''+u.gmail+'\')">BLOQUER</button> <button onclick="debloquer(\''+u.gmail+'\')">DEBLOQUER</button> <button onclick="supprimer(\''+u.gmail+'\')">SUPPRIMER</button></div>').join('');let rt=DB.resultats.map(r=>'<div>'+r+'</div>').join('');document.getElementById('resultatTxt').innerHTML=rt;let rt2=document.getElementById('resultatTxt2');if(rt2)rt2.innerHTML=rt||'Pas encore de resultat.';}
 setTimeout(()=>{document.getElementById('splash').style.display='none';render();let s=localStorage.getItem('session');if(s){let u=DB.users.find(x=>x.gmail==s);if(u)showDash(u)}},1500);
 function connecter(){
-  alert("BOUTON TOUCHE - on teste");
-  var box=document.getElementById("connexion");
-  if(!box){ alert("Page connexion introuvable"); return; }
-  var inputs=box.querySelectorAll("input");
-  alert("Inputs trouves : "+inputs.length);
+function connecter(){
+  var all=document.querySelectorAll("input");
   var gmail=""; var pass="";
-  for(var i=0;i<inputs.length;i++){
-    var ph=(inputs[i].placeholder||"").toLowerCase();
-    if(ph.includes("gmail")||ph.includes("mail")) gmail=inputs[i].value.trim();
-    if(ph.includes("mot")||inputs[i].type=="password") pass=inputs[i].value;
+  for(var i=0;i<all.length;i++){
+    if(all[i].offsetParent===null) continue;
+    var ph=(all[i].placeholder||"").toLowerCase();
+    if(ph.includes("gmail")||ph.includes("mail")) gmail=all[i].value.trim();
+    if(ph.includes("mot")||all[i].type=="password") pass=all[i].value;
   }
-  alert("Gmail tape : "+gmail+" / Pass : "+pass);
+  if(!gmail||!pass){ alert("Mets Gmail et mot de passe"); return; }
   var users=JSON.parse(localStorage.getItem("users")||"[]");
-  alert("Comptes enregistres : "+users.length);
-  if(users.length==0){ alert("Aucun compte. Inscris-toi d abord avec ce Gmail, puis reconnecte-toi."); return; }
+  if(users.length==0){ alert("Aucun compte. Inscris-toi d abord."); return; }
   var u=null;
   for(var i=0;i<users.length;i++){ if((users[i].gmail||"").toLowerCase()==gmail.toLowerCase() && users[i].pass==pass){ u=users[i]; break; } }
-  if(!u){ alert("Gmail ou mot de passe incorrect"); return; }
+  if(!u){ alert("Gmail ou mot de passe incorrect pour "+gmail); return; }
   window._currentUser=u;
   localStorage.setItem("session",JSON.stringify(u));
-  alert("Bienvenue - on ouvre tableau de bord");
-  box.classList.add("hide");
-  var ch=document.getElementById("clientHome");
-  if(!ch){ alert("Page clientHome introuvable - id different"); return; }
-  ch.classList.remove("hide");
+  alert("Bienvenue "+(u.prenom||u.gmail));
+  var ids=["clientHome","client","dashboard","accueil","home","pageClient"];
+  var trouve=false;
+  for(var k=0;k<ids.length;k++){ var el=document.getElementById(ids[k]); if(el){ el.classList.remove("hide"); el.style.display="block"; trouve=true; } }
+  var btns=document.querySelectorAll("button");
+  for(var b=0;b<btns.length;b++){ if(btns[b].innerText.includes("CONNEXION")){ var p=btns[b].parentElement; if(p) p.style.display="none"; } }
+  if(!trouve){ alert("Connexion OK mais page client introuvable - envoie moi le nom de la page bleue"); return; }
   window.scrollTo(0,0);
 }
 function inscrire(){
