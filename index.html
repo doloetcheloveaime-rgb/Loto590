@@ -128,10 +128,10 @@ function logout(){localStorage.removeItem('session');location.reload()}
 function showClientHome(){document.getElementById('clientHome').classList.remove('hide');document.getElementById('dashboard').classList.add('hide');window.scrollTo(0,0)}
 function showDash(u){
 document.getElementById('auth').style.display='none';
-document.getElementById('roleTxt').innerText=u.role;
-document.getElementById('userTxt').innerText=u.gmail+' | WhatsApp: '+u.wa+' | Solde Jeu: '+u.soldeJeu+' | Solde Gain: '+u.soldeGain+' | Solde Revendeur: '+u.soldeRev;
-document.getElementById('profilTxt').innerText='Nom: '+u.gmail+' | Role: '+u.role+' | WhatsApp: '+u.wa;
-window._currentUser=u;
+document.getElementById('clientHome').classList.add('hide');
+document.getElementById('bottomNav').classList.add('hide');
+document.getElementById('dashboard').classList.remove('hide');
+document.getElementById('dashboard').style.display='block';
 let estAdmin=(u.role==='ADMIN');let estRev=(u.role==='REVENDEUR');
 if(!estAdmin&&!estRev){
 document.getElementById('clientHome').classList.remove('hide');
