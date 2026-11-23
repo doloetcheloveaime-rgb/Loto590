@@ -83,12 +83,12 @@
 </div>
 <div class="ch-sec"><b>🌍 Choisir un pays</b><span>29 ouverts &nbsp; Voir tous ></span></div>
 <div class="ch-pays">
-<div onclick="alert('BENIN - LOTO 5/90')">🇧🇯 <b>BENIN</b><br><small>6 tirages ouverts ></small></div>
-<div onclick="alert('COTE DIVOIRE')">🇨🇮 <b>COTE DIVOIRE</b><br><small>9 tirages ouverts ></small></div>
-<div onclick="alert('FRANCE')">🇫🇷 <b>FRANCE</b><br><small>2 tirages ouverts ></small></div>
-<div onclick="alert('GHANA')">🇬🇭 <b>GHANA</b><br><small>2 tirages ouverts ></small></div>
-<div onclick="alert('NIGERIA')">🇳🇬 <b>NIGERIA</b><br><small>4 tirages ouverts ></small></div>
-<div onclick="alert('TOGO')">🇹🇬 <b>TOGO</b><br><small>3 tirages ouverts ></small></div>
+<div onclick="openPays('BENIN')">🇧🇯 <b>BENIN</b><br><small>6 tirages ouverts ></small></div>
+<div onclick="openPays('COTE DIVOIRE')">🇨🇮 <b>COTE DIVOIRE</b><br><small>9 tirages ouverts ></small></div>
+<div onclick="openPays('FRANCE')">🇫🇷 <b>FRANCE</b><br><small>2 tirages ouverts ></small></div>
+<div onclick="openPays('GHANA')">🇬🇭 <b>GHANA</b><br><small>2 tirages ouverts ></small></div>
+<div onclick="openPays('NIGERIA')">🇳🇬 <b>NIGERIA</b><br><small>4 tirages ouverts ></small></div>
+<div onclick="openPays('TOGO')">🇹🇬 <b>TOGO</b><br><small>3 tirages ouverts ></small></div>
 </div>
 <div class="ch-menu4">
 <div onclick="show('archive')">🎟️<br>Mes tickets</div>
@@ -188,6 +188,32 @@ function debloquer(g){let u=DB.users.find(x=>x.gmail==g);if(u){u.bloque=false;sa
 function supprimer(g){DB.users=DB.users.filter(x=>x.gmail!=g);save()}
 function render(){document.getElementById('nbUsers').innerText=DB.users.length;document.getElementById('nbClients').innerText=DB.users.filter(x=>x.role=='CLIENT').length;document.getElementById('nbRev').innerText=DB.revendeurs.length;document.getElementById('ventes').innerText=DB.ventes;document.getElementById('gains').innerText=DB.gains;document.getElementById('caisse').innerText=DB.caisse;document.getElementById('prList').innerHTML=DB.pronostics.map(p=>'<div>'+p+'</div>').join('');document.getElementById('resList').innerHTML=DB.resultats.map(r=>'<div>'+r+'</div>').join('');document.getElementById('revList').innerHTML=DB.revendeurs.map(r=>'<div>'+r.nom+' - '+r.etab+' - Code: '+r.code+'</div>').join('');let cur=window._currentUser;let arch=DB.archives;if(cur&&cur.role!=='ADMIN'){arch=DB.archives.filter(a=>a.includes(cur.gmail)||a.includes('Resultat publie'));}document.getElementById('archiveList').innerHTML=arch.map(a=>'<div>'+a+'</div>').join('');document.getElementById('contenuList').innerHTML=DB.contenus.map(c=>'<div>'+c+'</div>').join('');document.getElementById('usersList').innerHTML=DB.users.map(u=>'<div>'+u.gmail+' - '+u.role+' '+(u.bloque?'(BLOQUE)':'')+' <button onclick="bloquer(\''+u.gmail+'\')">BLOQUER</button> <button onclick="debloquer(\''+u.gmail+'\')">DEBLOQUER</button> <button onclick="supprimer(\''+u.gmail+'\')">SUPPRIMER</button></div>').join('');let rt=DB.resultats.map(r=>'<div>'+r+'</div>').join('');document.getElementById('resultatTxt').innerHTML=rt;let rt2=document.getElementById('resultatTxt2');if(rt2)rt2.innerHTML=rt||'Pas encore de resultat.';}
 setTimeout(()=>{document.getElementById('splash').style.display='none';render();let s=localStorage.getItem('session');if(s){let u=DB.users.find(x=>x.gmail==s);if(u)showDash(u)}},1500);
+<// FIX BOUTONS 
+  let u=window._currentUser;
+  if(u && u.role==='CLIENT'){ showClientHome(); return; }
+  window.scrollTo(0,0);
+}
+function show(id){
+  document.getElementById('menu').style.display='none';
+  let u=window._currentUser;
+  if(u && u.role==='CLIENT'){
+    document.getElementById('clientHome').classList.add('hide');
+    let d=document.getElementById('dashboard');
+    d.classList.remove('hide'); d.style.display='block';
+    let t=['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
+    t.forEach(function(x){let el=document.getElementById(x); if(el) el.style.display='none';});
+    let el=document.getElementById(id);
+    if(el){ el.style.display='block'; el.scrollIntoView(); }
+    if(!document.getElementById('btnRetourClient')){
+      let b=document.createElement('button'); b.id='btnRetourClient'; b.className='btn'; b.innerText='⬅ RETOUR ACCUEIL'; b.onclick=showClientHome; b.style.margin='12px';
+      d.prepend(b);
+    }
+    return;
+  }
+  let el2=document.getElementById(id); if(el2) el2.scrollIntoView();
+}
+function openPays(nom){ alert(nom+' - Bientôt disponible. Choisis ton jeu.'); }
+</script>
 </script>
 </body>
 </html>
