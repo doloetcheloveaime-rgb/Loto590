@@ -243,21 +243,16 @@ function ouvrirJeu(nom){
   alert(nom+" - Choisis ton jeu, bonne chance");
 }
 function show(id){
-  document.getElementById("menu").style.display="none";
-  var ch=document.getElementById("clientHome");
-  var d=document.getElementById("dashboard");
-  if(ch) ch.classList.add("hide");
-  if(d){ d.classList.remove("hide"); d.style.display="block"; }
-  var liste=["cardTableau","cardLoto","cardPronostic","cardPublierResultat","creerRevBox","cardRecharger","controle","cardRetrait","cardUsers","cardContenu","archive","profil","resultat","aide"];
-  for(var i=0;i<liste.length;i++){ var el=document.getElementById(liste[i]); if(el) el.style.display="none"; }
-  var cible=document.getElementById(id);
-  if(cible){ cible.style.display="block"; cible.scrollIntoView(); }
-  if(!document.getElementById("btnRetourClient")){
-    var b=document.createElement("button");
-    b.id="btnRetourClient"; b.innerText="RETOUR ACCUEIL";
-    b.className="btn"; b.style.margin="12px";
-    b.onclick=function(){ document.getElementById("dashboard").classList.add("hide"); document.getElementById("clientHome").classList.remove("hide"); window.scrollTo(0,0); };
-    d.prepend(b);
+  closeMenu();
+  var home=document.getElementById('clientHome');
+  home.classList.add('hide'); home.style.display='none';
+  var d=document.getElementById('dashboard');
+  d.classList.remove('hide'); d.style.display='block';
+  document.querySelectorAll('.card').forEach(c=>{c.classList.add('hide'); c.style.display='none';});
+  var el=document.getElementById(id);
+  if(el){ el.classList.remove('hide'); el.style.display='block'; el.scrollIntoView(); }
+  if(window._currentUser && window._currentUser.role=='CLIENT'){
+    var mt=document.getElementById('menuTableau'); if(mt) mt.style.display='none';
   }
 }
 function showClientHome(){
