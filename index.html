@@ -497,6 +497,57 @@ let v=document.getElementById('viewDepotSeul'); if(v) v.style.display='none';
 document.getElementById('clientHome').style.display='block';
 }
  // ===== FIN CODE 3 =====
+   // ===== REPARATION - ENLEVER LIGNE ROUGE DANS SOLDE + REPARER BOUTONS =====
+// 1. Supprimer la ligne rouge dans SOLDE
+setTimeout(function(){
+let all=document.querySelectorAll('*');
+all.forEach(function(el){
+if(el.children.length===0 && el.textContent.includes('SOLDE GAIN - RETRAIT RAPIDE')){
+el.remove();
+}
+});
+},500);
+
+// 2. Réparer SOLDE - les 2 boutons, haut + bas
+function ouvrirSoldeFinal(){
+let p=document.getElementById('panelSoldeSeul');
+if(!p){
+p=document.createElement('div');
+p.id='panelSoldeSeul';
+p.style.cssText='padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
+p.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b>0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b>0 F</b></div></div>';
+let home=document.getElementById('clientHome')||document.body;
+home.prepend(p);
+p.style.display='block';
+return;
+}
+if(p.style.display==='none'){ p.style.display='block'; } else { p.style.display='none'; }
+}
+
+// 3. Réparer DEPOT
+function ouvrirDepotFinal(){
+let old=document.getElementById('viewDepotSeul');
+if(!old){ old=document.createElement('div'); old.id='viewDepotSeul'; old.style.padding='15px'; document.body.appendChild(old); }
+old.innerHTML='<h2>💳 Dépôt</h2><p>Le dépôt est fait par <b>l\'admin</b> et les <b>revendeurs créés par l\'admin</b>.</p><input id="dMontantSeul" type="number" style="width:100%;padding:10px;margin:5px 0" placeholder="Montant Ex: 5000"><br><select id="dTypeSeul" style="width:100%;padding:10px;margin:5px 0"><option value="jeu">SOLDE JEU</option><option value="gain">SOLDE GAIN</option></select><br><button onclick="envoyerDepotSeul()" style="width:100%;padding:12px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">📩 DEMANDER UN DÉPÔT</button><br><button onclick="backDepotSeul()" style="width:100%;padding:10px;margin-top:8px">⬅ Retour</button>';
+let home=document.getElementById('clientHome'); if(home) home.style.display='none';
+old.style.display='block';
+}
+
+setTimeout(function(){
+let tous=document.querySelectorAll('div,button,span,a,p');
+tous.forEach(function(el){
+let t=el.textContent.trim();
+if(t==='SOLDE' || t==='💰 SOLDE'){
+el.style.cursor='pointer';
+el.onclick=function(e){ e.stopPropagation(); ouvrirSoldeFinal(); };
+}
+if(t.includes('DÉPÔT') || t.includes('DEPOT')){
+el.style.cursor='pointer';
+el.onclick=function(e){ e.stopPropagation(); ouvrirDepotFinal(); };
+}
+});
+},800);
+ // ===== FIN REPARATION =====
 </script>
 </body>
 </html>
