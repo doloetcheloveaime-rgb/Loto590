@@ -574,7 +574,8 @@ var ven=list.filter(function(j){ return j.jour==="demain"; });
 var html="<h2>"+paysNom+"</h2>";
 html+="<div style=\"display:flex;gap:8px\"><button style=\"flex:1;padding:10px;background:#e11d2e;color:#fff;border:none;border-radius:8px\">Aujourd hui "+auj.length+"</button><button style=\"flex:1;padding:10px;background:#fff;border:1px solid #ddd;border-radius:8px\">A venir "+ven.length+"</button></div>";
 html+="<h3>Aujourd hui</h3>";
-auj.forEach(function(j){ html+="<div style=\"background:#fff;padding:12px;border-radius:12px;margin:8px 0\"><b>"+j.flag+" "+j.nom+"</b><br><small>Fermeture "+j.ferm+"h"+(j.fermMin<10?"0"+j.fermMin:j.fermMin)+" - "+tempsRestant(j)+"</small></div>"; });
+auj.forEach(function(j){ html+="<div onclick=\"openJeu('"+j.pays+"','"+j.nom+"','"+j.ferm+"h"+j.fermMin+"')\" style=\"background:#fff;padding:12px;border-radius:12px;margin:8px 0;cursor:pointer\"><b>"+j.flag+" "+j.nom+"</b><br><small>Fermeture "+j.ferm+"h"+(j.fermMin<10?"0"+j.fermMin:j.fermMin)+" - "+tempsRestant(j)+"</small></div>"; });
+ven.forEach(function(j){ html+="<div onclick=\"openJeu('"+j.pays+"','"+j.nom+"','"+j.ferm+"h"+j.fermMin+"')\" style=\"background:#fff;padding:12px;border-radius:12px;margin:8px 0;cursor:pointer\"><b>"+j.flag+" "+j.nom+"</b><br><small>Dem. "+j.ferm+"h"+(j.fermMin<10?"0"+j.fermMin:j.fermMin)+" - "+tempsRestant(j)+"</small></div>"; });
 html+="<h3>A venir</h3>";
 ven.forEach(function(j){ html+="<div style=\"background:#fff;padding:12px;border-radius:12px;margin:8px 0\"><b>"+j.flag+" "+j.nom+"</b><br><small>Dem. "+j.ferm+"h"+(j.fermMin<10?"0"+j.fermMin:j.fermMin)+" - "+tempsRestant(j)+"</small></div>"; });
 html+="<button onclick=\"backPays6()\" style=\"width:100%;padding:12px;margin-top:10px\">Retour</button>";
@@ -606,6 +607,85 @@ JEUX_6PAYS.push({pays:"NIGERIA",flag:"🇳🇬",nom:"IGWE 17H",heure:17,ferm:15,
 ligneDefile();
 alert("26 JEUX OK - BENIN 6 + CI 9 + FRANCE 2 + GHANA 2 + NIGERIA 4 + TOGO 3 = 26");
  // FIN CORRECTION FINALE
+   // CODE PAGE DE JEU - PAREIL 6 PAYS
+var FORMULES=["PN (1N)","Two sure","NAP","Chance +","Permutation","Against","Total Résultat","Anagramme"];
+var JEU_ACTUEL=null;
+var FORMULE_ACTUELLE="Two sure";
+var PARI_ACTUEL="DIRECT";
+
+function openJeu(pays, nom, fermTxt){
+JEU_ACTUEL={pays:pays,nom:nom,ferm:fermTxt};
+var old=document.getElementById("viewJeu");
+if(!old){ old=document.createElement("div"); old.id="viewJeu"; old.style.padding="0"; old.style.background="#f5f5f5"; old.style.minHeight="100vh"; document.body.appendChild(old); }
+var html="";
+html+="<div style=\"background:#e11d2e;color:#fff;padding:14px\">";
+html+="<div style=\"display:flex;justify-content:space-between;align-items:center\"><b>🇧🇯 "+pays+" - "+nom+"</b><button onclick=\"backJeu()\" style=\"background:transparent;border:none;color:#fff;font-size:22px\">X</button></div>";
+html+="<small>Aujourd'hui "+fermTxt+"</small>";
+html+="<div style=\"display:flex;gap:6px;margin-top:10px\"><button style=\"flex:1;padding:8px;border:none;border-radius:20px;background:#fff;color:#000\">Basic</button><button style=\"flex:1;padding:8px;border:none;border-radius:20px;background:rgba(255,255,255,.3);color:#fff\">3D</button><button onclick=\"toggleClassic()\" id=\"btnClassic\" style=\"flex:1;padding:8px;border:none;border-radius:20px;background:rgba(255,255,255,.3);color:#fff\">Classic</button></div>";
+html+="</div>";
+html+="<div id=\"corpsJeu\" style=\"padding:14px\">";
+html+="<div style=\"display:flex;gap:8px\"><button id=\"btnNormal\" onclick=\"setModeJeu('Normal')\" style=\"flex:1;padding:12px;background:#e11d2e;color:#fff;border:none;border-radius:8px\">Normal</button><button id=\"btnChance\" onclick=\"setModeJeu('Ma chance')\" style=\"flex:1;padding:12px;background:#fff;border:1px solid #ddd;border-radius:8px\">Ma chance</button></div>";
+html+="<p style=\"margin:14px 0 6px\"><b>Formule</b></p>";
+html+="<div onclick=\"toggleFormule()\" style=\"background:#fff;padding:12px;border-radius:8px;display:flex;justify-content:space-between\"><span id=\"txtFormule\">"+FORMULE_ACTUELLE+"</span><span>▼</span></div>";
+html+="<div id=\"listeFormule\" style=\"display:none;background:#fff;border-radius:8px;margin-top:4px;overflow:hidden\">";
+FORMULES.forEach(function(f){
+var coche = f===FORMULE_ACTUELLE ? "✓ " : "";
+html+="<div onclick=\"choisirFormule('"+f+"')\" style=\"padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between\"><span>"+f+"</span><span style=\"color:#2563eb\">"+coche+"</span></div>";
+});
+html+="</div>";
+html+="<p style=\"margin:14px 0 6px\"><b>Pari</b></p>";
+html+="<div style=\"display:flex;gap:6px;flex-wrap:wrap\">";
+["DIRECT","TURBO2","TURBO3","TURBO4"].forEach(function(p){
+var act = p===PARI_ACTUEL;
+html+="<button onclick=\"choisirPari('"+p+"')\" style=\"flex:1;padding:10px;border-radius:8px;border:none;background:"+(act?"#e11d2e":"#fff")+";color:"+(act?"#fff":"#000")+";border:1px solid #ddd\">"+p+"</button>";
+});
+html+="</div>";
+html+="<p style=\"margin:14px 0 6px\"><b>Numéros</b></p>";
+html+="<div id=\"zoneNumeros\" style=\"background:#fff;padding:12px;border-radius:8px\"></div>";
+html+="<p style=\"margin:14px 0 6px\"><b>Mise</b></p>";
+html+="<div style=\"display:flex;gap:8px\"><input id=\"inputMise\" type=\"number\" value=\"0\" style=\"flex:1;padding:12px;border-radius:8px;border:1px solid #ddd\"><button onclick=\"randomNumero()\" style=\"padding:12px;border:none;background:#fff;border-radius:8px\">🎲</button><button onclick=\"effacerNumero()\" style=\"padding:12px;border:none;background:#fff;border-radius:8px\">🗑️</button></div>";
+html+="<div style=\"display:flex;gap:6px;margin-top:8px\">";
+[100,200,500,1000,2000].forEach(function(m){
+html+="<button onclick=\"setMise("+m+")\" style=\"flex:1;padding:10px;background:#fff;border:1px solid #ddd;border-radius:8px\">"+m.toLocaleString()+"</button>";
+});
+html+="</div>";
+html+="<button onclick=\"ajouterCoupon()\" style=\"width:100%;padding:14px;margin-top:14px;background:#e11d2e;color:#fff;border:none;border-radius:8px;font-weight:bold\">⚡ Ajouter au coupon</button>";
+html+="<div id=\"msgCoupon\" style=\"text-align:center;margin-top:10px;color:green\"></div>";
+html+="</div>";
+old.innerHTML=html;
+let home=document.getElementById("clientHome"); if(home) home.style.display="none";
+let vp=document.getElementById("viewPays6"); if(vp) vp.style.display="none";
+old.style.display="block";
+renderNumeros();
+window.scrollTo(0,0);
+}
+function renderNumeros(){
+var z=document.getElementById("zoneNumeros"); if(!z) return;
+if(FORMULE_ACTUELLE==="PN (1N)" || FORMULE_ACTUELLE==="NAP" || FORMULE_ACTUELLE==="Chance +" || FORMULE_ACTUELLE==="Total Résultat"){
+z.innerHTML="<div style=\"display:flex;align-items:center;gap:8px\"><b>T1</b><input id=\"numT1\" type=\"number\" placeholder=\"00\" style=\"flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;text-align:center\"></div><small>"+FORMULE_ACTUELLE+" : 1 numéro seulement</small>";
+}else{
+z.innerHTML="<div style=\"display:flex;align-items:center;gap:8px;margin-bottom:8px\"><b>T1</b><input id=\"numT1\" type=\"number\" placeholder=\"00\" style=\"flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;text-align:center\"></div><div style=\"display:flex;align-items:center;gap:8px\"><b>T2</b><input id=\"numT2\" type=\"number\" placeholder=\"00\" style=\"flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;text-align:center\"></div><small>"+FORMULE_ACTUELLE+" : 2 numéros - T1 + T2</small>";
+}
+}
+function toggleFormule(){ var l=document.getElementById("listeFormule"); if(l) l.style.display = l.style.display==="none" ? "block" : "none"; }
+function choisirFormule(f){ FORMULE_ACTUELLE=f; var t=document.getElementById("txtFormule"); if(t) t.innerText=f; toggleFormule(); openJeu(JEU_ACTUEL.pays, JEU_ACTUEL.nom, JEU_ACTUEL.ferm); }
+function choisirPari(p){ PARI_ACTUEL=p; openJeu(JEU_ACTUEL.pays, JEU_ACTUEL.nom, JEU_ACTUEL.ferm); }
+function setModeJeu(m){ document.getElementById("btnNormal").style.background = m==="Normal" ? "#e11d2e" : "#fff"; document.getElementById("btnNormal").style.color = m==="Normal" ? "#fff" : "#000"; document.getElementById("btnChance").style.background = m==="Ma chance" ? "#e11d2e" : "#fff"; document.getElementById("btnChance").style.color = m==="Ma chance" ? "#fff" : "#000"; }
+function setMise(m){ var i=document.getElementById("inputMise"); if(i) i.value=m; }
+function randomNumero(){ var a=document.getElementById("numT1"); if(a) a.value=Math.floor(Math.random()*90); var b=document.getElementById("numT2"); if(b) b.value=Math.floor(Math.random()*90); }
+function effacerNumero(){ var a=document.getElementById("numT1"); if(a) a.value=""; var b=document.getElementById("numT2"); if(b) b.value=""; var m=document.getElementById("inputMise"); if(m) m.value=0; }
+function ajouterCoupon(){ var t1=document.getElementById("numT1")?document.getElementById("numT1").value:""; var t2=document.getElementById("numT2")?document.getElementById("numT2").value:""; var mise=document.getElementById("inputMise")?document.getElementById("inputMise").value:0; var msg=document.getElementById("msgCoupon"); if(!t1){ if(msg) msg.innerText="Mets un numéro d'abord, boss !"; return; } if(msg) msg.innerText="✅ Ajouté : "+JEU_ACTUEL.pays+" "+JEU_ACTUEL.nom+" - "+FORMULE_ACTUELLE+" - "+PARI_ACTUEL+" - N° "+t1+(t2?"-"+t2:"")+" - Mise "+mise; }
+function toggleClassic(){ var c=document.getElementById("corpsJeu"); if(!c) return; var sombre = c.style.background==="#111"; c.style.background = sombre ? "#f5f5f5" : "#111"; c.style.color = sombre ? "#000" : "#fff"; }
+function backJeu(){ var v=document.getElementById("viewJeu"); if(v) v.style.display="none"; var vp=document.getElementById("viewPays6"); if(vp) vp.style.display="block"; }
+ // RENDRE LES JEUX CLIQUABLES DANS openPays
+var oldOpenPays = openPays;
+openPays = function(paysNom){
+oldOpenPays(paysNom);
+var vp=document.getElementById("viewPays6");
+if(!vp) return;
+var divs=vp.querySelectorAll("div");
+}
+ // FIN PAGE DE JEU
 </script>
 </body>
 </html>
