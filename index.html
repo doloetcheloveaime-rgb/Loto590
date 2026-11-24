@@ -755,98 +755,106 @@ openJeu = function(pays, nom, fermTxt){
  calculerGain();
 };
  // FIN CODE GAIN
- // CODE FORMULES 4 à 8 - VERSION CORRIGEE SANS ZONEMISELABLE
-var NB_CHANCE2 = 3;
-var NB_PERM2 = 3;
-var ANAGRAMME_LISTE2 = [];
+   // CODE V3 - CHANCE+ NAP + PAIRE - SAUT AUTO - SANS ZONEMISELABLE
+var NB_CHANCE3 = 3;
+var NB_PERM3 = 3;
+var LISTE_PAIRE3 = [];
 try{
-function calculerGain2(){
+function autoSaut3(el){
+ try{
+  if(el.value.length>=2){ el.value=el.value.slice(0,2); var next=el.parentElement.nextElementSibling; if(next){ var inp=next.querySelector("input"); if(inp) inp.focus(); } }
+ }catch(e){}
+}
+function calculerGain3(){
  try{
   var inp=document.getElementById("inputMise"); if(!inp) return 0;
   var miseBase=parseInt(inp.value||0)||0;
   var miseTotale=miseBase, gain=0, detail="";
   if(FORMULE_ACTUELLE==="Chance +"){
-   gain=miseBase*80; detail="2 bons = "+(miseBase*80).toLocaleString()+" | 3 bons = "+(miseBase*1750).toLocaleString();
+   miseTotale=miseBase;
+   if(NB_CHANCE3===2) gain=miseBase*80;
+   if(NB_CHANCE3===3) gain=miseBase*1750;
+   if(NB_CHANCE3===4) gain=miseBase*17500;
+   if(NB_CHANCE3===5) gain=miseBase*200000;
+   detail="Nap "+NB_CHANCE3+" = "+gain.toLocaleString()+" XOF";
   } else if(FORMULE_ACTUELLE==="Permutation"){
-   var nbComb=3; if(NB_PERM2===4) nbComb=6; if(NB_PERM2===5) nbComb=10;
-   miseTotale=miseBase*nbComb; gain=miseBase*300; detail="2 bons = "+(miseBase*300).toLocaleString()+" | 3 bons = "+(miseBase*900).toLocaleString();
+   var nbComb=3; if(NB_PERM3===4) nbComb=6; if(NB_PERM3===5) nbComb=10;
+   miseTotale=miseBase*nbComb; gain=miseBase*300;
+   detail="Perm "+NB_PERM3+" = "+nbComb+" combinaisons | Mise totale "+miseTotale.toLocaleString();
   } else if(FORMULE_ACTUELLE==="Against"){
-   miseTotale=miseBase*NB_PERM2; gain=miseBase*300; detail="Banka+1 = "+(miseBase*300).toLocaleString()+" | Banka+2 = "+(miseBase*600).toLocaleString()+" | Banka+3 = "+(miseBase*900).toLocaleString();
+   miseTotale=miseBase*NB_PERM3; gain=miseBase*300;
+   detail="Against : Banka + "+NB_PERM3+" numéros | Mise totale "+miseTotale.toLocaleString();
   } else if(FORMULE_ACTUELLE==="Total Résultat"){
    gain=miseBase*13; detail="Total exact = "+gain.toLocaleString();
   } else if(FORMULE_ACTUELLE==="Anagramme"){
-   var nbNap2=ANAGRAMME_LISTE2.length*2; if(ANAGRAMME_LISTE2.length>=5) nbNap2=37;
-   miseTotale=miseBase*nbNap2; gain=miseBase*300; detail="1 couple = "+(miseBase*300).toLocaleString()+" | 2 couples = "+(miseBase*600).toLocaleString()+" | 3 couples = "+(miseBase*900).toLocaleString();
+   var nbCouples=LISTE_PAIRE3.length;
+   miseTotale=miseBase*nbCouples; gain=miseBase*300;
+   detail=nbCouples+" couple(s) x "+miseBase.toLocaleString()+" = Mise "+miseTotale.toLocaleString()+" | 1 couple trouvé = "+gain.toLocaleString();
   } else { return 0; }
-  var el=document.getElementById("txtGain2"); if(el) el.innerText=gain.toLocaleString()+" XOF";
-  var elT=document.getElementById("txtMiseTotale2"); if(elT) elT.innerText=miseTotale.toLocaleString()+" XOF";
-  var elD=document.getElementById("txtDetailGain2"); if(elD) elD.innerText=detail;
+  var el=document.getElementById("txtGain3"); if(el) el.innerText=gain.toLocaleString()+" XOF";
+  var elT=document.getElementById("txtMiseTotale3"); if(elT) elT.innerText=miseTotale.toLocaleString()+" XOF";
+  var elD=document.getElementById("txtDetailGain3"); if(elD) elD.innerText=detail;
   return gain;
  }catch(e){ return 0; }
 }
-function voirDetails2(){
- var d=document.getElementById("txtDetailGain2") ? document.getElementById("txtDetailGain2").innerText : "";
- alert("Détail des gains\n"+FORMULE_ACTUELLE+"\n"+d);
-}
-function renderNumeros2(){
+function renderNumeros3(){
  try{
   var z=document.getElementById("zoneNumeros"); if(!z) return;
   var h="";
   if(FORMULE_ACTUELLE==="Chance +"){
-   h="<div style='display:flex;gap:6px;flex-wrap:wrap'>";
-   for(var i=1;i<=NB_CHANCE2;i++){ h+="<div style='width:58px;text-align:center'><small>T"+i+"</small><input placeholder='00' style='width:100%;padding:8px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div>"; }
-   if(NB_CHANCE2<5) h+="<button onclick='NB_CHANCE2++;renderNumeros2()' style='width:40px;height:40px;border-radius:50%;background:#e11d2e;color:#fff;border:none;font-size:20px'>+</button>";
-   if(NB_CHANCE2>2) h+="<button onclick='NB_CHANCE2--;renderNumeros2()' style='width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #ddd'>-</button>";
-   h+="</div>";
+   h="<div style='display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end'>";
+   for(var i=1;i<=NB_CHANCE3;i++){ h+="<div style='width:58px;text-align:center'><small>Nap "+i+"</small><input maxlength='2' inputmode='numeric' oninput='autoSaut3(this);calculerGain3()' placeholder='00' style='width:100%;padding:10px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold;font-size:16px'></div>"; }
+   if(NB_CHANCE3<5) h+="<button onclick='NB_CHANCE3++;renderNumeros3()' style='width:42px;height:42px;border-radius:50%;background:#e11d2e;color:#fff;border:none;font-size:22px'>+</button>";
+   if(NB_CHANCE3>2) h+="<button onclick='NB_CHANCE3--;renderNumeros3()' style='width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid #ddd'>-</button>";
+   h+="</div><small>Nap "+NB_CHANCE3+" : "+NB_CHANCE3+" numéro(s) à trouver</small>";
   } else if(FORMULE_ACTUELLE==="Permutation"){
-   h="<div style='display:flex;gap:6px;flex-wrap:wrap'>";
-   for(var j=1;j<=NB_PERM2;j++){ h+="<div style='width:58px;text-align:center'><small>T"+j+"</small><input placeholder='00' style='width:100%;padding:8px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div>"; }
-   if(NB_PERM2<5) h+="<button onclick='NB_PERM2++;renderNumeros2()' style='width:40px;height:40px;border-radius:50%;background:#e11d2e;color:#fff;border:none;font-size:20px'>+</button>";
-   if(NB_PERM2>2) h+="<button onclick='NB_PERM2--;renderNumeros2()' style='width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #ddd'>-</button>";
+   h="<div style='display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end'>";
+   for(var j=1;j<=NB_PERM3;j++){ h+="<div style='width:58px;text-align:center'><small>T"+j+"</small><input maxlength='2' inputmode='numeric' oninput='autoSaut3(this);calculerGain3()' placeholder='00' style='width:100%;padding:10px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold;font-size:16px'></div>"; }
+   if(NB_PERM3<5) h+="<button onclick='NB_PERM3++;renderNumeros3()' style='width:42px;height:42px;border-radius:50%;background:#e11d2e;color:#fff;border:none;font-size:22px'>+</button>";
+   if(NB_PERM3>2) h+="<button onclick='NB_PERM3--;renderNumeros3()' style='width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid #ddd'>-</button>";
    h+="</div>";
   } else if(FORMULE_ACTUELLE==="Against"){
    h="<div style='display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end'>";
-   h+="<div style='width:65px;text-align:center'><small>Banka</small><input placeholder='00' style='width:100%;padding:8px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div>";
-   for(var k=1;k<=NB_PERM2;k++){ h+="<div style='width:58px;text-align:center'><small>T"+k+"</small><input placeholder='00' style='width:100%;padding:8px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div>"; }
-   if(NB_PERM2<5) h+="<button onclick='NB_PERM2++;renderNumeros2()' style='width:40px;height:40px;border-radius:50%;background:#e11d2e;color:#fff;border:none;font-size:20px'>+</button>";
-   if(NB_PERM2>1) h+="<button onclick='NB_PERM2--;renderNumeros2()' style='width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #ddd'>-</button>";
+   h+="<div style='width:65px;text-align:center'><small>Banka</small><input maxlength='2' inputmode='numeric' oninput='autoSaut3(this);calculerGain3()' placeholder='00' style='width:100%;padding:10px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div>";
+   for(var k=1;k<=NB_PERM3;k++){ h+="<div style='width:58px;text-align:center'><small>T"+k+"</small><input maxlength='2' inputmode='numeric' oninput='autoSaut3(this);calculerGain3()' placeholder='00' style='width:100%;padding:10px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div>"; }
+   if(NB_PERM3<5) h+="<button onclick='NB_PERM3++;renderNumeros3()' style='width:42px;height:42px;border-radius:50%;background:#e11d2e;color:#fff;border:none;font-size:22px'>+</button>";
+   if(NB_PERM3>1) h+="<button onclick='NB_PERM3--;renderNumeros3()' style='width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid #ddd'>-</button>";
    h+="</div>";
   } else if(FORMULE_ACTUELLE==="Total Résultat"){
    h="<div style='width:120px'><small>TOTAL (1-90)</small><input type='number' min='1' max='90' placeholder='00' style='width:100%;padding:12px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold;font-size:18px'></div><small>1 numéro entre 1 et 90</small>";
   } else if(FORMULE_ACTUELLE==="Anagramme"){
-   var inverses=ANAGRAMME_LISTE2.map(function(n){ var s=("0"+n).slice(-2); return s[1]+s[0]; }).join(" - ");
-   h="<div style='width:100%;background:#fff;padding:8px;border-radius:8px'><small>Numéros : </small><b>"+(ANAGRAMME_LISTE2.join(" - ")||"Aucun")+"</b><br><small>Inversés auto : </small><b style='color:#e11d2e'>"+inverses+"</b></div>";
-   h+="<div style='display:flex;gap:6px;width:100%'><input id='inputAnagramme2' type='number' placeholder='Ex: 10' style='flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;text-align:center'><button onclick='ajouterAnagramme2()' style='padding:10px 16px;background:#e11d2e;color:#fff;border:none;border-radius:8px'>+</button></div>";
-   h+="<small>Ex: 10 -> 01, 45 -> 54</small>";
+   var inv=LISTE_PAIRE3.map(function(n){ var s=("0"+n).slice(-2); return s[1]+s[0]; }).join(" - ");
+   h="<div style='width:100%;background:#fff;padding:8px;border-radius:8px'><small>Numéros ("+LISTE_PAIRE3.length+"/15) : </small><b>"+(LISTE_PAIRE3.join(" - ")||"Aucun")+"</b><br><small>Inversés auto : </small><b style='color:#e11d2e'>"+inv+"</b></div>";
+   h+="<div style='display:flex;gap:6px;width:100%'><input id='inputPaire3' type='number' placeholder='Ex: 10' style='flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;text-align:center'><button onclick='ajouterPaire3()' style='padding:10px 16px;background:#e11d2e;color:#fff;border:none;border-radius:8px;font-size:20px'>+</button></div>";
+   h+="<small>Ex: 10 -> 01, 45 -> 54. Max 15 numéros. Couples = "+LISTE_PAIRE3.length+"</small>";
   } else { return; }
-  z.innerHTML=h;
-  calculerGain2();
+  z.innerHTML=h; calculerGain3();
  }catch(e){}
 }
-function ajouterAnagramme2(){
+function ajouterPaire3(){
  try{
-  var inp=document.getElementById("inputAnagramme2"); if(!inp||!inp.value) return;
+  var inp=document.getElementById("inputPaire3"); if(!inp||!inp.value) return;
   var v=parseInt(inp.value); if(v<1||v>90) return;
-  if(ANAGRAMME_LISTE2.indexOf(v)===-1) ANAGRAMME_LISTE2.push(v);
-  inp.value=""; renderNumeros2();
+  if(LISTE_PAIRE3.length>=15){ alert("Max 15 numéros pour Paire"); return; }
+  if(LISTE_PAIRE3.indexOf(v)===-1) LISTE_PAIRE3.push(v);
+  inp.value=""; renderNumeros3();
  }catch(e){}
 }
-function afficherBarreGain2(){
+function afficherBarreGain3(){
  try{
-  if(document.getElementById("barreGainDetail2")) return;
+  if(document.getElementById("barreGainDetail3")) return;
   var btn=document.querySelector("#corpsJeu button[onclick='ajouterCoupon()']");
   if(!btn) return;
-  var div=document.createElement("div"); div.id="barreGainDetail2";
+  var div=document.createElement("div"); div.id="barreGainDetail3";
   div.style.cssText="background:#111;color:#fff;padding:12px;border-radius:8px;margin-top:12px";
-  div.innerHTML="<div style='display:flex;justify-content:space-between'><span>GAIN</span><b id='txtGain2' style='color:#ffd700'>0 XOF</b></div><div style='display:flex;justify-content:space-between;margin-top:6px;font-size:12px'><span>Mise totale : <b id='txtMiseTotale2'>0 XOF</b></span><button onclick='voirDetails2()' style='background:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:12px'>DÉTAILS</button></div><div id='txtDetailGain2' style='font-size:11px;color:#ccc;margin-top:6px'></div>";
+  div.innerHTML="<div style='display:flex;justify-content:space-between'><span>GAIN</span><b id='txtGain3' style='color:#ffd700'>0 XOF</b></div><div style='display:flex;justify-content:space-between;margin-top:6px;font-size:12px'><span>Mise totale : <b id='txtMiseTotale3'>0 XOF</b></span><button onclick='alert(document.getElementById(\"txtDetailGain3\").innerText)' style='background:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:12px'>DÉTAILS</button></div><div id='txtDetailGain3' style='font-size:11px;color:#ccc;margin-top:6px'></div>";
   btn.parentNode.insertBefore(div, btn);
-  var im=document.getElementById("inputMise"); if(im) im.oninput=function(){ calculerGain2(); };
+  var im=document.getElementById("inputMise"); if(im) im.oninput=function(){ calculerGain3(); };
  }catch(e){}
 }
-// On ne remplace PAS openJeu, on observe seulement : quand tu choisis une formule, on affiche
-setInterval(function(){ try{ if(typeof FORMULE_ACTUELLE!=="undefined" && ["Chance +","Permutation","Against","Total Résultat","Anagramme"].indexOf(FORMULE_ACTUELLE)>=0){ afficherBarreGain2(); } }catch(e){} }, 800);
+setInterval(function(){ try{ if(typeof FORMULE_ACTUELLE!=="undefined" && ["Chance +","Permutation","Against","Total Résultat","Anagramme"].indexOf(FORMULE_ACTUELLE)>=0){ afficherBarreGain3(); } }catch(e){} }, 800);
 }catch(e){}
- // FIN CODE CORRIGE SANS ZONEMISELABLE
+ // FIN CODE V3
 </script>
 </body>
 </html>
