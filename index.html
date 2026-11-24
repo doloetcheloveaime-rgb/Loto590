@@ -491,6 +491,49 @@ document.getElementById('clientHome').style.display='block';
 }
 showSoldes();
  // ===== FIN SOLDE + DEPOT =====
+   // ===== SOLDE BOUTON FINAL =====
+(function(){
+let old=document.getElementById('boxSoldes'); if(old) old.remove();
+})();
+function creerPanelSolde(){
+let panel=document.getElementById('panelSolde');
+if(!panel){
+panel=document.createElement('div');
+panel.id='panelSolde';
+panel.style.cssText='display:none;padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
+panel.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b id="txtGain">0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b id="txtJeu">0 F</b></div></div><div style="background:#dc2626;color:white;padding:8px;border-radius:8px;margin-top:10px;font-weight:bold">SOLDE GAIN - RETRAIT RAPIDE</div><button onclick="openDepot()" style="width:100%;padding:12px;margin-top:10px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">💳 DÉPÔT</button>';
+let home=document.getElementById('clientHome'); if(home) home.prepend(panel);
+}
+let s=JSON.parse(localStorage.getItem('soldes')||'{"gain":0,"jeu":0}');
+let g=document.getElementById('txtGain'); if(g) g.textContent=s.gain+' F';
+let j=document.getElementById('txtJeu'); if(j) j.textContent=s.jeu+' F';
+return panel;
+}
+// SOLDE devient un bouton
+(function(){
+let all=document.querySelectorAll('*');
+all.forEach(function(el){
+if(el.children.length===0 && el.textContent.trim()==='SOLDE'){
+el.style.cursor='pointer';
+el.onclick=function(){
+let p=creerPanelSolde();
+if(p.style.display==='none'){ p.style.display='block'; } else { p.style.display='none'; }
+};
+}
+});
+})();
+// NET LOTO qui défile toutes les 6 secondes
+let ligneNet=null;
+let msgsNet=['📢 NET LOTO partout dans le monde ! Simple • Rapide • Beau','🌍 AUTO PARTOUT DANS LE MONDE - DÉPÔT RAPIDE','🔥 GAGNEZ PLUS AVEC SOLDE JEU','✅ ADMIN + REVENDEURS DISPONIBLES 24/7','💰 SOLDE GAIN - RETRAIT RAPIDE'];
+let idxNet=0;
+setInterval(function(){
+if(!ligneNet){
+let all=document.querySelectorAll('*');
+for(let el of all){ if(el.children.length===0 && el.textContent.includes('NET LOTO partout')){ ligneNet=el; break; } }
+}
+if(ligneNet){ idxNet=(idxNet+1)%msgsNet.length; ligneNet.textContent=msgsNet[idxNet]; }
+},6000);
+ // ===== FIN SOLDE BOUTON =====
 </script>
 </body>
 </html>
