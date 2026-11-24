@@ -523,6 +523,89 @@ if(d){ d.classList.add("hide"); d.style.display="none"; }
 window.scrollTo(0,0);
 }
  // FIN REPARATION PAGE BLANCHE
+   // CODE 6 PAYS - 26 JEUX - LIGNE QUI DEFILE
+var JEUX_6PAYS=[
+{pays:"BENIN",flag:"🇧🇯",nom:"MARDI 18H",heure:18,ferm:17,fermMin:50},
+{pays:"BENIN",flag:"🇧🇯",nom:"MARDI 21H",heure:21,ferm:20,fermMin:50},
+{pays:"BENIN",flag:"🇧🇯",nom:"MARDI 00H",heure:0,ferm:23,fermMin:50},
+{pays:"BENIN",flag:"🇧🇯",nom:"MERCREDI 08H",heure:8,ferm:7,fermMin:50,jour:"demain"},
+{pays:"BENIN",flag:"🇧🇯",nom:"MERCREDI 11H",heure:11,ferm:10,fermMin:50,jour:"demain"},
+{pays:"BENIN",flag:"🇧🇯",nom:"MERCREDI 14H",heure:14,ferm:13,fermMin:50,jour:"demain"},
+{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"AFTERWORK 17H",heure:17,ferm:16,fermMin:50},
+{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"DIGITAL 21H",heure:21,ferm:20,fermMin:50},
+{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"DIGITAL 22H",heure:22,ferm:21,fermMin:50},
+{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"DIGITAL 23H",heure:23,ferm:22,fermMin:50},
+{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"DIGITAL 7H",heure:7,ferm:6,fermMin:50,jour:"demain"},
+{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"DIGITAL 8H",heure:8,ferm:7,fermMin:50,jour:"demain"},
+{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"PREMIERE HEURE 10H",heure:10,ferm:9,fermMin:55,jour:"demain"},
+{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"FORTUNE 13H",heure:13,ferm:12,fermMin:55,jour:"demain"},
+{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"BARAKA 16H",heure:16,ferm:15,fermMin:55,jour:"demain"},
+{pays:"FRANCE",flag:"🇫🇷",nom:"TOULOUSE 22H",heure:22,ferm:21,fermMin:45},
+{pays:"FRANCE",flag:"🇫🇷",nom:"NICE 12H",heure:12,ferm:11,fermMin:50,jour:"demain"},
+{pays:"GHANA",flag:"🇬🇭",nom:"LUCKY TUESDAY",heure:20,ferm:19,fermMin:55},
+{pays:"GHANA",flag:"🇬🇭",nom:"GHANA DEMAIN",heure:20,ferm:19,fermMin:55,jour:"demain"},
+{pays:"NIGERIA",flag:"🇳🇬",nom:"DESTINY 21H",heure:21,ferm:20,fermMin:5},
+{pays:"NIGERIA",flag:"🇳🇬",nom:"NIGERIA DEMAIN",heure:21,ferm:20,fermMin:5,jour:"demain"}
+];
+function tempsRestant(j){
+var now=new Date();
+var ferm=new Date(); ferm.setHours(j.ferm,j.fermMin,0,0);
+if(j.jour==="demain") ferm.setDate(ferm.getDate()+1);
+if(j.heure===0) ferm.setDate(ferm.getDate()+1);
+var diff=ferm-now;
+if(diff<0) return "FERME";
+var h=Math.floor(diff/3600000); var m=Math.floor((diff%3600000)/60000);
+if(h<=0) return m+" min";
+return h+"h"+(m<10?"0"+m:m);
+}
+function ligneDefile(){
+var el=document.querySelector(".ch-defil");
+if(!el) return;
+var tri=JEUX_6PAYS.slice().sort(function(a,b){ return tempsRestant(a).localeCompare(tempsRestant(b)); });
+var txt=JEUX_6PAYS.map(function(j){ return j.flag+" "+j.nom+" - "+tempsRestant(j); }).join("  •  ");
+el.innerText="📢 "+txt;
+}
+function openPays(paysNom){
+var old=document.getElementById("viewPays6");
+if(!old){ old=document.createElement("div"); old.id="viewPays6"; old.style.padding="15px"; document.body.appendChild(old); }
+var list=JEUX_6PAYS.filter(function(j){ return j.pays===paysNom; });
+var auj=list.filter(function(j){ return !j.jour; });
+var ven=list.filter(function(j){ return j.jour==="demain"; });
+var html="<h2>"+paysNom+"</h2>";
+html+="<div style=\"display:flex;gap:8px\"><button style=\"flex:1;padding:10px;background:#e11d2e;color:#fff;border:none;border-radius:8px\">Aujourd hui "+auj.length+"</button><button style=\"flex:1;padding:10px;background:#fff;border:1px solid #ddd;border-radius:8px\">A venir "+ven.length+"</button></div>";
+html+="<h3>Aujourd hui</h3>";
+auj.forEach(function(j){ html+="<div style=\"background:#fff;padding:12px;border-radius:12px;margin:8px 0\"><b>"+j.flag+" "+j.nom+"</b><br><small>Fermeture "+j.ferm+"h"+(j.fermMin<10?"0"+j.fermMin:j.fermMin)+" - "+tempsRestant(j)+"</small></div>"; });
+html+="<h3>A venir</h3>";
+ven.forEach(function(j){ html+="<div style=\"background:#fff;padding:12px;border-radius:12px;margin:8px 0\"><b>"+j.flag+" "+j.nom+"</b><br><small>Dem. "+j.ferm+"h"+(j.fermMin<10?"0"+j.fermMin:j.fermMin)+" - "+tempsRestant(j)+"</small></div>"; });
+html+="<button onclick=\"backPays6()\" style=\"width:100%;padding:12px;margin-top:10px\">Retour</button>";
+old.innerHTML=html;
+let home=document.getElementById("clientHome"); if(home) home.style.display="none";
+old.style.display="block";
+}
+function backPays6(){
+let v=document.getElementById("viewPays6"); if(v) v.style.display="none";
+let home=document.getElementById("clientHome"); if(home) home.style.display="block";
+}
+setInterval(ligneDefile,30000);
+setTimeout(ligneDefile,1000);
+ // FIN CODE 6 PAYS
+   // CORRECTION GHANA + TOGO - POUR 26 JEUX
+JEUX_6PAYS = JEUX_6PAYS.filter(function(j){ return j.nom!=="GHANA DEMAIN"; });
+JEUX_6PAYS.push({pays:"GHANA",flag:"🇬🇭",nom:"NOOM RUSH 13H",heure:13,ferm:12,fermMin:50,jour:"demain"});
+JEUX_6PAYS.push({pays:"TOGO",flag:"🇹🇬",nom:"AGA 18H",heure:18,ferm:17,fermMin:55});
+JEUX_6PAYS.push({pays:"TOGO",flag:"🇹🇬",nom:"ESPOIR 9H",heure:9,ferm:8,fermMin:55,jour:"demain"});
+JEUX_6PAYS.push({pays:"TOGO",flag:"🇹🇬",nom:"ESPOIR 13H",heure:13,ferm:12,fermMin:55,jour:"demain"});
+ligneDefile();
+ // FIN CORRECTION
+   // CORRECTION FINALE NIGERIA 4 - 26 JEUX - PAS UNIVERSEL
+JEUX_6PAYS = JEUX_6PAYS.filter(function(j){ return j.nom!=="DESTINY 21H" && j.nom!=="NIGERIA DEMAIN"; });
+JEUX_6PAYS.push({pays:"NIGERIA",flag:"🇳🇬",nom:"KEY 21H",heure:21,ferm:19,fermMin:5});
+JEUX_6PAYS.push({pays:"NIGERIA",flag:"🇳🇬",nom:"SUNRISE 12H",heure:12,ferm:10,fermMin:5,jour:"demain"});
+JEUX_6PAYS.push({pays:"NIGERIA",flag:"🇳🇬",nom:"GATEWAY 15H",heure:15,ferm:13,fermMin:5,jour:"demain"});
+JEUX_6PAYS.push({pays:"NIGERIA",flag:"🇳🇬",nom:"IGWE 17H",heure:17,ferm:15,fermMin:5,jour:"demain"});
+ligneDefile();
+alert("26 JEUX OK - BENIN 6 + CI 9 + FRANCE 2 + GHANA 2 + NIGERIA 4 + TOGO 3 = 26");
+ // FIN CORRECTION FINALE
 </script>
 </body>
 </html>
