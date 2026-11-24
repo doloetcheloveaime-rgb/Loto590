@@ -855,6 +855,89 @@ function afficherBarreGain3(){
 setInterval(function(){ try{ if(typeof FORMULE_ACTUELLE!=="undefined" && ["Chance +","Permutation","Against","Total Résultat","Anagramme"].indexOf(FORMULE_ACTUELLE)>=0){ afficherBarreGain3(); } }catch(e){} }, 800);
 }catch(e){}
  // FIN CODE V3
+   // CODE FINAL - CHANCE+ PERMUTATION NUMERO DE BASE ANAGRAMME 37
+var NB_FINAL = 3;
+var NB_PERM_FINAL = 3;
+var NB_BASE_FINAL = 3;
+var COUPLES37 = ["01-10","02-20","03-30","04-40","05-50","06-60","07-70","08-80","09-90","12-21","13-31","14-41","15-51","16-61","17-71","18-81","23-32","24-42","25-52","26-62","27-72","28-82","34-43","35-53","36-63","37-73","38-83","45-54","46-64","47-74","48-84","56-65","57-75","58-85","67-76","68-86","78-87"];
+try{
+function sautFinal(el){
+ try{ if(el.value.length>=2){ el.value=el.value.slice(0,2); var n=el.parentElement.nextElementSibling; if(n){ var i=n.querySelector("input"); if(i) i.focus(); } } }catch(e){}
+}
+function gainFinal(){
+ try{
+  var inp=document.getElementById("inputMise"); if(!inp) return 0;
+  var mise=parseInt(inp.value||0)||0;
+  var tot=mise, gain=0, det="";
+  if(FORMULE_ACTUELLE==="Chance +"){
+   tot=mise; gain=mise*80;
+   if(NB_FINAL>=3) det="2 bons = "+(mise*80).toLocaleString()+" XOF | 3 bons = "+(mise*1750).toLocaleString()+" XOF";
+   else det="2 bons = "+(mise*80).toLocaleString()+" XOF";
+  } else if(FORMULE_ACTUELLE==="Permutation"){
+   var c=3; if(NB_PERM_FINAL===4) c=6; if(NB_PERM_FINAL===5) c=10;
+   tot=mise*c; gain=mise*300; det="2 bons = "+(mise*300).toLocaleString()+" | 3 bons = "+(mise*900).toLocaleString()+" | "+c+" combinaisons";
+  } else if(FORMULE_ACTUELLE==="Against" || FORMULE_ACTUELLE==="Numéro de base"){
+   tot=mise*NB_BASE_FINAL; gain=mise*300;
+   det="Banka + 1 = "+(mise*300).toLocaleString()+" | Banka + 2 = "+(mise*600).toLocaleString()+" | Banka + 3 = "+(mise*900).toLocaleString();
+  } else if(FORMULE_ACTUELLE==="Total Résultat"){
+   tot=mise; gain=mise*13; det="Total exact = "+gain.toLocaleString();
+  } else if(FORMULE_ACTUELLE==="Anagramme"){
+   tot=mise*37; gain=mise*300; det="1 couple = "+(mise*300).toLocaleString()+" | 2 couples = "+(mise*600).toLocaleString()+" | 37 couples = "+(mise*300*37).toLocaleString()+" | 37 couples fixes";
+  } else return 0;
+  var a=document.getElementById("txtGainF"); if(a) a.innerText=gain.toLocaleString()+" XOF";
+  var b=document.getElementById("txtTotF"); if(b) b.innerText=tot.toLocaleString()+" XOF";
+  var d=document.getElementById("txtDetF"); if(d) d.innerText=det;
+  return gain;
+ }catch(e){ return 0; }
+}
+function renderFinal(){
+ try{
+  var z=document.getElementById("zoneNumeros"); if(!z) return;
+  var h="";
+  if(FORMULE_ACTUELLE==="Chance +"){
+   h="<div style='display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end'>";
+   for(var i=1;i<=NB_FINAL;i++){ h+="<div style='width:58px;text-align:center'><small>N"+i+"</small><input maxlength='2' inputmode='numeric' oninput='sautFinal(this);gainFinal()' placeholder='00' style='width:100%;padding:10px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold;font-size:16px'></div>"; }
+   h+="</div><div style='display:flex;gap:8px;margin-top:6px'>";
+   if(NB_FINAL>2) h+="<button onclick='NB_FINAL--;renderFinal()' style='width:42px;height:42px;border-radius:8px;background:#fff;border:1px solid #ddd;font-size:20px'>-</button>";
+   if(NB_FINAL<5) h+="<button onclick='NB_FINAL++;renderFinal()' style='width:42px;height:42px;border-radius:8px;background:#fff;border:1px solid #ddd;font-size:20px'>+</button>";
+   h+="</div><small>Nap "+NB_FINAL+" : "+NB_FINAL+" numéro(s)</small>";
+  } else if(FORMULE_ACTUELLE==="Permutation"){
+   h="<div style='display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end'>";
+   for(var j=1;j<=NB_PERM_FINAL;j++){ h+="<div style='width:58px;text-align:center'><small>N"+j+"</small><input maxlength='2' inputmode='numeric' oninput='sautFinal(this);gainFinal()' placeholder='00' style='width:100%;padding:10px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold;font-size:16px'></div>"; }
+   h+="</div><div style='display:flex;gap:8px;margin-top:6px'>";
+   if(NB_PERM_FINAL>2) h+="<button onclick='NB_PERM_FINAL--;renderFinal()' style='width:42px;height:42px;border-radius:8px;background:#fff;border:1px solid #ddd;font-size:20px'>-</button>";
+   if(NB_PERM_FINAL<5) h+="<button onclick='NB_PERM_FINAL++;renderFinal()' style='width:42px;height:42px;border-radius:8px;background:#fff;border:1px solid #ddd;font-size:20px'>+</button>";
+   h+="</div><small>Permutation "+NB_PERM_FINAL+"</small>";
+  } else if(FORMULE_ACTUELLE==="Against" || FORMULE_ACTUELLE==="Numéro de base"){
+   h="<div style='margin-bottom:8px'><small>Numéro de base (Banka)</small><div style='width:70px;text-align:center'><input maxlength='2' inputmode='numeric' oninput='sautFinal(this);gainFinal()' placeholder='00' style='width:100%;padding:10px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold;font-size:16px'></div></div>";
+   h+="<div style='display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end'>";
+   for(var k=1;k<=NB_BASE_FINAL;k++){ h+="<div style='width:58px;text-align:center'><small>N"+k+"</small><input maxlength='2' inputmode='numeric' oninput='sautFinal(this);gainFinal()' placeholder='00' style='width:100%;padding:10px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold;font-size:16px'></div>"; }
+   h+="</div><div style='display:flex;gap:8px;margin-top:6px'>";
+   if(NB_BASE_FINAL>1) h+="<button onclick='NB_BASE_FINAL--;renderFinal()' style='width:42px;height:42px;border-radius:8px;background:#fff;border:1px solid #ddd;font-size:20px'>-</button>";
+   if(NB_BASE_FINAL<5) h+="<button onclick='NB_BASE_FINAL++;renderFinal()' style='width:42px;height:42px;border-radius:8px;background:#fff;border:1px solid #ddd;font-size:20px'>+</button>";
+   h+="</div><small>Numéro de base + "+NB_BASE_FINAL+" numéro(s)</small>";
+  } else if(FORMULE_ACTUELLE==="Total Résultat"){
+   h="<div style='width:120px'><small>TOTAL (1-90)</small><input type='number' min='1' max='90' placeholder='00' style='width:100%;padding:12px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold;font-size:18px'></div><small>1 numéro entre 1 et 90</small>";
+  } else if(FORMULE_ACTUELLE==="Anagramme"){
+   h="<div style='width:100%;background:#fff;padding:8px;border-radius:8px'><small>37 couples fixes : </small><b style='font-size:11px'>"+COUPLES37.join(" , ")+"</b></div><small>Simple : 37 couples auto. Pas besoin de taper les numéros.</small>";
+  } else return;
+  z.innerHTML=h; gainFinal();
+ }catch(e){}
+}
+function barreFinal(){
+ try{
+  if(document.getElementById("barreF")) return;
+  var btn=document.querySelector("#corpsJeu button[onclick='ajouterCoupon()']"); if(!btn) return;
+  var div=document.createElement("div"); div.id="barreF";
+  div.style.cssText="background:#111;color:#fff;padding:12px;border-radius:8px;margin-top:12px";
+  div.innerHTML="<div style='display:flex;justify-content:space-between'><span>GAIN</span><b id='txtGainF' style='color:#ffd700'>0 XOF</b></div><div style='display:flex;justify-content:space-between;margin-top:6px;font-size:12px'><span>Mise totale : <b id='txtTotF'>0 XOF</b></span><button onclick='alert(document.getElementById(\"txtDetF\").innerText)' style='background:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:12px'>DÉTAILS</button></div><div id='txtDetF' style='font-size:11px;color:#ccc;margin-top:6px'></div>";
+  btn.parentNode.insertBefore(div, btn);
+  var im=document.getElementById("inputMise"); if(im) im.oninput=function(){ gainFinal(); };
+ }catch(e){}
+}
+setInterval(function(){ try{ if(typeof FORMULE_ACTUELLE!=="undefined" && ["Chance +","Permutation","Against","Numéro de base","Total Résultat","Anagramme"].indexOf(FORMULE_ACTUELLE)>=0){ barreFinal(); } }catch(e){} }, 800);
+}catch(e){}
+ // FIN CODE FINAL
 </script>
 </body>
 </html>
