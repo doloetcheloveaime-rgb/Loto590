@@ -548,6 +548,43 @@ el.onclick=function(e){ e.stopPropagation(); ouvrirDepotFinal(); };
 });
 },800);
  // ===== FIN REPARATION =====
+   // ===== DEPOT + LISTE REVENDEURS =====
+function ouvrirDepotFinal(){
+let old=document.getElementById('viewDepotSeul');
+if(!old){ old=document.createElement('div'); old.id='viewDepotSeul'; old.style.padding='15px'; document.body.appendChild(old); }
+let rev=JSON.parse(localStorage.getItem('revendeursAdmin')||'[]');
+let html='<h2>💳 Dépôt</h2><p>Le dépôt est fait par <b>l\'admin</b> et les <b>revendeurs créés par l\'admin</b>.</p>';
+html+='<h3>👥 Liste des Revendeurs</h3>';
+if(rev.length===0){
+html+='<div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px">Aucun revendeur ajouté pour le moment, boss.<br>Contacte directement <b>l\'admin</b> pour ton dépôt.</div>';
+} else {
+rev.forEach(function(r){
+html+='<div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:8px"><b>'+(r.nom||'Revendeur')+'</b><br>📱 '+(r.telephone||r.numero||'Non indiqué')+'<br><small>'+(r.zone||'')+'</small><br><button onclick="choisirRevendeur(\''+(r.nom||'Revendeur')+'\')" style="padding:8px 12px;margin-top:5px;background:#16a34a;color:white;border:none;border-radius:6px">Choisir ce revendeur</button></div>';
+});
+}
+html+='<h3>📩 Faire une demande</h3><input id="dMontantSeul" type="number" style="width:100%;padding:10px;margin:5px 0" placeholder="Montant Ex: 5000"><br><select id="dTypeSeul" style="width:100%;padding:10px;margin:5px 0"><option value="jeu">SOLDE JEU</option><option value="gain">SOLDE GAIN</option></select><br><select id="dRevendeurChoisi" style="width:100%;padding:10px;margin:5px 0"><option value="Admin">Admin</option>';
+rev.forEach(function(r){ html+='<option value="'+(r.nom||'Revendeur')+'">'+(r.nom||'Revendeur')+'</option>'; });
+html+='</select><br><button onclick="envoyerDepotSeul()" style="width:100%;padding:12px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">📩 DEMANDER UN DÉPÔT</button><br><button onclick="backDepotSeul()" style="width:100%;padding:10px;margin-top:8px">⬅ Retour</button>';
+old.innerHTML=html;
+let home=document.getElementById('clientHome'); if(home) home.style.display='none';
+old.style.display='block';
+}
+function choisirRevendeur(nom){
+let s=document.getElementById('dRevendeurChoisi'); if(s) s.value=nom;
+alert('Tu as choisi : '+nom+', boss ✅');
+}
+function envoyerDepotSeul(){
+let m=document.getElementById('dMontantSeul').value;
+let r=document.getElementById('dRevendeurChoisi') ? document.getElementById('dRevendeurChoisi').value : 'Admin';
+if(!m||m<=0){ alert('Mets un montant, boss'); return; }
+alert('Demande '+m+' F envoyée à '+r+', boss ✅ Il va valider.');
+backDepotSeul();
+}
+function backDepotSeul(){
+let v=document.getElementById('viewDepotSeul'); if(v) v.style.display='none';
+let home=document.getElementById('clientHome'); if(home) home.style.display='block';
+}
+ // ===== FIN DEPOT + REVENDEURS =====
 </script>
 </body>
 </html>
