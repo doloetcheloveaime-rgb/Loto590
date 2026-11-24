@@ -585,6 +585,29 @@ let v=document.getElementById('viewDepotSeul'); if(v) v.style.display='none';
 let home=document.getElementById('clientHome'); if(home) home.style.display='block';
 }
  // ===== FIN DEPOT + REVENDEURS =====
+   // ===== NETTOYAGE - ENLEVER SOLDE PARTOUT =====
+setTimeout(function(){
+// 1. On enlève le onclick sur TOUTES les grandes boîtes
+let tous=document.querySelectorAll('div,section,main,body');
+tous.forEach(function(el){
+if(el.children.length>2){
+el.onclick=null;
+}
+});
+// 2. On remet SOLDE seulement sur les petits textes SOLDE tout seul, sans enfant
+let petits=document.querySelectorAll('*');
+petits.forEach(function(el){
+if(el.children.length===0 && el.textContent.trim()==='SOLDE'){
+el.style.cursor='pointer';
+el.onclick=function(e){ e.stopPropagation(); ouvrirSoldeFinal(); };
+}
+if(el.children.length===0 && (el.textContent.trim()==='DÉPÔT' || el.textContent.trim()==='DEPOT' || el.textContent.trim()==='RECHARGER')){
+el.style.cursor='pointer';
+el.onclick=function(e){ e.stopPropagation(); ouvrirDepotFinal(); };
+}
+});
+},800);
+ // ===== FIN NETTOYAGE =====
 </script>
 </body>
 </html>
