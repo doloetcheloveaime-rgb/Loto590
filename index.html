@@ -349,6 +349,14 @@ let btns=document.querySelectorAll('#menu button');
 btns.forEach(function(b){ if(b.textContent.includes('Profil')) b.onclick=openProfil; });
 })();
  // ===== FIN PROFIL =====
+   // ===== REPARATION MENU =====
+(function(){
+let items=document.querySelectorAll('#menu *');
+items.forEach(function(el){
+if(el.textContent.includes('Profil') && el.children.length===0){ el.onclick=openProfil; el.style.cursor='pointer'; }
+});
+})();
+ // ===== FIN REPARATION =====
 </script>
 </body>
 </html>
