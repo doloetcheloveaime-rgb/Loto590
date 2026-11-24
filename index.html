@@ -441,132 +441,62 @@ if(el.textContent.includes('Aide') && el.children.length===0){ el.onclick=openAi
 });
 })();
  // ===== FIN ARCHIVE + AIDE =====
-   // ===== SOLDE + LIGNE DEFILANTE + DEPOT - 100% JS =====
-function getSoldes(){ return JSON.parse(localStorage.getItem('soldes')||'{"gain":0,"jeu":0}'); }
-function showSoldes(){
-let s=getSoldes();
-let box=document.getElementById('boxSoldes');
-if(!box){
-box=document.createElement('div');
-box.id='boxSoldes';
-box.style.cssText='padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
-let home=document.getElementById('clientHome'); if(home) home.prepend(box);
-}
-box.innerHTML='<div style="font-size:18px;font-weight:bold">💰 SOLDE</div><div style="display:flex;gap:10px;margin-top:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b>'+s.gain+' F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b>'+s.jeu+' F</b></div></div><div id="ticker" style="background:#dc2626;color:white;padding:8px;border-radius:8px;margin-top:10px;font-weight:bold;overflow:hidden;white-space:nowrap">🌍 AUTO PARTOUT DANS LE MONDE</div><button onclick="openDepot()" style="width:100%;padding:12px;margin-top:10px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">💳 DÉPÔT</button>';
-startTicker();
-}
-let tickerTimer=null;
-function startTicker(){
-let msgs=['🌍 AUTO PARTOUT DANS LE MONDE - DÉPÔT RAPIDE','🔥 GAGNEZ PLUS AVEC SOLDE JEU','✅ ADMIN + REVENDEURS DISPONIBLES 24/7','💰 SOLDE GAIN - RETRAIT RAPIDE'];
-let i=0;
-if(tickerTimer) clearInterval(tickerTimer);
-tickerTimer=setInterval(function(){
-let t=document.getElementById('ticker'); if(!t){ clearInterval(tickerTimer); return; }
-i=(i+1)%msgs.length; t.textContent=msgs[i];
-},6000);
-}
-function openDepot(){
-let old=document.getElementById('viewDepot');
-if(!old){ old=document.createElement('div'); old.id='viewDepot'; old.style.padding='15px'; document.body.appendChild(old); }
-let s=getSoldes();
-old.innerHTML='<h2>💳 Dépôt</h2><p>Solde Gain: <b>'+s.gain+' F</b> | Solde Jeu: <b>'+s.jeu+' F</b></p><p>Le dépôt est fait par <b>l\'admin</b> et les <b>revendeurs créés par l\'admin</b>.</p><label>Montant</label><br><input id="dMontant" type="number" style="width:100%;padding:10px;margin:5px 0" placeholder="Ex: 5000"><br><label>Choisir : Gain ou Jeu ?</label><br><select id="dType" style="width:100%;padding:10px;margin:5px 0"><option value="jeu">SOLDE JEU</option><option value="gain">SOLDE GAIN</option></select><br><label>Méthode</label><br><select id="dMethode" style="width:100%;padding:10px;margin:5px 0"><option>MTN MoMo</option><option>Moov Money</option><option>Orange Money</option></select><br><button onclick="demandeDepot()" style="width:100%;padding:12px;background:#16a34a;color:white;border:none;border-radius:8px;font-weight:bold">📩 DEMANDER UN DÉPÔT</button><br><button onclick="backHomeDepot()" style="width:100%;padding:10px;margin-top:8px">⬅ Retour</button><p style="font-size:13px;color:#666">Après ta demande, l\'admin ou un revendeur valide et ton solde est crédité.</p>';
-document.getElementById('clientHome').style.display='none';
-old.style.display='block';
-let m=document.getElementById('menu'); if(m) m.style.display='none';
-}
-function demandeDepot(){
-let m=document.getElementById('dMontant').value;
-let t=document.getElementById('dType').value;
-if(!m||m<=0){ alert('Mets un montant, boss'); return; }
-let d=JSON.parse(localStorage.getItem('demandesDepot')||'[]');
-d.unshift({montant:m,type:t,methode:document.getElementById('dMethode').value,date:new Date().toLocaleString(),statut:'En attente'});
-localStorage.setItem('demandesDepot',JSON.stringify(d));
-if(window.addArchive) addArchive('Demande dépôt '+m+' F pour '+t);
-alert('Demande envoyée, boss ✅ L\'admin / revendeur va valider.');
-backHomeDepot();
-}
-function backHomeDepot(){
-let v=document.getElementById('viewDepot'); if(v) v.style.display='none';
-document.getElementById('clientHome').style.display='block';
-}
-showSoldes();
- // ===== FIN SOLDE + DEPOT =====
-   // ===== SOLDE BOUTON FINAL =====
-(function(){
-let old=document.getElementById('boxSoldes'); if(old) old.remove();
-})();
-function creerPanelSolde(){
-let panel=document.getElementById('panelSolde');
-if(!panel){
-panel=document.createElement('div');
-panel.id='panelSolde';
-panel.style.cssText='display:none;padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
-panel.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b id="txtGain">0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b id="txtJeu">0 F</b></div></div><div style="background:#dc2626;color:white;padding:8px;border-radius:8px;margin-top:10px;font-weight:bold">SOLDE GAIN - RETRAIT RAPIDE</div><button onclick="openDepot()" style="width:100%;padding:12px;margin-top:10px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">💳 DÉPÔT</button>';
-let home=document.getElementById('clientHome'); if(home) home.prepend(panel);
-}
-let s=JSON.parse(localStorage.getItem('soldes')||'{"gain":0,"jeu":0}');
-let g=document.getElementById('txtGain'); if(g) g.textContent=s.gain+' F';
-let j=document.getElementById('txtJeu'); if(j) j.textContent=s.jeu+' F';
-return panel;
-}
-// SOLDE devient un bouton
-(function(){
-let all=document.querySelectorAll('*');
-all.forEach(function(el){
-if(el.children.length===0 && el.textContent.trim()==='SOLDE'){
-el.style.cursor='pointer';
-el.onclick=function(){
-let p=creerPanelSolde();
-if(p.style.display==='none'){ p.style.display='block'; } else { p.style.display='none'; }
-};
-}
-});
-})();
-// NET LOTO qui défile toutes les 6 secondes
-let ligneNet=null;
-let msgsNet=['📢 NET LOTO partout dans le monde ! Simple • Rapide • Beau','🌍 AUTO PARTOUT DANS LE MONDE - DÉPÔT RAPIDE','🔥 GAGNEZ PLUS AVEC SOLDE JEU','✅ ADMIN + REVENDEURS DISPONIBLES 24/7','💰 SOLDE GAIN - RETRAIT RAPIDE'];
-let idxNet=0;
-setInterval(function(){
-if(!ligneNet){
-let all=document.querySelectorAll('*');
-for(let el of all){ if(el.children.length===0 && el.textContent.includes('NET LOTO partout')){ ligneNet=el; break; } }
-}
-if(ligneNet){ idxNet=(idxNet+1)%msgsNet.length; ligneNet.textContent=msgsNet[idxNet]; }
-},6000);
- // ===== FIN SOLDE BOUTON =====
-   // ===== REPARATION 2 SOLDE =====
-function creerPanelSolde2(){
-let panel=document.getElementById('panelSolde');
-if(!panel){
-panel=document.createElement('div');
-panel.id='panelSolde';
-panel.style.cssText='display:none;padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center;position:relative;z-index:999';
-panel.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b id="txtGain2">0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b id="txtJeu2">0 F</b></div></div><div style="background:#dc2626;color:white;padding:8px;border-radius:8px;margin-top:10px;font-weight:bold">SOLDE GAIN - RETRAIT RAPIDE</div><button onclick="openDepot()" style="width:100%;padding:12px;margin-top:10px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">💳 DÉPÔT</button>';
+ // ===== CODE 1 SOLDE SEUL =====
+function toggleSoldeSeul(){
+let p=document.getElementById('panelSoldeSeul');
+if(!p){
+p=document.createElement('div');
+p.id='panelSoldeSeul';
+p.style.cssText='padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
+p.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b>0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b>0 F</b></div></div><div style="background:#dc2626;color:white;padding:8px;border-radius:8px;margin-top:10px;font-weight:bold">SOLDE GAIN - RETRAIT RAPIDE</div>';
 let home=document.getElementById('clientHome')||document.body;
-home.prepend(panel);
+home.prepend(p);
+p.style.display='block';
+return;
 }
-let s=JSON.parse(localStorage.getItem('soldes')||'{"gain":0,"jeu":0}');
-let g=document.getElementById('txtGain2'); if(g) g.textContent=s.gain+' F';
-let j=document.getElementById('txtJeu2'); if(j) j.textContent=s.jeu+' F';
-return panel;
+if(p.style.display==='none'){ p.style.display='block'; } else { p.style.display='none'; }
 }
-function toggleSolde(){
-let p=creerPanelSolde2();
-p.style.display=(p.style.display==='none'||p.style.display==='')?'block':'none';
-p.scrollIntoView({behavior:'smooth'});
-}
-// On prend LES 2 SOLDE, haut + bas
 setTimeout(function(){
-let tous=document.querySelectorAll('div,button,span,a,p');
+let tous=document.querySelectorAll('div,button,span,a');
 tous.forEach(function(el){
-let t=el.textContent.trim();
-if((t==='SOLDE'||t==='💰 SOLDE'||t.startsWith('SOLDE')) && el.children.length<=2){
+if(el.textContent.trim()==='SOLDE'){
 el.style.cursor='pointer';
-el.onclick=function(e){ e.stopPropagation(); toggleSolde(); };
+el.onclick=function(){ toggleSoldeSeul(); };
 }
 });
 },500);
- // ===== FIN REPARATION 2 SOLDE =====
+ // ===== FIN CODE 1 =====
+   // ===== CODE 2 LIGNE DEFILEMENT SEULE =====
+let ligneNet2=null;
+let msgsNet2=['📢 NET LOTO partout dans le monde ! Simple • Rapide • Beau','🌍 AUTO PARTOUT DANS LE MONDE - DÉPÔT RAPIDE','🔥 GAGNEZ PLUS AVEC SOLDE JEU','✅ ADMIN + REVENDEURS DISPONIBLES 24/7'];
+let idxNet2=0;
+setInterval(function(){
+if(!ligneNet2){
+let all=document.querySelectorAll('*');
+for(let el of all){ if(el.children.length===0 && el.textContent.includes('NET LOTO partout')){ ligneNet2=el; break; } }
+}
+if(ligneNet2){ idxNet2=(idxNet2+1)%msgsNet2.length; ligneNet2.textContent=msgsNet2[idxNet2]; }
+},6000);
+ // ===== FIN CODE 2 =====
+   // ===== CODE 3 DEPOT SEUL =====
+function openDepotSeul(){
+let old=document.getElementById('viewDepotSeul');
+if(!old){ old=document.createElement('div'); old.id='viewDepotSeul'; old.style.padding='15px'; document.body.appendChild(old); }
+old.innerHTML='<h2>💳 Dépôt</h2><p>Le dépôt est fait par <b>l\'admin</b> et les <b>revendeurs créés par l\'admin</b>.</p><input id="dMontantSeul" type="number" style="width:100%;padding:10px;margin:5px 0" placeholder="Montant Ex: 5000"><br><select id="dTypeSeul" style="width:100%;padding:10px;margin:5px 0"><option value="jeu">SOLDE JEU</option><option value="gain">SOLDE GAIN</option></select><br><button onclick="envoyerDepotSeul()" style="width:100%;padding:12px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">📩 DEMANDER UN DÉPÔT</button><br><button onclick="backDepotSeul()" style="width:100%;padding:10px;margin-top:8px">⬅ Retour</button>';
+document.getElementById('clientHome').style.display='none';
+old.style.display='block';
+}
+function envoyerDepotSeul(){
+let m=document.getElementById('dMontantSeul').value;
+if(!m||m<=0){ alert('Mets un montant, boss'); return; }
+alert('Demande '+m+' F envoyée, boss ✅ Admin / revendeur va valider.');
+backDepotSeul();
+}
+function backDepotSeul(){
+let v=document.getElementById('viewDepotSeul'); if(v) v.style.display='none';
+document.getElementById('clientHome').style.display='block';
+}
+ // ===== FIN CODE 3 =====
 </script>
 </body>
 </html>
