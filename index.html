@@ -357,6 +357,41 @@ if(el.textContent.includes('Profil') && el.children.length===0){ el.onclick=open
 });
 })();
  // ===== FIN REPARATION =====
+   // ===== RESULTAT - 100% JS =====
+function openResultat(){
+let old=document.getElementById('viewResultat');
+if(!old){
+old=document.createElement('div');
+old.id='viewResultat';
+old.style.padding='15px';
+document.body.appendChild(old);
+}
+let res=JSON.parse(localStorage.getItem('resultatsAdmin')||'[]');
+let html='<h2>🏆 Résultats</h2>';
+if(res.length===0){ html+='<p>Aucun résultat publié pour le moment, boss.<br>En attente de l\'admin.</p>'; }
+else{
+res.forEach(function(r){
+html+='<div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px"><b>'+(r.titre||'Résultat')+'</b><br>'+(r.texte||'')+'<br><small>'+(r.date||'')+'</small></div>';
+});
+}
+html+='<br><button onclick="backHome3()" style="width:100%;padding:10px">⬅ Retour</button>';
+old.innerHTML=html;
+document.getElementById('clientHome').style.display='none';
+let p=document.getElementById('viewProfil'); if(p) p.style.display='none';
+old.style.display='block';
+let m=document.getElementById('menu'); if(m) m.style.display='none';
+}
+function backHome3(){
+document.getElementById('viewResultat').style.display='none';
+document.getElementById('clientHome').style.display='block';
+}
+(function(){
+let items=document.querySelectorAll('#menu *');
+items.forEach(function(el){
+if((el.textContent.includes('Résultat')||el.textContent.includes('Resultat')) && el.children.length===0){ el.onclick=openResultat; el.style.cursor='pointer'; }
+});
+})();
+ // ===== FIN RESULTAT =====
 </script>
 </body>
 </html>
