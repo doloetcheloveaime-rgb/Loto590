@@ -755,6 +755,75 @@ openJeu = function(pays, nom, fermTxt){
  calculerGain();
 };
  // FIN CODE GAIN
+   // CORRECTION COUPON + PETITES CASES + BOUTON +
+var PANIER = [];
+var NB_NUM = 1;
+var MAX_NUM = { "PN (1N)":1, "Two sure":2, "NAP":5, "Chance +":3, "Permutation":2, "Against":2, "Total Résultat":1, "Anagramme":2 };
+function getMaxFormule(){ return MAX_NUM[FORMULE_ACTUELLE] || 2; }
+function resetNumeros(){
+ NB_NUM = 1;
+ if(FORMULE_ACTUELLE==="Two sure") NB_NUM=2;
+ if(FORMULE_ACTUELLE==="NAP") NB_NUM=3;
+ renderNumeros();
+}
+function renderNumeros(){
+ var z=document.getElementById("zoneNumeros"); if(!z) return;
+ var max = getMaxFormule();
+ // Si NB_NUM dépasse max, on bloque
+ if(NB_NUM>max) NB_NUM=max;
+ var h="<div style='display:flex;gap:6px;flex-wrap:wrap;align-items:center'>";
+ for(var i=1;i<=NB_NUM;i++){
+  h+="<div style='width:58px;text-align:center'><small style='font-size:10px'>T"+i+"</small><input id='numT"+i+"' placeholder='00' style='width:100%;padding:8px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold;font-size:14px'></div>";
+ }
+ // Bouton + : seulement si on n'a pas atteint le max
+ if(NB_NUM < max){
+  h+="<button onclick='ajouterCase()' style='width:40px;height:40px;border-radius:50%;background:#e11d2e;color:#fff;border:none;font-size:20px'>+</button>";
+ }
+ if(NB_NUM>1){
+  h+="<button onclick='retirerCase()' style='width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #ddd;font-size:20px'>-</button>";
+ }
+ h+="<button onclick='randomNumero()' style='padding:8px;background:#fff;border:none;border-radius:8px'>🎲</button><button onclick='effacerNumero()' style='padding:8px;background:#fff;border:none;border-radius:8px'>🗑️</button>";
+ h+="</div><small>"+FORMULE_ACTUELLE+" : "+NB_NUM+"/"+max+" numéros</small>";
+ z.innerHTML=h;
+ calculerGain();
+}
+function ajouterCase(){ var max=getMaxFormule(); if(NB_NUM<max){ NB_NUM++; renderNumeros(); } }
+function retirerCase(){ if(NB_NUM>1){ NB_NUM--; renderNumeros(); } }
+function changeNAP(d){ if(d>0) ajouterCase(); else retirerCase(); }
+function randomNumero(){ for(var i=1;i<=NB_NUM;i++){ var el=document.getElementById("numT"+i); if(el) el.value=Math.floor(Math.random()*90); } }
+function effacerNumero(){ for(var i=1;i<=NB_NUM;i++){ var el=document.getElementById("numT"+i); if(el) el.value=""; } var m=document.getElementById("inputMise"); if(m) m.value=0; calculerGain(); }
+function ajouterCoupon(){
+ var nums=[];
+ for(var i=1;i<=NB_NUM;i++){ var el=document.getElementById("numT"+i); if(el && el.value!=="") nums.push(el.value); }
+ var mise=document.getElementById("inputMise")?document.getElementById("inputMise").value:0;
+ var gain=calculerGain();
+ var msg=document.getElementById("msgCoupon");
+ if(nums.length < NB_NUM){ if(msg) msg.innerText="Remplis tous les numéros d'abord, boss !"; msg.style.color="red"; return; }
+ // Ajoute au panier
+ PANIER.push({pays:JEU_ACTUEL.pays, jeu:JEU_ACTUEL.nom, formule:FORMULE_ACTUELLE, pari:PARI_ACTUEL, nums:nums.join("-"), mise:mise, gain:gain});
+ if(msg){ msg.style.color="green"; msg.innerText="✅ Ajouté au panier ! Panier : "+PANIER.length+" jeu(x) - Total Gain : "+PANIER.reduce((a,b)=>a+b.gain,0).toLocaleString()+" XOF"; }
+ // VIDE LES CASES comme tu as dit, boss
+ for(var j=1;j<=NB_NUM;j++){ var e=document.getElementById("numT"+j); if(e) e.value=""; }
+ var mm=document.getElementById("inputMise"); if(mm) mm.value=0;
+ calculerGain();
+ // Montre bouton Voir Panier
+ if(!document.getElementById("btnVoirPanier")){
+  var btn=document.querySelector("#corpsJeu button[onclick='ajouterCoupon()']");
+  if(btn){ var v=document.createElement("button"); v.id="btnVoirPanier"; v.innerText="🧺 Voir Panier ("+PANIER.length+")"; v.onclick=function(){ alert("PANIER :\\n"+PANIER.map((p,i)=>(i+1)+". "+p.pays+" "+p.jeu+" - "+p.formule+" "+p.pari+" N° "+p.nums+" - Mise "+p.mise+" - Gain "+p.gain.toLocaleString()).join("\\n")); }; v.style.cssText="width:100%;padding:12px;margin-top:8px;background:#111;color:#fff;border:none;border-radius:8px"; btn.parentNode.insertBefore(v, btn.nextSibling); }
+ } else {
+  document.getElementById("btnVoirPanier").innerText="🧺 Voir Panier ("+PANIER.length+")";
+ }
+}
+function choisirFormule(f){
+ FORMULE_ACTUELLE=f;
+ if(f==="PN (1N)"){ PARI_ACTUEL="DIRECT"; NB_NUM=1; }
+ if(f==="Two sure"){ PARI_ACTUEL="DIRECT"; NB_NUM=2; }
+ if(f==="NAP"){ PARI_ACTUEL=""; NB_NUM=3; }
+ if(f==="Chance +"){ PARI_ACTUEL="DIRECT"; NB_NUM=1; }
+ openJeu(JEU_ACTUEL.pays, JEU_ACTUEL.nom, JEU_ACTUEL.ferm);
+ renderNumeros();
+}
+ // FIN CORRECTION
 </script>
 </body>
 </html>
