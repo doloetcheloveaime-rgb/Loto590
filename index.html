@@ -440,8 +440,9 @@ if(el.textContent.includes('Archive') && el.children.length===0){ el.onclick=ope
 if(el.textContent.includes('Aide') && el.children.length===0){ el.onclick=openAide; el.style.cursor='pointer'; }
 });
 })();
- // ===== FIN ARCHIVE + AIDE =====
-return;
+  // ===== FIN ARCHIVE + AIDE =====
+function closeMenu(){ let m=document.getElementById('menu'); if(m) m.style.display='none'; }
 </script>
 </body>
 </html>
+
