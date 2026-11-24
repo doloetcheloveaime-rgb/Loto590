@@ -534,6 +534,39 @@ for(let el of all){ if(el.children.length===0 && el.textContent.includes('NET LO
 if(ligneNet){ idxNet=(idxNet+1)%msgsNet.length; ligneNet.textContent=msgsNet[idxNet]; }
 },6000);
  // ===== FIN SOLDE BOUTON =====
+   // ===== REPARATION 2 SOLDE =====
+function creerPanelSolde2(){
+let panel=document.getElementById('panelSolde');
+if(!panel){
+panel=document.createElement('div');
+panel.id='panelSolde';
+panel.style.cssText='display:none;padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center;position:relative;z-index:999';
+panel.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b id="txtGain2">0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b id="txtJeu2">0 F</b></div></div><div style="background:#dc2626;color:white;padding:8px;border-radius:8px;margin-top:10px;font-weight:bold">SOLDE GAIN - RETRAIT RAPIDE</div><button onclick="openDepot()" style="width:100%;padding:12px;margin-top:10px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">💳 DÉPÔT</button>';
+let home=document.getElementById('clientHome')||document.body;
+home.prepend(panel);
+}
+let s=JSON.parse(localStorage.getItem('soldes')||'{"gain":0,"jeu":0}');
+let g=document.getElementById('txtGain2'); if(g) g.textContent=s.gain+' F';
+let j=document.getElementById('txtJeu2'); if(j) j.textContent=s.jeu+' F';
+return panel;
+}
+function toggleSolde(){
+let p=creerPanelSolde2();
+p.style.display=(p.style.display==='none'||p.style.display==='')?'block':'none';
+p.scrollIntoView({behavior:'smooth'});
+}
+// On prend LES 2 SOLDE, haut + bas
+setTimeout(function(){
+let tous=document.querySelectorAll('div,button,span,a,p');
+tous.forEach(function(el){
+let t=el.textContent.trim();
+if((t==='SOLDE'||t==='💰 SOLDE'||t.startsWith('SOLDE')) && el.children.length<=2){
+el.style.cursor='pointer';
+el.onclick=function(e){ e.stopPropagation(); toggleSolde(); };
+}
+});
+},500);
+ // ===== FIN REPARATION 2 SOLDE =====
 </script>
 </body>
 </html>
