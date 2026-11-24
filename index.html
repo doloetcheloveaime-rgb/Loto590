@@ -392,6 +392,55 @@ if((el.textContent.includes('Résultat')||el.textContent.includes('Resultat')) &
 });
 })();
  // ===== FIN RESULTAT =====
+   // ===== ARCHIVE + AIDE - 100% JS =====
+function addArchive(texte){
+let a=JSON.parse(localStorage.getItem('archiveClient')||'[]');
+a.unshift({texte:texte,date:new Date().toLocaleString()});
+localStorage.setItem('archiveClient',JSON.stringify(a.slice(0,50)));
+}
+function openArchive(){
+let old=document.getElementById('viewArchive');
+if(!old){ old=document.createElement('div'); old.id='viewArchive'; old.style.padding='15px'; document.body.appendChild(old); }
+let a=JSON.parse(localStorage.getItem('archiveClient')||'[]');
+let p=JSON.parse(localStorage.getItem('profil')||'{}');
+let html='<h2>📁 Archive</h2><p>Tout ce que tu as fait sur ton compte, boss.</p>';
+if(a.length===0){ html+='<p>Aucune activité pour le moment.</p>'; }
+else{ a.forEach(function(x){ html+='<div style="border:1px solid #ddd;padding:10px;border-radius:10px;margin-bottom:8px">✅ '+x.texte+'<br><small>'+x.date+'</small></div>'; }); }
+html+='<br><button onclick="backHome4()" style="width:100%;padding:10px">⬅ Retour</button>';
+old.innerHTML=html;
+document.getElementById('clientHome').style.display='none';
+let pr=document.getElementById('viewProfil'); if(pr) pr.style.display='none';
+let re=document.getElementById('viewResultat'); if(re) re.style.display='none';
+old.style.display='block';
+let m=document.getElementById('menu'); if(m) m.style.display='none';
+}
+function backHome4(){
+document.getElementById('viewArchive').style.display='none';
+document.getElementById('clientHome').style.display='block';
+}
+function openAide(){
+let old=document.getElementById('viewAide');
+if(!old){ old=document.createElement('div'); old.id='viewAide'; old.style.padding='15px'; document.body.appendChild(old); }
+old.innerHTML='<h2>❓ Aide</h2><p>Besoin d\'aide, boss ?</p><div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px"><b>1. Comment voir mon résultat ?</b><br>Menu ☰ -> Résultat, tu vois ce que l\'admin a publié.</div><div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px"><b>2. Comment changer mon profil ?</b><br>Menu ☰ -> Profil, change et clique SAUVEGARDER.</div><div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px"><b>3. Où voir ce que j\'ai fait ?</b><br>Menu ☰ -> Archive, tout est là.</div><div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px"><b>4. Contacter l\'admin</b><br>Écris sur WhatsApp à l\'admin du site.</div><br><button onclick="backHome5()" style="width:100%;padding:10px">⬅ Retour</button>';
+document.getElementById('clientHome').style.display='none';
+let pr=document.getElementById('viewProfil'); if(pr) pr.style.display='none';
+let re=document.getElementById('viewResultat'); if(re) re.style.display='none';
+let ar=document.getElementById('viewArchive'); if(ar) ar.style.display='none';
+old.style.display='block';
+let m=document.getElementById('menu'); if(m) m.style.display='none';
+}
+function backHome5(){
+document.getElementById('viewAide').style.display='none';
+document.getElementById('clientHome').style.display='block';
+}
+(function(){
+let items=document.querySelectorAll('#menu *');
+items.forEach(function(el){
+if(el.textContent.includes('Archive') && el.children.length===0){ el.onclick=openArchive; el.style.cursor='pointer'; }
+if(el.textContent.includes('Aide') && el.children.length===0){ el.onclick=openAide; el.style.cursor='pointer'; }
+});
+})();
+ // ===== FIN ARCHIVE + AIDE =====
 </script>
 </body>
 </html>
