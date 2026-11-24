@@ -316,48 +316,6 @@ function motOublie(){
   }
   render();
 }
-  <!-- BOUTON PROFIL - A COLLER A LA FIN -->
-<div id="viewProfil" style="display:none;padding:15px">
-<h2>👤 Mon Profil</h2>
-<label>Nom</label><br>
-<input id="pNom" style="width:100%;padding:10px;margin:5px 0" placeholder="Ton nom"><br>
-<label>Prénom</label><br>
-<input id="pPrenom" style="width:100%;padding:10px;margin:5px 0" placeholder="Ton prénom"><br>
-<label>Numéro WhatsApp</label><br>
-<input id="pWhats" style="width:100%;padding:10px;margin:5px 0" placeholder="Ex: 229 90 00 00 00"><br>
-<label>Date de naissance</label><br>
-<input id="pNaiss" type="date" style="width:100%;padding:10px;margin:5px 0"><br>
-<label>Gmail</label><br>
-<input id="pMail" style="width:100%;padding:10px;margin:5px 0" placeholder="ton@gmail.com"><br>
-<label>Mot de passe</label><br>
-<input id="pPass" type="password" style="width:100%;padding:10px;margin:5px 0" placeholder="Mot de passe"><br>
-<button onclick="saveProfil()" style="width:100%;padding:12px;background:#16a34a;color:white;border:none;border-radius:8px;font-weight:bold">💾 SAUVEGARDER</button>
-<button onclick="backHome()" style="width:100%;padding:10px;margin-top:8px">⬅ Retour</button>
-</div>
-<script>
-function saveProfil(){
-localStorage.setItem('profil',JSON.stringify({nom:document.getElementById('pNom').value,prenom:document.getElementById('pPrenom').value,whats:document.getElementById('pWhats').value,naiss:document.getElementById('pNaiss').value,mail:document.getElementById('pMail').value,pass:document.getElementById('pPass').value}));
-alert('Profil sauvegardé boss ✅');
-}
-function openProfil(){
-var p=JSON.parse(localStorage.getItem('profil')||'{}');
-document.getElementById('pNom').value=p.nom||'';
-document.getElementById('pPrenom').value=p.prenom||'';
-document.getElementById('pWhats').value=p.whats||'';
-document.getElementById('pNaiss').value=p.naiss||'';
-document.getElementById('pMail').value=p.mail||'';
-document.getElementById('pPass').value=p.pass||'';
-document.getElementById('clientHome').style.display='none';
-document.getElementById('viewProfil').style.display='block';
-document.getElementById('menu').style.display='none';
-}
-function backHome(){
-document.getElementById('viewProfil').style.display='none';
-document.getElementById('clientHome').style.display='block';
-}
-var btns=document.querySelectorAll('#menu button');
-btns.forEach(function(b){ if(b.textContent.includes('Profil')) b.onclick=openProfil; });
-<!-- FIN PROFIL -->
 </script>
 </body>
 </html>
