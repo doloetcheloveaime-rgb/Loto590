@@ -499,6 +499,30 @@ if(soldes[1]){ soldes[1].textContent="SOLDE +"; soldes[1].onclick=function(e){ e
 depots.forEach(function(d){ d.textContent="DEPOT +"; d.onclick=function(e){ e.stopPropagation(); ouvrirDepotVrai(); }; });
 },800);
  // FIN VRAI CODE
+   // REPARATION PAGE BLANCHE
+function show(id){
+let home=document.getElementById("clientHome");
+if(home){ home.classList.remove("hide"); home.style.display="block"; }
+let d=document.getElementById("dashboard");
+if(d){ d.classList.remove("hide"); d.style.display="block"; }
+document.querySelectorAll(".card").forEach(function(c){ c.classList.add("hide"); c.style.display="none"; });
+let el=document.getElementById(id);
+if(el){ el.classList.remove("hide"); el.style.display="block"; el.scrollIntoView(); }
+let m=document.getElementById("menu"); if(m) m.style.display="none";
+let b=document.getElementById("btnRetourClient");
+if(!b){
+b=document.createElement("button"); b.id="btnRetourClient"; b.className="btn"; b.innerText="RETOUR ACCUEIL CLIENT"; b.onclick=showClientHome; b.style.margin="12px";
+let dd=document.getElementById("dashboard"); if(dd) dd.prepend(b);
+}
+}
+function showClientHome(){
+let home=document.getElementById("clientHome");
+if(home){ home.classList.remove("hide"); home.style.display="block"; }
+let d=document.getElementById("dashboard");
+if(d){ d.classList.add("hide"); d.style.display="none"; }
+window.scrollTo(0,0);
+}
+ // FIN REPARATION PAGE BLANCHE
 </script>
 </body>
 </html>
