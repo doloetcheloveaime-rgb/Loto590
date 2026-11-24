@@ -608,6 +608,54 @@ el.onclick=function(e){ e.stopPropagation(); ouvrirDepotFinal(); };
 });
 },800);
  // ===== FIN NETTOYAGE =====
+   // ===== FINAL 3 BOUTONS - SOLDE + DEPOT + SOLDE BAS =====
+function ouvrirSoldeHaut(){
+let p=document.getElementById('panelSoldeHaut');
+if(!p){
+p=document.createElement('div'); p.id='panelSoldeHaut';
+p.style.cssText='padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
+p.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b>0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b>0 F</b></div></div>';
+let home=document.getElementById('clientHome')||document.body; home.prepend(p);
+p.style.display='block'; return;
+}
+p.style.display=(p.style.display==='none')?'block':'none';
+}
+function ouvrirSoldeBas(){
+let p=document.getElementById('panelSoldeBas');
+if(!p){
+p=document.createElement('div'); p.id='panelSoldeBas';
+p.style.cssText='padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
+p.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b>0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b>0 F</b></div></div><button onclick="ouvrirDepotFinal()" style="width:100%;padding:12px;margin-top:10px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">💳 RECHARGER MON COMPTE</button>';
+let home=document.getElementById('clientHome')||document.body; home.prepend(p);
+p.style.display='block'; return;
+}
+p.style.display=(p.style.display==='none')?'block':'none';
+}
+setTimeout(function(){
+// 1. Enlever le clic sur la ligne rouge qui défile
+let all=document.querySelectorAll('*');
+all.forEach(function(el){
+if(el.children.length===0 && el.textContent.includes('NET LOTO partout')){
+el.onclick=null; el.style.cursor='default';
+}
+// Enlever clic sur les grandes boîtes
+if(el.children.length>2){ el.onclick=null; }
+});
+// 2. Trouver les SOLDE
+let soldes=[];
+let depots=[];
+all.forEach(function(el){
+if(el.children.length===0 && (el.textContent.trim()==='SOLDE' || el.textContent.trim()==='SOLDE +')){ soldes.push(el); }
+if(el.children.length===0 && (el.textContent.trim()==='DÉPÔT' || el.textContent.trim()==='DEPOT' || el.textContent.trim()==='DÉPÔT +')){ depots.push(el); }
+});
+// SOLDE en haut = le premier, avec +
+if(soldes[0]){ soldes[0].textContent='SOLDE +'; soldes[0].style.cursor='pointer'; soldes[0].onclick=function(e){ e.stopPropagation(); ouvrirSoldeHaut(); }; }
+// SOLDE en bas = le deuxième, avec +
+if(soldes[1]){ soldes[1].textContent='SOLDE +'; soldes[1].style.cursor='pointer'; soldes[1].onclick=function(e){ e.stopPropagation(); ouvrirSoldeBas(); }; }
+// DEPOT avec +
+depots.forEach(function(d){ d.textContent='DÉPÔT +'; d.style.cursor='pointer'; d.onclick=function(e){ e.stopPropagation(); ouvrirDepotFinal(); }; });
+},800);
+ // ===== FIN FINAL 3 BOUTONS =====
 </script>
 </body>
 </html>
