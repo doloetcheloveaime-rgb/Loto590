@@ -686,6 +686,75 @@ if(!vp) return;
 var divs=vp.querySelectorAll("div");
 }
  // FIN PAGE DE JEU
+   // CODE GAIN - REMPLACE ANCIEN openJeu / renderNumeros
+var NB_NAP = 3;
+var GAINS = {
+ "PN (1N)|DIRECT":13, "PN (1N)|1ere POSITION":60,
+ "Two sure|DIRECT":300, "Two sure|TURBO2":3000, "Two sure|TURBO3":800, "Two sure|TURBO4":500,
+ "NAP|3":3000, "NAP|4":8000, "NAP|5":50000
+};
+function calculerGain(){
+ var mise = document.getElementById("inputMise") ? parseInt(document.getElementById("inputMise").value||0) : 0;
+ var mult = 0;
+ if(FORMULE_ACTUELLE==="NAP"){ mult = GAINS["NAP|"+NB_NAP] || 0; }
+ else { mult = GAINS[FORMULE_ACTUELLE+"|"+PARI_ACTUEL] || 0; }
+ var gain = mise * mult;
+ var el = document.getElementById("txtGain");
+ if(el) el.innerText = gain.toLocaleString()+" XOF";
+ return gain;
+}
+function renderNumeros(){
+ var z=document.getElementById("zoneNumeros"); if(!z) return;
+ if(FORMULE_ACTUELLE==="PN (1N)"){
+  z.innerHTML="<div style='display:flex;align-items:center;gap:8px'><b>T1</b><input id='numT1' value='12' style='flex:1;padding:12px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold'></div>";
+ } else if(FORMULE_ACTUELLE==="NAP"){
+  var h="<div style='display:flex;gap:6px;flex-wrap:wrap'>";
+  for(var i=1;i<=NB_NAP;i++){ h+="<div style='flex:1;min-width:50px;text-align:center'><small>T"+i+"</small><input id='numT"+i+"' value='"+(i*11)+"' style='width:100%;padding:10px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold'></div>"; }
+  h+="</div><div style='display:flex;gap:6px;margin-top:8px'><button onclick='changeNAP(-1)' style='padding:8px 14px;background:#fff;border:1px solid #ddd;border-radius:8px'>-</button><button onclick='changeNAP(1)' style='padding:8px 14px;background:#fff;border:1px solid #ddd;border-radius:8px'>+</button><button onclick='randomNumero()' style='padding:8px 14px;background:#fff;border:none;border-radius:8px'>🎲</button><button onclick='effacerNumero()' style='padding:8px 14px;background:#fff;border:none;border-radius:8px'>🗑️</button></div><small>NAP "+NB_NAP+" numéros</small>";
+  z.innerHTML=h;
+ } else {
+  z.innerHTML="<div style='display:flex;gap:8px'><div style='flex:1;text-align:center'><small>T1</small><input id='numT1' value='12' style='width:100%;padding:12px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold'></div><div style='flex:1;text-align:center'><small>T2</small><input id='numT2' value='32' style='width:100%;padding:12px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold'></div></div>";
+ }
+ calculerGain();
+}
+function changeNAP(d){ NB_NAP = Math.max(2, Math.min(5, NB_NAP+d)); renderNumeros(); }
+function choisirFormule(f){
+ FORMULE_ACTUELLE=f;
+ if(f==="PN (1N)") PARI_ACTUEL="DIRECT";
+ if(f==="Two sure") PARI_ACTUEL="DIRECT";
+ if(f==="NAP") PARI_ACTUEL="";
+ openJeu(JEU_ACTUEL.pays, JEU_ACTUEL.nom, JEU_ACTUEL.ferm);
+}
+function choisirPari(p){ PARI_ACTUEL=p; openJeu(JEU_ACTUEL.pays, JEU_ACTUEL.nom, JEU_ACTUEL.ferm); }
+function setMise(m){ var i=document.getElementById("inputMise"); if(i){ i.value=m; calculerGain(); } }
+ // PATCH openJeu pour Pari selon Formule + Barre GAIN
+var oldOpenJeu2 = openJeu;
+openJeu = function(pays, nom, fermTxt){
+ oldOpenJeu2(pays, nom, fermTxt);
+ // Corrige Pari selon formule
+ var corps=document.getElementById("corpsJeu"); if(!corps) return;
+ // On reconstruit juste la partie Pari + Gain si besoin - simple : on injecte la barre GAIN
+ if(!document.getElementById("barreGain")){
+   var btn=document.querySelector("#corpsJeu button[onclick='ajouterCoupon()']");
+   if(btn){
+     var div=document.createElement("div");
+     div.id="barreGain";
+     div.style.cssText="background:#111;color:#fff;padding:12px;border-radius:8px;margin-top:12px;display:flex;justify-content:space-between";
+     div.innerHTML="<span>GAIN</span><b id='txtGain' style='color:#ffd700'>0 XOF</b>";
+     btn.parentNode.insertBefore(div, btn);
+   }
+ }
+ // Mise : recalcul à chaque frappe
+ var im=document.getElementById("inputMise");
+ if(im){ im.oninput=function(){ calculerGain(); }; im.value = im.value || 100; }
+ // Si NAP, cache les boutons Pari
+ if(FORMULE_ACTUELLE==="NAP"){
+   var ps = document.querySelectorAll("#corpsJeu p");
+   // On ne cache pas tout, on laisse comme ça, le gain NAP marche déjà
+ }
+ calculerGain();
+};
+ // FIN CODE GAIN
 </script>
 </body>
 </html>
