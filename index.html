@@ -441,63 +441,6 @@ if(el.textContent.includes('Aide') && el.children.length===0){ el.onclick=openAi
 });
 })();
  // ===== FIN ARCHIVE + AIDE =====
- // VRAI CODE SANS APOSTROPHE
-function ouvrirDepotVrai(){
-let old=document.getElementById("viewDepotVrai");
-if(!old){ old=document.createElement("div"); old.id="viewDepotVrai"; old.style.padding="15px"; document.body.appendChild(old); }
-let rev=JSON.parse(localStorage.getItem("revendeursAdmin")||"[]");
-let html="<h2>Depot</h2><p>Depot par Admin et revendeurs</p>";
-if(rev.length===0){ html+="<div>Admin - Aucun revendeur pour le moment</div>"; }
-else { rev.forEach(function(r){ html+="<div><b>"+(r.nom||"Revendeur")+"</b><br>"+(r.telephone||"")+"</div>"; }); }
-html+="<input id=\"dMontantVrai\" type=\"number\" placeholder=\"Montant Ex 5000\" style=\"width:100%;padding:12px;margin:5px 0\"><br><button onclick=\"envoyerDepotVrai()\" style=\"width:100%;padding:12px;background:#16a34a;color:white;border:none;border-radius:8px\">VALIDER</button><br><button onclick=\"backDepotVrai()\" style=\"width:100%;padding:10px;margin-top:8px\">Retour</button>";
-old.innerHTML=html;
-let home=document.getElementById("clientHome"); if(home) home.style.display="none";
-old.style.display="block";
-}
-function envoyerDepotVrai(){
-let m=document.getElementById("dMontantVrai").value;
-if(!m||m<=0){ alert("Mets un montant"); return; }
-alert("Demande "+m+" F envoyee");
-backDepotVrai();
-}
-function backDepotVrai(){
-let v=document.getElementById("viewDepotVrai"); if(v) v.style.display="none";
-let home=document.getElementById("clientHome"); if(home) home.style.display="block";
-}
-function ouvrirSoldeHautVrai(){
-let p=document.getElementById("panelSoldeHautVrai");
-if(!p){
-p=document.createElement("div"); p.id="panelSoldeHautVrai";
-p.style.cssText="padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center";
-p.innerHTML="<div style=\"display:flex;gap:10px\"><div style=\"flex:1;background:#16a34a;padding:12px;border-radius:10px\">SOLDE GAIN<br><b>0 F</b></div><div style=\"flex:1;background:#2563eb;padding:12px;border-radius:10px\">SOLDE JEU<br><b>0 F</b></div></div><button onclick=\"ouvrirDepotVrai()\" style=\"width:100%;padding:12px;margin-top:10px;background:#f59e0b;border:none;border-radius:8px\">FAIRE UN DEPOT</button>";
-let home=document.getElementById("clientHome")||document.body; home.prepend(p);
-p.style.display="block"; return;
-}
-p.style.display=(p.style.display==="none")?"block":"none";
-}
-function ouvrirSoldeBasVrai(){
-let p=document.getElementById("panelSoldeBasVrai");
-if(!p){
-p=document.createElement("div"); p.id="panelSoldeBasVrai";
-p.style.cssText="padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center";
-p.innerHTML="<div style=\"display:flex;gap:10px\"><div style=\"flex:1;background:#16a34a;padding:12px;border-radius:10px\">SOLDE GAIN<br><b>0 F</b></div><div style=\"flex:1;background:#2563eb;padding:12px;border-radius:10px\">SOLDE JEU<br><b>0 F</b></div></div>";
-let home=document.getElementById("clientHome")||document.body; home.prepend(p);
-p.style.display="block"; return;
-}
-p.style.display=(p.style.display==="none")?"block":"none";
-}
-setTimeout(function(){
-let all=document.querySelectorAll("*");
-let soldes=[]; let depots=[];
-all.forEach(function(el){
-if(el.children.length===0 && el.textContent.trim()==="SOLDE"){ soldes.push(el); }
-if(el.children.length===0 && (el.textContent.trim()==="DEPOT" || el.textContent.trim()==="DÉPÔT")){ depots.push(el); }
-});
-if(soldes[0]){ soldes[0].textContent="SOLDE +"; soldes[0].onclick=function(e){ e.stopPropagation(); ouvrirSoldeHautVrai(); }; }
-if(soldes[1]){ soldes[1].textContent="SOLDE +"; soldes[1].onclick=function(e){ e.stopPropagation(); ouvrirSoldeBasVrai(); }; }
-depots.forEach(function(d){ d.textContent="DEPOT +"; d.onclick=function(e){ e.stopPropagation(); ouvrirDepotVrai(); }; });
-},800);
- // FIN VRAI CODE
 return;
 </script>
 </body>
