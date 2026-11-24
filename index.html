@@ -441,178 +441,57 @@ if(el.textContent.includes('Aide') && el.children.length===0){ el.onclick=openAi
 });
 })();
  // ===== FIN ARCHIVE + AIDE =====
- // ===== CODE 1 SOLDE SEUL =====
-function toggleSoldeSeul(){
-let p=document.getElementById('panelSoldeSeul');
-if(!p){
-p=document.createElement('div');
-p.id='panelSoldeSeul';
-p.style.cssText='padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
-p.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b>0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b>0 F</b></div></div><div style="background:#dc2626;color:white;padding:8px;border-radius:8px;margin-top:10px;font-weight:bold">SOLDE GAIN - RETRAIT RAPIDE</div>';
-let home=document.getElementById('clientHome')||document.body;
-home.prepend(p);
-p.style.display='block';
-return;
-}
-if(p.style.display==='none'){ p.style.display='block'; } else { p.style.display='none'; }
-}
-setTimeout(function(){
-let tous=document.querySelectorAll('div,button,span,a');
-tous.forEach(function(el){
-if(el.textContent.trim()==='SOLDE'){
-el.style.cursor='pointer';
-el.onclick=function(){ toggleSoldeSeul(); };
-}
-});
-},500);
- // ===== FIN CODE 1 =====
-   // ===== CODE 2 LIGNE DEFILEMENT SEULE =====
-let ligneNet2=null;
-let msgsNet2=['📢 NET LOTO partout dans le monde ! Simple • Rapide • Beau','🌍 AUTO PARTOUT DANS LE MONDE - DÉPÔT RAPIDE','🔥 GAGNEZ PLUS AVEC SOLDE JEU','✅ ADMIN + REVENDEURS DISPONIBLES 24/7'];
-let idxNet2=0;
-setInterval(function(){
-if(!ligneNet2){
-let all=document.querySelectorAll('*');
-for(let el of all){ if(el.children.length===0 && el.textContent.includes('NET LOTO partout')){ ligneNet2=el; break; } }
-}
-if(ligneNet2){ idxNet2=(idxNet2+1)%msgsNet2.length; ligneNet2.textContent=msgsNet2[idxNet2]; }
-},600);
- // ===== FIN CODE 2 =====
-   // ===== CODE 3 DEPOT SEUL =====
-function openDepotSeul(){
-let old=document.getElementById('viewDepotSeul');
-if(!old){ old=document.createElement('div'); old.id='viewDepotSeul'; old.style.padding='15px'; document.body.appendChild(old); }
-old.innerHTML='<h2>💳 Dépôt</h2><p>Le dépôt est fait par <b>l\'admin</b> et les <b>revendeurs créés par l\'admin</b>.</p><input id="dMontantSeul" type="number" style="width:100%;padding:10px;margin:5px 0" placeholder="Montant Ex: 5000"><br><select id="dTypeSeul" style="width:100%;padding:10px;margin:5px 0"><option value="jeu">SOLDE JEU</option><option value="gain">SOLDE GAIN</option></select><br><button onclick="envoyerDepotSeul()" style="width:100%;padding:12px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">📩 DEMANDER UN DÉPÔT</button><br><button onclick="backDepotSeul()" style="width:100%;padding:10px;margin-top:8px">⬅ Retour</button>';
-document.getElementById('clientHome').style.display='none';
-old.style.display='block';
-}
-function envoyerDepotSeul(){
-let m=document.getElementById('dMontantSeul').value;
-if(!m||m<=0){ alert('Mets un montant, boss'); return; }
-alert('Demande '+m+' F envoyée, boss ✅ Admin / revendeur va valider.');
-backDepotSeul();
-}
-function backDepotSeul(){
-let v=document.getElementById('viewDepotSeul'); if(v) v.style.display='none';
-document.getElementById('clientHome').style.display='block';
-}
- // ===== FIN CODE 3 =====
-   // ===== REPARATION - ENLEVER LIGNE ROUGE DANS SOLDE + REPARER BOUTONS =====
-// 1. Supprimer la ligne rouge dans SOLDE
-setTimeout(function(){
-let all=document.querySelectorAll('*');
-all.forEach(function(el){
-if(el.children.length===0 && el.textContent.includes('SOLDE GAIN - RETRAIT RAPIDE')){
-el.remove();
-}
-});
-},500);
-
-// 2. Réparer SOLDE - les 2 boutons, haut + bas
-function ouvrirSoldeFinal(){
-let p=document.getElementById('panelSoldeSeul');
-if(!p){
-p=document.createElement('div');
-p.id='panelSoldeSeul';
-p.style.cssText='padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
-p.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b>0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b>0 F</b></div></div>';
-let home=document.getElementById('clientHome')||document.body;
-home.prepend(p);
-p.style.display='block';
-return;
-}
-if(p.style.display==='none'){ p.style.display='block'; } else { p.style.display='none'; }
-}
-
-// 3. Réparer DEPOT
-function ouvrirDepotFinal(){
-let old=document.getElementById('viewDepotSeul');
-if(!old){ old=document.createElement('div'); old.id='viewDepotSeul'; old.style.padding='15px'; document.body.appendChild(old); }
-old.innerHTML='<h2>💳 Dépôt</h2><p>Le dépôt est fait par <b>l\'admin</b> et les <b>revendeurs créés par l\'admin</b>.</p><input id="dMontantSeul" type="number" style="width:100%;padding:10px;margin:5px 0" placeholder="Montant Ex: 5000"><br><select id="dTypeSeul" style="width:100%;padding:10px;margin:5px 0"><option value="jeu">SOLDE JEU</option><option value="gain">SOLDE GAIN</option></select><br><button onclick="envoyerDepotSeul()" style="width:100%;padding:12px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">📩 DEMANDER UN DÉPÔT</button><br><button onclick="backDepotSeul()" style="width:100%;padding:10px;margin-top:8px">⬅ Retour</button>';
-let home=document.getElementById('clientHome'); if(home) home.style.display='none';
-old.style.display='block';
-}
-
-setTimeout(function(){
-let tous=document.querySelectorAll('div,button,span,a,p');
-tous.forEach(function(el){
-let t=el.textContent.trim();
-if(t==='SOLDE' || t==='💰 SOLDE'){
-el.style.cursor='pointer';
-el.onclick=function(e){ e.stopPropagation(); ouvrirSoldeFinal(); };
-}
-if(t.includes('DÉPÔT') || t.includes('DEPOT')){
-el.style.cursor='pointer';
-el.onclick=function(e){ e.stopPropagation(); ouvrirDepotFinal(); };
-}
-});
-},800);
- // ===== FIN REPARATION =====
-   // ===== DEPOT + LISTE REVENDEURS =====
-function ouvrirDepotFinal(){
-let old=document.getElementById('viewDepotSeul');
-if(!old){ old=document.createElement('div'); old.id='viewDepotSeul'; old.style.padding='15px'; document.body.appendChild(old); }
+   // ===== VRAI CODE SOLDE + DEPOT - UN SEUL =====
+function ouvrirDepotVrai(){
+let old=document.getElementById('viewDepotVrai');
+if(!old){ old=document.createElement('div'); old.id='viewDepotVrai'; old.style.padding='15px'; document.body.appendChild(old); }
 let rev=JSON.parse(localStorage.getItem('revendeursAdmin')||'[]');
-let html='<h2>💳 Dépôt</h2><p>Le dépôt est fait par <b>l\'admin</b> et les <b>revendeurs créés par l\'admin</b>.</p>';
-html+='<h3>👥 Liste des Revendeurs</h3>';
+let html='<h2>💳 Faire un Dépôt</h2><p>Le dépôt est fait par <b>l\'admin</b> et les <b>revendeurs créés par l\'admin</b>.</p>';
+html+='<h3>👥 Revendeurs / Admin</h3>';
 if(rev.length===0){
-html+='<div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px">Aucun revendeur ajouté pour le moment, boss.<br>Contacte directement <b>l\'admin</b> pour ton dépôt.</div>';
+html+='<div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px"><b>Admin</b><br>Contacte l\'admin pour ton dépôt, boss.<br>Aucun revendeur ajouté pour le moment.</div>';
 } else {
 rev.forEach(function(r){
-html+='<div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:8px"><b>'+(r.nom||'Revendeur')+'</b><br>📱 '+(r.telephone||r.numero||'Non indiqué')+'<br><small>'+(r.zone||'')+'</small><br><button onclick="choisirRevendeur(\''+(r.nom||'Revendeur')+'\')" style="padding:8px 12px;margin-top:5px;background:#16a34a;color:white;border:none;border-radius:6px">Choisir ce revendeur</button></div>';
+html+='<div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:8px"><b>'+(r.nom||'Revendeur')+'</b><br>📱 '+(r.telephone||r.numero||'Non indiqué')+'<br><button onclick="choisirRevendeurVrai(\''+(r.nom||'Revendeur')+'\')" style="padding:8px 12px;margin-top:5px;background:#16a34a;color:white;border:none;border-radius:6px">Choisir</button></div>';
 });
 }
-html+='<h3>📩 Faire une demande</h3><input id="dMontantSeul" type="number" style="width:100%;padding:10px;margin:5px 0" placeholder="Montant Ex: 5000"><br><select id="dTypeSeul" style="width:100%;padding:10px;margin:5px 0"><option value="jeu">SOLDE JEU</option><option value="gain">SOLDE GAIN</option></select><br><select id="dRevendeurChoisi" style="width:100%;padding:10px;margin:5px 0"><option value="Admin">Admin</option>';
+html+='<h3>💰 Montant à recharger</h3><input id="dMontantVrai" type="number" style="width:100%;padding:12px;margin:5px 0" placeholder="Montant Ex: 5000"><br><select id="dTypeVrai" style="width:100%;padding:10px;margin:5px 0"><option value="jeu">SOLDE JEU</option><option value="gain">SOLDE GAIN</option></select><br><select id="dRevendeurVrai" style="width:100%;padding:10px;margin:5px 0"><option value="Admin">Admin</option>';
 rev.forEach(function(r){ html+='<option value="'+(r.nom||'Revendeur')+'">'+(r.nom||'Revendeur')+'</option>'; });
-html+='</select><br><button onclick="envoyerDepotSeul()" style="width:100%;padding:12px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">📩 DEMANDER UN DÉPÔT</button><br><button onclick="backDepotSeul()" style="width:100%;padding:10px;margin-top:8px">⬅ Retour</button>';
+html+='</select><br><button onclick="envoyerDepotVrai()" style="width:100%;padding:12px;background:#16a34a;color:white;border:none;border-radius:8px;font-weight:bold">✅ VALIDER</button><br><button onclick="backDepotVrai()" style="width:100%;padding:10px;margin-top:8px">⬅ Retour</button>';
 old.innerHTML=html;
 let home=document.getElementById('clientHome'); if(home) home.style.display='none';
 old.style.display='block';
 }
-function choisirRevendeur(nom){
-let s=document.getElementById('dRevendeurChoisi'); if(s) s.value=nom;
+function choisirRevendeurVrai(nom){
+let s=document.getElementById('dRevendeurVrai'); if(s) s.value=nom;
 alert('Tu as choisi : '+nom+', boss ✅');
 }
-function envoyerDepotSeul(){
-let m=document.getElementById('dMontantSeul').value;
-let r=document.getElementById('dRevendeurChoisi') ? document.getElementById('dRevendeurChoisi').value : 'Admin';
+function envoyerDepotVrai(){
+let m=document.getElementById('dMontantVrai').value;
+let r=document.getElementById('dRevendeurVrai') ? document.getElementById('dRevendeurVrai').value : 'Admin';
 if(!m||m<=0){ alert('Mets un montant, boss'); return; }
 alert('Demande '+m+' F envoyée à '+r+', boss ✅ Il va valider.');
-backDepotSeul();
+backDepotVrai();
 }
-function backDepotSeul(){
-let v=document.getElementById('viewDepotSeul'); if(v) v.style.display='none';
+function backDepotVrai(){
+let v=document.getElementById('viewDepotVrai'); if(v) v.style.display='none';
 let home=document.getElementById('clientHome'); if(home) home.style.display='block';
 }
- // ===== FIN DEPOT + REVENDEURS =====
-   // ===== NETTOYAGE - ENLEVER SOLDE PARTOUT =====
-setTimeout(function(){
-// 1. On enlève le onclick sur TOUTES les grandes boîtes
-let tous=document.querySelectorAll('div,section,main,body');
-tous.forEach(function(el){
-if(el.children.length>2){
-el.onclick=null;
-}
-});
-// 2. On remet SOLDE seulement sur les petits textes SOLDE tout seul, sans enfant
-let petits=document.querySelectorAll('*');
-petits.forEach(function(el){
-if(el.children.length===0 && el.textContent.trim()==='SOLDE'){
-el.style.cursor='pointer';
-el.onclick=function(e){ e.stopPropagation(); ouvrirSoldeFinal(); };
-}
-if(el.children.length===0 && (el.textContent.trim()==='DÉPÔT' || el.textContent.trim()==='DEPOT' || el.textContent.trim()==='RECHARGER')){
-el.style.cursor='pointer';
-el.onclick=function(e){ e.stopPropagation(); ouvrirDepotFinal(); };
-}
-});
-},800);
- // ===== FIN NETTOYAGE =====
-   // ===== FINAL 3 BOUTONS - SOLDE + DEPOT + SOLDE BAS =====
-function ouvrirSoldeHaut(){
-let p=document.getElementById('panelSoldeHaut');
+function ouvrirSoldeHautVrai(){
+let p=document.getElementById('panelSoldeHautVrai');
 if(!p){
-p=document.createElement('div'); p.id='panelSoldeHaut';
+p=document.createElement('div'); p.id='panelSoldeHautVrai';
+p.style.cssText='padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
+p.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b>0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b>0 F</b></div></div><button onclick="ouvrirDepotVrai()" style="width:100%;padding:12px;margin-top:10px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">💳 FAIRE UN DÉPÔT</button>';
+let home=document.getElementById('clientHome')||document.body; home.prepend(p);
+p.style.display='block'; return;
+}
+p.style.display=(p.style.display==='none')?'block':'none';
+}
+function ouvrirSoldeBasVrai(){
+let p=document.getElementById('panelSoldeBasVrai');
+if(!p){
+p=document.createElement('div'); p.id='panelSoldeBasVrai';
 p.style.cssText='padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
 p.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b>0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b>0 F</b></div></div>';
 let home=document.getElementById('clientHome')||document.body; home.prepend(p);
@@ -620,42 +499,24 @@ p.style.display='block'; return;
 }
 p.style.display=(p.style.display==='none')?'block':'none';
 }
-function ouvrirSoldeBas(){
-let p=document.getElementById('panelSoldeBas');
-if(!p){
-p=document.createElement('div'); p.id='panelSoldeBas';
-p.style.cssText='padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
-p.innerHTML='<div style="display:flex;gap:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b>0 F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b>0 F</b></div></div><button onclick="ouvrirDepotFinal()" style="width:100%;padding:12px;margin-top:10px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">💳 RECHARGER MON COMPTE</button>';
-let home=document.getElementById('clientHome')||document.body; home.prepend(p);
-p.style.display='block'; return;
-}
-p.style.display=(p.style.display==='none')?'block':'none';
-}
 setTimeout(function(){
-// 1. Enlever le clic sur la ligne rouge qui défile
 let all=document.querySelectorAll('*');
 all.forEach(function(el){
-if(el.children.length===0 && el.textContent.includes('NET LOTO partout')){
-el.onclick=null; el.style.cursor='default';
-}
-// Enlever clic sur les grandes boîtes
 if(el.children.length>2){ el.onclick=null; }
+if(el.children.length===0 && el.textContent.includes('NET LOTO partout')){ el.onclick=null; }
 });
-// 2. Trouver les SOLDE
 let soldes=[];
 let depots=[];
 all.forEach(function(el){
-if(el.children.length===0 && (el.textContent.trim()==='SOLDE' || el.textContent.trim()==='SOLDE +')){ soldes.push(el); }
-if(el.children.length===0 && (el.textContent.trim()==='DÉPÔT' || el.textContent.trim()==='DEPOT' || el.textContent.trim()==='DÉPÔT +')){ depots.push(el); }
+if(el.children.length===0 && el.textContent.trim()==='SOLDE'){ soldes.push(el); }
+if(el.children.length===0 && (el.textContent.trim()==='DÉPÔT' || el.textContent.trim()==='DEPOT')){ depots.push(el); }
 });
-// SOLDE en haut = le premier, avec +
-if(soldes[0]){ soldes[0].textContent='SOLDE +'; soldes[0].style.cursor='pointer'; soldes[0].onclick=function(e){ e.stopPropagation(); ouvrirSoldeHaut(); }; }
-// SOLDE en bas = le deuxième, avec +
-if(soldes[1]){ soldes[1].textContent='SOLDE +'; soldes[1].style.cursor='pointer'; soldes[1].onclick=function(e){ e.stopPropagation(); ouvrirSoldeBas(); }; }
-// DEPOT avec +
-depots.forEach(function(d){ d.textContent='DÉPÔT +'; d.style.cursor='pointer'; d.onclick=function(e){ e.stopPropagation(); ouvrirDepotFinal(); }; });
+if(soldes[0]){ soldes[0].textContent='SOLDE +'; soldes[0].style.cursor='pointer'; soldes[0].onclick=function(e){ e.stopPropagation(); ouvrirSoldeHautVrai(); }; }
+if(soldes[1]){ soldes[1].textContent='SOLDE +'; soldes[1].style.cursor='pointer'; soldes[1].onclick=function(e){ e.stopPropagation(); ouvrirSoldeBasVrai(); }; }
+depots.forEach(function(d){ d.textContent='DÉPÔT +'; d.style.cursor='pointer'; d.onclick=function(e){ e.stopPropagation(); ouvrirDepotVrai(); }; });
 },800);
- // ===== FIN FINAL 3 BOUTONS =====
+ // ===== FIN VRAI CODE =====
+return;
 </script>
 </body>
 </html>
