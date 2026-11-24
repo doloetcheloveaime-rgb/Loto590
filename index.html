@@ -441,6 +441,56 @@ if(el.textContent.includes('Aide') && el.children.length===0){ el.onclick=openAi
 });
 })();
  // ===== FIN ARCHIVE + AIDE =====
+   // ===== SOLDE + LIGNE DEFILANTE + DEPOT - 100% JS =====
+function getSoldes(){ return JSON.parse(localStorage.getItem('soldes')||'{"gain":0,"jeu":0}'); }
+function showSoldes(){
+let s=getSoldes();
+let box=document.getElementById('boxSoldes');
+if(!box){
+box=document.createElement('div');
+box.id='boxSoldes';
+box.style.cssText='padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center';
+let home=document.getElementById('clientHome'); if(home) home.prepend(box);
+}
+box.innerHTML='<div style="font-size:18px;font-weight:bold">💰 SOLDE</div><div style="display:flex;gap:10px;margin-top:10px"><div style="flex:1;background:#16a34a;padding:12px;border-radius:10px"><div>SOLDE GAIN</div><b>'+s.gain+' F</b></div><div style="flex:1;background:#2563eb;padding:12px;border-radius:10px"><div>SOLDE JEU</div><b>'+s.jeu+' F</b></div></div><div id="ticker" style="background:#dc2626;color:white;padding:8px;border-radius:8px;margin-top:10px;font-weight:bold;overflow:hidden;white-space:nowrap">🌍 AUTO PARTOUT DANS LE MONDE</div><button onclick="openDepot()" style="width:100%;padding:12px;margin-top:10px;background:#f59e0b;border:none;border-radius:8px;font-weight:bold">💳 DÉPÔT</button>';
+startTicker();
+}
+let tickerTimer=null;
+function startTicker(){
+let msgs=['🌍 AUTO PARTOUT DANS LE MONDE - DÉPÔT RAPIDE','🔥 GAGNEZ PLUS AVEC SOLDE JEU','✅ ADMIN + REVENDEURS DISPONIBLES 24/7','💰 SOLDE GAIN - RETRAIT RAPIDE'];
+let i=0;
+if(tickerTimer) clearInterval(tickerTimer);
+tickerTimer=setInterval(function(){
+let t=document.getElementById('ticker'); if(!t){ clearInterval(tickerTimer); return; }
+i=(i+1)%msgs.length; t.textContent=msgs[i];
+},6000);
+}
+function openDepot(){
+let old=document.getElementById('viewDepot');
+if(!old){ old=document.createElement('div'); old.id='viewDepot'; old.style.padding='15px'; document.body.appendChild(old); }
+let s=getSoldes();
+old.innerHTML='<h2>💳 Dépôt</h2><p>Solde Gain: <b>'+s.gain+' F</b> | Solde Jeu: <b>'+s.jeu+' F</b></p><p>Le dépôt est fait par <b>l\'admin</b> et les <b>revendeurs créés par l\'admin</b>.</p><label>Montant</label><br><input id="dMontant" type="number" style="width:100%;padding:10px;margin:5px 0" placeholder="Ex: 5000"><br><label>Choisir : Gain ou Jeu ?</label><br><select id="dType" style="width:100%;padding:10px;margin:5px 0"><option value="jeu">SOLDE JEU</option><option value="gain">SOLDE GAIN</option></select><br><label>Méthode</label><br><select id="dMethode" style="width:100%;padding:10px;margin:5px 0"><option>MTN MoMo</option><option>Moov Money</option><option>Orange Money</option></select><br><button onclick="demandeDepot()" style="width:100%;padding:12px;background:#16a34a;color:white;border:none;border-radius:8px;font-weight:bold">📩 DEMANDER UN DÉPÔT</button><br><button onclick="backHomeDepot()" style="width:100%;padding:10px;margin-top:8px">⬅ Retour</button><p style="font-size:13px;color:#666">Après ta demande, l\'admin ou un revendeur valide et ton solde est crédité.</p>';
+document.getElementById('clientHome').style.display='none';
+old.style.display='block';
+let m=document.getElementById('menu'); if(m) m.style.display='none';
+}
+function demandeDepot(){
+let m=document.getElementById('dMontant').value;
+let t=document.getElementById('dType').value;
+if(!m||m<=0){ alert('Mets un montant, boss'); return; }
+let d=JSON.parse(localStorage.getItem('demandesDepot')||'[]');
+d.unshift({montant:m,type:t,methode:document.getElementById('dMethode').value,date:new Date().toLocaleString(),statut:'En attente'});
+localStorage.setItem('demandesDepot',JSON.stringify(d));
+if(window.addArchive) addArchive('Demande dépôt '+m+' F pour '+t);
+alert('Demande envoyée, boss ✅ L\'admin / revendeur va valider.');
+backHomeDepot();
+}
+function backHomeDepot(){
+let v=document.getElementById('viewDepot'); if(v) v.style.display='none';
+document.getElementById('clientHome').style.display='block';
+}
+showSoldes();
+ // ===== FIN SOLDE + DEPOT =====
 </script>
 </body>
 </html>
