@@ -536,4 +536,115 @@ window.addEventListener('load',function(){var s=localStorage.getItem('session');
  }
  setInterval(tuerMenu,500);
 })();
+ // DEBUT CORRECTION UNIVERSELLE - A COLLER TOUT EN BAS AVANT LA FIN
+(function(){
+ function txt(el){ return (el.innerText||el.textContent||'').trim(); }
+ function findBtn(mot){ return Array.from(document.querySelectorAll('button,div,span,a')).find(e=>e.children.length===0 && txt(e).toLowerCase().includes(mot.toLowerCase())); }
+
+ // 1. SUPPRIMER AUTOGAMES PARTOUT
+ setInterval(function(){
+  document.querySelectorAll('button,div,span,a,li').forEach(function(e){
+   if(e.children.length===0 && /autogame/i.test(txt(e))){ e.style.display='none'; }
+   if(/autogame/i.test(txt(e)) && e.children.length>0 && e.tagName==='BUTTON'){ e.style.display='none'; }
+  });
+ },800);
+
+ // 2. CHANCE + 4 NUMEROS - FORCER LE DETAIL PARTOUT OU IL Y A CHANCE
+ setInterval(function(){
+  var all=document.querySelectorAll('div,section');
+  all.forEach(function(d){
+   if(/CHANCE \+/i.test(txt(d)) && !d.dataset.chanceFix && txt(d).length<2000){
+    d.dataset.chanceFix='1';
+    var div=document.createElement('div');
+    div.style.cssText='background:#fff7ed;border:1px solid #ffedd5;border-radius:12px;padding:12px;margin-top:10px';
+    div.innerHTML='<b>CHANCE + avec 4 numeros - Detail des gains</b><br>2 bons = <b>3 000 XOF</b><br>3 bons = <b>12 000 XOF</b><br>4 bons = <b>300 000 XOF</b><br>5 bons = <b>5 000 000 XOF</b><br><small>Meilleur cas: 5 000 000 XOF - GAIN affiche = 3 000 XOF</small>';
+    d.appendChild(div);
+   }
+  });
+ },1500);
+
+ // 3. PN (1N) - 1300 DIRECT / 6000 POSITION - SURVEILLE LA MISE
+ document.addEventListener('input',function(e){
+  var body=document.body.innerText||'';
+  if(!/PN|NAP 1|1N/i.test(body)) return;
+  var inputs=document.querySelectorAll('input[type="number"], input');
+  var mise=0; inputs.forEach(function(i){ if(i.value && parseInt(i.value)>0) mise=parseInt(i.value); });
+  if(!mise) return;
+  var isPos=/POSITION/i.test(body);
+  var gain=isPos? mise*60 : mise*13;
+  var gains=document.querySelectorAll('b,span,div');
+  gains.forEach(function(g){
+   if(/Gain potentiel|GAIN/i.test(txt(g)) && g.children.length===0){
+    g.innerText='Gain: '+gain.toLocaleString()+' XOF';
+   }
+  });
+ });
+
+ // 4. TICKETS - AJOUTER LE FILTRE PERIODE SI IL MANQUE
+ setInterval(function(){
+  if(document.querySelector('#periodeBoss')) return;
+  var t=document.body.innerText||'';
+  if(/Mes tickets/i.test(t)){
+   var selects=document.querySelectorAll('select');
+   var deja=false; selects.forEach(function(s){ if(/Aujourd|Hier|Semaine|Mois/i.test(s.innerText)) deja=true; });
+   if(!deja){
+    var h=Array.from(document.querySelectorAll('h2,h3,b')).find(e=>/Mes tickets/i.test(txt(e)));
+    if(h){
+     var s=document.createElement('select'); s.id='periodeBoss'; s.style.cssText='width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;margin:10px 0';
+     s.innerHTML='<option>Toute periode</option><option>Aujourd\'hui</option><option>Hier</option><option>Une semaine</option><option>Un mois</option>';
+     h.parentNode.insertBefore(s,h.nextSibling);
+    }
+   }
+  }
+ },2000);
+
+ // 5. AIDE - CREER LES 9 BOUTONS + ADMIN POUR QUE TOI TU REMPLISSES
+ window.aideBossData=JSON.parse(localStorage.getItem('aideBoss')||'{}');
+ var titres=['Bien demarrer','Comment se lit un tirage','Les modes de jeu','Les types de paris','Les formules','Les paris Ma chance','Le formulaire de pari','E-games','Portefeuille et tickets'];
+ setInterval(function(){
+  var aideZone=Array.from(document.querySelectorAll('div,section')).find(e=>/Rechercher dans l.aide/i.test(txt(e)));
+  if(aideZone && !document.querySelector('#aideBossZone')){
+   var z=document.createElement('div'); z.id='aideBossZone';
+   z.innerHTML=titres.map(function(n){ return '<button onclick="window.openAideBoss(\''+n+'\')" style="width:100%;text-align:left;background:#fff;border:1px solid #eee;padding:13px;border-radius:12px;margin-bottom:8px;font-weight:700;display:flex;justify-content:space-between">'+n+' <span>›</span></button>'; }).join('')+'<div id="aideBossDetail" style="background:#fff;padding:14px;border-radius:12px;margin-top:10px;display:none"><b id="aideBossTitre"></b><p id="aideBossTexte" style="color:#666;font-size:13px;margin-top:8px"></p></div><div style="background:#fff;padding:14px;border-radius:12px;margin-top:10px"><b>MODIFIER AIDE (ADMIN - c\'est toi qui remplis)</b><select id="aideBossSel" style="width:100%;padding:12px;margin:10px 0">'+titres.map(function(n){return '<option>'+n+'</option>'}).join('')+'</select><textarea id="aideBossInput" placeholder="Ecris ton texte ici, boss..." style="width:100%;padding:12px;min-height:100px"></textarea><button onclick="window.saveAideBoss()" style="background:#e11d2e;color:#fff;border:0;padding:12px;border-radius:10px;width:100%;font-weight:800;margin-top:8px">Enregistrer ce texte</button></div>';
+   aideZone.appendChild(z);
+   var sel=document.getElementById('aideBossSel'); sel.onchange=function(){ document.getElementById('aideBossInput').value=window.aideBossData[sel.value]||''; };
+  }
+ },2000);
+ window.openAideBoss=function(n){
+  var d=document.getElementById('aideBossDetail'); if(!d) return;
+  d.style.display='block'; document.getElementById('aideBossTitre').innerText=n;
+  document.getElementById('aideBossTexte').innerText=window.aideBossData[n]||'Boss, ce texte est encore vide. Remplis-le dans MODIFIER AIDE ci-dessous.';
+  d.scrollIntoView({behavior:'smooth'});
+ };
+ window.saveAideBoss=function(){
+  var sel=document.getElementById('aideBossSel'); var inp=document.getElementById('aideBossInput');
+  window.aideBossData[sel.value]=inp.value; localStorage.setItem('aideBoss',JSON.stringify(window.aideBossData)); alert('Enregistre, boss: '+sel.value);
+ };
+
+ // 6. RETRAIT - FORCER PAYS + MTN/MOOV + ETAT SI MANQUANT
+ setInterval(function(){
+  var pays=document.querySelector('select'); // on ne touche pas si deja bon
+  var selects=document.querySelectorAll('select');
+  selects.forEach(function(s){
+   if(/Benin/i.test(s.innerText) && s.options.length<5){
+    s.innerHTML='<option>Benin</option><option>Burkina Faso</option><option>Cote d\'Ivoire</option><option>France</option><option>Ghana</option><option>Guinee</option><option>Liberia</option><option>Mali</option><option>Niger</option><option>Nigeria</option><option>Senegal</option><option>Togo</option><option>Universel</option>';
+   }
+   if(/MTN/i.test(s.innerText) && s.options.length<2){
+    s.innerHTML='<option>MTN Mobile Money</option><option>Moov Money</option>';
+   }
+   if(/En attente/i.test(s.innerText) && s.options.length<5){
+    s.innerHTML='<option>Tous</option><option>En attente</option><option>En cours</option><option>Valide</option><option>Rejete</option>';
+   }
+  });
+ },2000);
+
+ // 7. MENU ADMIN - CACHER CHEZ CLIENT
+ setInterval(function(){
+  var u=window._currentUser;
+  if(u && (u.role==='CLIENT'||u.role==='REVENDEUR')){
+   document.querySelectorAll('button,a,div').forEach(function(e){ if(e.children.length===0 && /MENU ADMIN/i.test(txt(e))){ e.style.display='none'; } });
+  }
+ },1000);
+})();
+// FIN CORRECTION
 </script></body></html>
