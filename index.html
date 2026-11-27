@@ -434,4 +434,106 @@ window.addEventListener('load',function(){var s=localStorage.getItem('session');
  };
  document.addEventListener('change',function(e){ if(e.target && e.target.id==='selFormule'){ setTimeout(function(){ window.calcJeu(); },100); } });
 })();
+  // CORRECTION BOSS - A COLLER A LA SUITE
+(function(){
+ // 1. NAP 1 = PN (1N) - DIRECT 1300 / 1ERE POSITION 6000 pour 100
+ window.calcGainBoss=function(){
+  var f=document.getElementById('selFormule'); if(!f) return false;
+  var form=f.value||''; var mise=parseInt((document.getElementById('inputMise')||{}).value||0)||0;
+  var g=document.getElementById('txtGainJeu'); var t=document.getElementById('txtTotJeu'); var d=document.getElementById('txtDetJeu');
+  if(!g||!t||!d) return false;
+  var pari='';
+  var btns=document.querySelectorAll('button');
+  btns.forEach(function(b){ if(b.classList && b.classList.contains('on') && /DIRECT|POSITION/i.test(b.innerText||'')) pari=b.innerText; });
+  if(/PN|NAP 1|1N/i.test(form)){
+   var gain = /POSITION/i.test(pari) ? mise*60 : mise*13;
+   g.innerText=gain.toLocaleString()+' XOF'; t.innerText=mise.toLocaleString()+' XOF';
+   d.innerText='PN (1N) - '+( /POSITION/i.test(pari) ? '1ere POSITION | 100 = 6 000' : 'DIRECT | 100 = 1 300' )+' | Gain: '+gain.toLocaleString();
+   return true;
+  }
+  return false;
+ };
+ var oldCalc=window.calcJeu;
+ window.calcJeu=function(){ if(window.calcGainBoss()) return; if(oldCalc) oldCalc(); };
+
+ // 2. CHANCE + 4 NUMEROS - DETAIL GAINS PHOTO 2
+ function chanceBox(){
+  var box=document.getElementById('chanceBox'); if(!box) return;
+  box.innerHTML='<b>CHANCE + avec 4 numeros - Detail des gains</b><table><tr><td>2 bons</td><td><b>3 000 XOF</b></td></tr><tr><td>3 bons</td><td><b>12 000 XOF</b></td></tr><tr><td>4 bons</td><td><b>300 000 XOF</b></td></tr><tr><td>5 bons</td><td><b>5 000 000 XOF</b></td></tr></table><div class="mut">Meilleur cas: 5 000 000 XOF - GAIN affiche = 3 000 XOF</div>';
+ }
+ setTimeout(chanceBox,500); setInterval(chanceBox,5000);
+
+ // 3. TICKETS - FILTRE PERIODE
+ function ticketsPeriode(){
+  var sel=document.getElementById('periode'); if(!sel) return;
+  if(sel.options.length<5){
+   sel.innerHTML='<option value="toute">Toute periode</option><option value="auj">Aujourd\'hui</option><option value="hier">Hier</option><option value="sem">Une semaine</option><option value="mois">Un mois</option>';
+  }
+ }
+ setTimeout(ticketsPeriode,500);
+
+ // 4. RESULTATS - PAS DE AUTOGAMES + COULEURS ROUGE / BLEU WIN / OR MAC
+ function noAutogame(){
+  var els=document.querySelectorAll('button, div, span, a');
+  els.forEach(function(e){
+   if(e.children.length===0 && /autogame/i.test(e.innerText||'')){
+    e.style.display='none';
+   }
+  });
+  // Couleurs resultats
+  var wins=document.querySelectorAll('.win'); wins.forEach(function(w){ w.style.background='#2563eb'; w.style.color='#fff'; });
+  var macs=document.querySelectorAll('.mac'); macs.forEach(function(m){ m.style.background='#f59e0b'; m.style.color='#111'; });
+ }
+ setInterval(noAutogame,1000);
+
+ // 5. AIDE - BOUTONS VIDES, C'EST TOI QUI REMPLIS DANS ADMIN
+ var aideTitres=['Bien demarrer','Comment se lit un tirage','Les modes de jeu','Les types de paris','Les formules','Les paris Ma chance','Le formulaire de pari','E-games','Portefeuille et tickets'];
+ window.aideData=JSON.parse(localStorage.getItem('aideBoss')||'{}');
+ function renderAideBoss(){
+  var cont=document.getElementById('aideBtns'); if(cont && cont.children.length===0){
+   cont.innerHTML=aideTitres.map(function(n){ return '<button class="helpBtn" onclick="openAideBoss(\''+n+'\')">'+n+' <span>›</span></button>'; }).join('');
+  }
+  var sel=document.getElementById('aideSel');
+  if(sel && sel.options.length===0){
+   sel.innerHTML=aideTitres.map(function(n){ return '<option>'+n+'</option>'; }).join('');
+   sel.onchange=function(){ var inp=document.getElementById('aideInput'); if(inp) inp.value=window.aideData[sel.value]||''; };
+  }
+ }
+ window.openAideBoss=function(n){
+  var det=document.getElementById('aideDetail'); if(!det) return;
+  det.classList.remove('hide');
+  var tit=document.getElementById('aideTitre'); if(tit) tit.textContent=n;
+  var txt=document.getElementById('aideTexte'); if(txt) txt.innerText=window.aideData[n]||'Boss, ce texte est encore vide. Remplis-le dans MENU ADMIN > Modifier Aide.';
+ };
+ window.saveAideBoss=function(){
+  var sel=document.getElementById('aideSel'); var inp=document.getElementById('aideInput');
+  if(!sel||!inp) return; window.aideData[sel.value]=inp.value; localStorage.setItem('aideBoss',JSON.stringify(window.aideData)); alert('Enregistre, boss: '+sel.value);
+ };
+ setTimeout(renderAideBoss,600); setInterval(renderAideBoss,3000);
+
+ // 6. RETRAIT - PAYS + METHODE + ETAT
+ function retraitFix(){
+  var pays=document.getElementById('retPays');
+  if(pays && pays.options.length<5){
+   pays.innerHTML='<option>Benin</option><option>Burkina Faso</option><option>Cote d\'Ivoire</option><option>France</option><option>Ghana</option><option>Guinee</option><option>Liberia</option><option>Mali</option><option>Niger</option><option>Nigeria</option><option>Senegal</option><option>Togo</option><option>Universel</option>';
+  }
+  var meth=document.getElementById('retMeth');
+  if(meth && meth.options.length<2){ meth.innerHTML='<option>MTN Mobile Money</option><option>Moov Money</option>'; }
+  var etat=document.getElementById('retEtat');
+  if(etat && etat.options.length<5){ etat.innerHTML='<option>Tous</option><option>En attente</option><option>En cours</option><option>Valide</option><option>Rejete</option>'; }
+ }
+ setTimeout(retraitFix,500);
+
+ // 7. SOLDE - ON NE CHANGE PAS LE DESIGN, ON GARDE PHOTO 2
+ // Rien a changer ici, boss, on laisse ton design Solde tel quel.
+
+ // 8. MENU ADMIN JAMAIS CHEZ CLIENT
+ function tuerMenu(){
+  var u=window._currentUser; if(!u) return;
+  if(u.role==='CLIENT' || u.role==='REVENDEUR'){
+   var m=document.getElementById('menuAdminBtns'); if(m){ m.style.display='none'; m.remove(); }
+  }
+ }
+ setInterval(tuerMenu,500);
+})();
 </script></body></html>
