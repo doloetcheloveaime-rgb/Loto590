@@ -340,4 +340,98 @@ window.addEventListener('load',function(){var s=localStorage.getItem('session');
  // Si renderJeu n'existait pas, on crée un minimum
  if(!OLD_RENDERJEU){ window.renderJeu=function(){ var z=document.getElementById('zoneNumeros'); if(z) z.innerHTML='Choisis une formule'; }; }
 })();
+  // CORRECTION FINALE BOSS - NE RIEN EFFACER
+(function(){
+ // ============ 1. MENU ADMIN JAMAIS CHEZ CLIENT / REVENDEUR ============
+ function tuerMenuAdmin(){
+  var u=window._currentUser;
+  if(!u) return;
+  if(u.role==='CLIENT' || u.role==='REVENDEUR'){
+   var m=document.getElementById('menuAdminBtns');
+   if(m){ m.style.display='none'; m.remove(); }
+   // Tous les boutons Admin qu'on cache aussi
+   var ids=['cardTableau','cardPronostic','cardPublierResultat','creerRevBox','controle','cardUsers','cardContenu','cardRetrait','cardArchiveTout','btnTableau','btnPronostic','btnResultat','btnCreerRev','btnControle','btnUsers'];
+   ids.forEach(function(x){ var el=document.getElementById(x); if(el) el.style.display='none'; });
+   // Si un bouton a le texte Admin, on le cache
+   var btns=document.querySelectorAll('button, a, div');
+   btns.forEach(function(b){
+    var t=(b.innerText||'').toLowerCase();
+    if(b.id!=='menuAdminBtns' && b.closest && b.closest('#menuAdminBtns')){ b.style.display='none'; }
+   });
+  }
+ }
+ // On surveille tout le temps, meme quand il change de page / barre en bas
+ setInterval(tuerMenuAdmin,500);
+ document.addEventListener('click',function(){ setTimeout(tuerMenuAdmin,200); });
+ var oldShowDash=window.showDash;
+ window.showDash=function(u){ oldShowDash(u); setTimeout(tuerMenuAdmin,300); };
+ var oldVoir=window.voirMesCoupons;
+ window.voirMesCoupons=function(){ tuerMenuAdmin(); if(oldVoir) oldVoir(); setTimeout(tuerMenuAdmin,300); };
+
+ // ============ 2. RENOMMER TOUSSOU / YOUSSOU EN TWO SUR ============
+ function corrigerTwoSur(){
+  var f=document.getElementById('selFormule');
+  if(f){
+   for(var i=0;i<f.options.length;i++){
+    f.options[i].text=f.options[i].text.replace(/Toussou/gi,'TWO SÛR').replace(/Youssou/gi,'TWO SÛR').replace(/TOUSSOU/g,'TWO SÛR');
+    f.options[i].value=f.options[i].value.replace(/Toussou/gi,'TWO SÛR').replace(/Youssou/gi,'TWO SÛR');
+   }
+  }
+  // Corrige aussi les titres et boutons sans casser la page
+  var els=document.querySelectorAll('button, option, label, span, div, h3, h4');
+  els.forEach(function(e){
+   if(e.children.length===0 && e.innerText && (e.innerText.indexOf('Toussou')>=0 || e.innerText.indexOf('Youssou')>=0)){
+    e.innerText=e.innerText.replace(/Toussou/g,'TWO SÛR').replace(/Youssou/g,'TWO SÛR');
+   }
+  });
+ }
+ setTimeout(corrigerTwoSur,600);
+ setInterval(corrigerTwoSur,3000);
+
+ // ============ 3. GAINS POUR TOUTES LES FORMULES ============
+ window.calcGainNouveau=function(){
+  var f=document.getElementById('selFormule'); if(!f) return false;
+  var form=f.value; var mise=parseInt((document.getElementById('inputMise')||{}).value||0)||0;
+  var g=document.getElementById('txtGainJeu'); var t=document.getElementById('txtTotJeu'); var d=document.getElementById('txtDetJeu');
+  if(!g || !t || !d) return false;
+  var gain=0, tot=mise, det='';
+  // NAP 1 Direct et NAP 1 1ere Position
+  if(form.indexOf('NAP 1')>=0){
+   gain=mise*300; tot=mise;
+   if(form.indexOf('1ère')>=0 || form.indexOf('1ere')>=0 || form.indexOf('Position')>=0){ det='NAP 1 - 1ère Position | 1 numéro en 1ère = '+gain.toLocaleString()+' XOF'; }
+   else { det='NAP 1 - Direct | 1 numéro direct = '+gain.toLocaleString()+' XOF'; }
+   g.innerText=gain.toLocaleString()+' XOF'; t.innerText=tot.toLocaleString()+' XOF'; d.innerText=det; return true;
+  }
+  // NAP 2 TWO SUR Turbo 2 / 3 / 4
+  if(form.indexOf('NAP 2')>=0){
+   var turbo=form.indexOf('Turbo 2')>=0?2:(form.indexOf('Turbo 3')>=0?3:4);
+   if(turbo===2){ gain=mise*90; det='NAP 2 - TWO SÛR Turbo 2 | 2 numéros = '+gain.toLocaleString()+' XOF'; }
+   if(turbo===3){ gain=mise*180; det='NAP 2 - TWO SÛR Turbo 3 | 2 numéros = '+gain.toLocaleString()+' XOF'; }
+   if(turbo===4){ gain=mise*360; det='NAP 2 - TWO SÛR Turbo 4 | 2 numéros = '+gain.toLocaleString()+' XOF'; }
+   tot=mise; g.innerText=gain.toLocaleString()+' XOF'; t.innerText=tot.toLocaleString()+' XOF'; d.innerText=det; return true;
+  }
+  // NAP Direct NAP 3 / 4 / 5
+  if(form.indexOf('NAP Direct')>=0){
+   var nb=form.indexOf('NAP 3')>=0?3:(form.indexOf('NAP 4')>=0?4:5);
+   if(nb===3){ gain=mise*900; det='NAP Direct - NAP 3 | 3 numéros directs = '+gain.toLocaleString()+' XOF'; }
+   if(nb===4){ gain=mise*3500; det='NAP Direct - NAP 4 | 4 numéros directs = '+gain.toLocaleString()+' XOF'; }
+   if(nb===5){ gain=mise*7000; det='NAP Direct - NAP 5 | 5 numéros directs = '+gain.toLocaleString()+' XOF'; }
+   tot=mise; g.innerText=gain.toLocaleString()+' XOF'; t.innerText=tot.toLocaleString()+' XOF'; d.innerText=det; return true;
+  }
+  // Permutation : Mise x Nombre de Couples = Montant Coupon
+  if(form==='Permutation'){
+   var nbP=window.NB_P||3; var couples=3; if(nbP===4) couples=6; if(nbP===5) couples=10; if(nbP===6) couples=15; if(nbP>=7) couples=nbP*(nbP-1)/2;
+   tot=mise*couples; gain=mise*300; det='Permutation '+nbP+' | '+couples+' couples | Mise x Couples = '+tot.toLocaleString()+' XOF | 2 bons = '+gain.toLocaleString();
+   g.innerText=gain.toLocaleString()+' XOF'; t.innerText=tot.toLocaleString()+' XOF'; d.innerText=det; return true;
+  }
+  return false;
+ };
+ var oldCalc=window.calcJeu;
+ window.calcJeu=function(){
+  if(window.calcGainNouveau()){ corrigerTwoSur(); return; }
+  if(oldCalc) oldCalc();
+  corrigerTwoSur();
+ };
+ document.addEventListener('change',function(e){ if(e.target && e.target.id==='selFormule'){ setTimeout(function(){ window.calcJeu(); },100); } });
+})();
 </script></body></html>
