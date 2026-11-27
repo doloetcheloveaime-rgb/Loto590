@@ -12,7 +12,6 @@
 #clientHome{background:#eef2f7;padding-bottom:90px}
 .ch-top{display:flex;align-items:center;gap:10px;padding:12px;background:#fff}
 .ch-solde{margin-left:auto;background:#fff8d6;border-radius:20px;padding:6px 10px;font-weight:bold;display:flex;align-items:center;gap:6px}
-.ch-plus{background:#f7c948;border:0;width:28px;height:28px;border-radius:50%;font-weight:bold;font-size:18px}
 .ch-salut{padding:12px 12px 0;font-size:18px;font-weight:bold}
 .ch-defil{background:#e11d2e;color:#fff;margin:10px 12px;padding:8px 12px;border-radius:20px;font-size:13px;white-space:nowrap;overflow:hidden}
 .ch-actions{display:flex;gap:10px;padding:10px 12px}
@@ -62,11 +61,10 @@
 </div>
 <p style="text-align:center"><a href="#" onclick="toggleAuth()">Inscription / Connexion</a></p>
 <p class="small">Test ADMIN : admin@netloto.com / Admin123!</p>
-</div>
-<div id="clientHome" class="hide">
+</div><div id="clientHome" class="hide">
 <div class="ch-top"><div class="ch-solde">💰 SOLDE <b id="chSolde">0</b> XOF</div></div>
 <div class="ch-salut">Salut <span id="chNom">Client</span> 👋</div>
-<div class="ch-defil">📢 NET LOTO AT partout dans le monde ! Simple • Rapide • Beau</div>
+<div class="ch-defil">📢 NET LOTO partout dans le monde ! Simple • Rapide • Beau</div>
 <div class="ch-actions">
 <button class="ch-depot" onclick="show('cardRecharger')">➕ Dépôt</button>
 <button class="ch-hist" onclick="show('archive')">⇄ Historique</button>
@@ -93,7 +91,15 @@
 <div onclick="show('cardPronostic')">🔮<br>Pronostics</div>
 <div onclick="show('aide')">❓<br>Aide</div>
 </div>
-<div id="dashboard" class="hide">
+<div id="pageJeu" class="card hide"></div>
+</div>
+<div id="bottomNav" class="ch-bottom hide">
+<div class="act" onclick="showClientHome()">🏠<br>Accueil</div>
+<div onclick="show('cardLoto')">🎮<br>Tirages</div>
+<div onclick="show('archive')"><div class="ch-coupon">🎟️</div>Coupon</div>
+<div onclick="show('archive')">🎫<br>Tickets</div>
+<div onclick="show('cardRecharger')">💰<br>Solde</div>
+</div><div id="dashboard" class="hide">
 <div class="card" id="cardTableau"><b>👑 TABLEAU DE BORD - <span id="roleTxt"></span></b><br><span id="userTxt"></span><br><br>
 <div id="adminTableau"><b>Utilisateurs :</b> <span id="nbUsers">0</span> | <b>Clients :</b> <span id="nbClients">0</span> | <b>Revendeurs :</b> <span id="nbRev">0</span><br><b>Ventes :</b> <span id="ventes">0</span> FCFA | <b>Gains :</b> <span id="gains">0</span> FCFA<br><b>Solde Caisse ADMIN :</b> <span id="caisse">0</span> FCFA<div class="flex"><button class="btn orange" onclick="rechargerCaisse()">RECHARGER CAISSE</button><button class="btn" onclick="show('controle')">🎯 CONTRÔLE</button></div></div></div>
 <div class="card" id="cardLoto"><h3>🎰 Types de LOTO</h3><div class="loto"><div>LOTO<br>5/90</div><div>LOTO<br>FORTUNE</div><div>LOTO<br>NAP 2</div><div>LOTO<br>NAP 3</div><div>PERMUTATION</div></div></div>
@@ -106,833 +112,111 @@
 <div class="card" id="cardUsers"><h3>👥 Gestion Utilisateurs</h3><div id="usersList"></div></div>
 <div class="card" id="cardContenu"><h3>📝 Gestion Contenu</h3><input id="contenuTxt" placeholder="Contenu"><div class="flex"><button class="btn green" onclick="ajoutContenu()">AJOUTER</button><button class="btn orange" onclick="modifContenu()">MODIFIER</button><button class="btn red" onclick="suppContenu()">SUPPRIMER</button></div><div id="contenuList"></div></div>
 <div class="card" id="archive"><h3>📁 Archives</h3><div id="archiveList"></div></div>
-<div class="card" id="profil"><h3>👤 Profil</h3><div id="profilTxt"></div><br><b>Mot de passe :</b> <span id="profilPass">****</span> <button onclick="let s=document.getElementById('profilPass');s.innerText=s.innerText=='****'?window._currentUser.pass:'****'">👁️ Voir</button></div>
+<div class="card" id="profil"><h3>👤 Profil</h3><div id="profilTxt"></div><br><b>Mot de passe :</b> <span id="profilPass">****</span> <button onclick="let s=document.getElementById('profilPass');s.innerText=s.innerText=='****'?(window._currentUser?window._currentUser.pass:''):'****'">👁️ Voir</button></div>
 <div class="card" id="resultat"><h3>🏆 Résultat</h3><div id="resultatTxt"></div></div>
 <div class="card" id="aide"><h3>❓ Aide</h3><p>ADMIN controle tout. Pour aide, contact ADMIN sur WhatsApp.</p></div>
-</div>
-<div id="bottomNav" class="ch-bottom hide">
-<div class="act" onclick="showClientHome()">🏠<br>Accueil</div>
-<div onclick="show('cardLoto')">🎮<br>Tirages</div>
-<div><div class="ch-coupon">🎟️</div>Coupon</div>
-<div onclick="show('archive')">🎫<br>Tickets</div>
-<div onclick="show('cardRecharger')">💰<br>Solde</div>
-</div>
-<script>
+<button class="btn" onclick="showClientHome()" style="margin:12px">RETOUR ACCUEIL</button>
+</div><script>
 let DB=JSON.parse(localStorage.getItem('netloto')||'{"users":[{"gmail":"admin@netloto.com","pass":"Admin123!","wa":"22990000000","role":"ADMIN","soldeJeu":0,"soldeGain":0,"soldeRev":0,"bloque":false}],"revendeurs":[],"codes":{},"pronostics":[],"resultats":[],"tickets":[],"archives":[],"contenus":[],"caisse":500000,"ventes":0,"gains":0}');
 function save(){localStorage.setItem('netloto',JSON.stringify(DB));render()}
 function toggleAuth(){document.getElementById('insc').classList.toggle('hide');document.getElementById('conn').classList.toggle('hide');document.getElementById('authTitle').innerText=document.getElementById('insc').classList.contains('hide')?'Connexion':'Inscription'}
 function inscrire(){let g=document.getElementById('iGmail').value,p=document.getElementById('iPass').value,w=document.getElementById('iWa').value;if(!g||!p||!w)return alert('Remplis Gmail + Mot de passe + WhatsApp');if(p.length<6)return alert('Mot de passe 6 caracteres minimum');DB.users.push({gmail:g,pass:p,wa:w,role:'CLIENT',soldeJeu:0,soldeGain:0,soldeRev:0,bloque:false});DB.archives.push('Inscription: '+g+' - '+new Date().toLocaleString());save();alert('Inscription reussie ! Connecte-toi.');toggleAuth()}
 function connecter(){let g=document.getElementById('cGmail').value,p=document.getElementById('cPass').value;let u=DB.users.find(x=>x.gmail==g&&x.pass==p);if(!u)return alert('Gmail ou mot de passe faux');if(u.bloque)return alert('Compte bloque par ADMIN');localStorage.setItem('session',g);showDash(u)}
+function motOublie(){let g=prompt('Ton Gmail ?');let u=DB.users.find(x=>x.gmail==g);if(u)alert('Ton mot de passe est : '+u.pass);else alert('Gmail introuvable')}
 function logout(){localStorage.removeItem('session');location.reload()}
-function showClientHome(){document.getElementById('clientHome').classList.remove('hide');document.getElementById('dashboard').classList.add('hide');window.scrollTo(0,0)}
+function goBack(){window.scrollTo(0,0)}
 function showDash(u){
-document.getElementById('auth').style.display='none';
-document.getElementById('clientHome').classList.add('hide');
-document.getElementById('bottomNav').classList.add('hide');
-document.getElementById('dashboard').classList.remove('hide');
-document.getElementById('dashboard').style.display='block';
-let estAdmin=(u.role==='ADMIN');let estRev=(u.role==='REVENDEUR');
-if(!estAdmin&&!estRev){
-document.getElementById('clientHome').classList.remove('hide');
-document.getElementById('bottomNav').classList.remove('hide');
-document.getElementById('dashboard').classList.remove('hide');
-let t=['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
-t.forEach(function(id){let el=document.getElementById(id);if(el)el.style.display='none';});
-document.getElementById('chNom').innerText=u.gmail.split('@')[0];
-document.getElementById('chSolde').innerText=(u.soldeJeu+u.soldeGain)+' XOF';
-let p2=document.getElementById('profilTxt2'); if(p2) p2.innerText='Nom: '+u.gmail+' | Role: '+u.role+' | WhatsApp: '+u.wa;
-}
-document.getElementById('clientHome').classList.add('hide');
-document.getElementById('bottomNav').classList.add('hide');
-document.getElementById('dashboard').classList.remove('hide');
-let visRev=['cardTableau','cardLoto','archive','profil','resultat','aide','cardRecharger'];
-let t2=['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
-t2.forEach(function(id){let el=document.getElementById(id);if(!el)return;if(estAdmin)el.style.display='block';else el.style.display=visRev.includes(id)?'block':'none';});
-let at=document.getElementById('adminTableau');if(at)at.style.display=estAdmin?'block':'none';
-render();
-}
-function goBack(){history.back();window.scrollTo(0,0)}
-function show(id){
-let cur=window._currentUser;
-if(cur&&cur.role==='CLIENT'){
-document.getElementById('clientHome').classList.add('hide');
-document.getElementById('dashboard').classList.remove('hide');
-let t=['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
-t.forEach(function(x){let el=document.getElementById(x);if(el)el.style.display='none';});
-let el=document.getElementById(id);if(el){el.style.display='block';el.scrollIntoView({behavior:'smooth'});}
-if(!document.getElementById('btnRetourClient')){let b=document.createElement('button');b.id='btnRetourClient';b.className='btn';b.innerText='RETOUR ACCUEIL CLIENT';b.onclick=showClientHome;b.style.margin='12px';document.getElementById('dashboard').prepend(b);}
-document.getElementById('menu').style.display='none';return;
-}
-document.getElementById('menu').style.display='none';let el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'})
-}
-function rechargerCaisse(){let m=prompt('Montant a ajouter a la Caisse ADMIN ?');if(m){DB.caisse+=parseInt(m);DB.archives.push('Caisse rechargee: '+m+' - '+new Date().toLocaleString());save()}}
-function creerRevendeur(){let e=document.getElementById('etab').value,n=document.getElementById('rNom').value,g=document.getElementById('rGmail').value,w=document.getElementById('rWa').value,p=document.getElementById('rPass').value;if(!e||!n||!g||!w||!p)return alert('Remplis tout');let code='REV-'+Math.floor(10000+Math.random()*90000);DB.revendeurs.push({etab:e,nom:n,gmail:g,wa:w,pass:p,code:code,soldeRev:0});DB.users.push({gmail:g,pass:p,wa:w,role:'REVENDEUR',soldeJeu:0,soldeGain:0,soldeRev:0,bloque:false});DB.archives.push('Revendeur cree: '+n+' '+e+' Code '+code);save();alert('REVENDEUR CREE ! Code: '+code)}
-function genererCode(type){let wa=document.getElementById('rechWa').value,m=document.getElementById('rechMontant').value;if(!wa||!m)return alert('Mets WhatsApp + Montant');let code='NET-'+Math.floor(10000+Math.random()*90000);DB.codes[code]={wa:wa,montant:parseInt(m),type:type};save();document.getElementById('rechMsg').innerHTML='Code <b>'+code+'</b> pour '+type+' - '+m+' FCFA';window.open('https://wa.me/'+wa.replace(/\D/g,'')+'?text='+encodeURIComponent('Ton code NET LOTO: '+code+' Montant: '+m+' FCFA.'),'_blank')}
-function validerCode(){let c=document.getElementById('codeClient').value;let info=DB.codes[c];if(!info)return alert('Code faux');let u=DB.users.find(x=>x.wa==info.wa);if(u){if(info.type=='client'){u.soldeJeu+=info.montant}else{u.soldeRev+=info.montant}DB.caisse-=info.montant;DB.ventes+=info.montant;DB.archives.push('Recharge validee: '+info.type+' '+info.wa+' '+info.montant+' Code '+c);delete DB.codes[c];save();alert('SOLDE VALIDE ! '+info.montant+' FCFA ajoute.')}else alert('Utilisateur introuvable')}
-function publierPronostic(){let t=document.getElementById('prType').value,n=document.getElementById('prNums').value;if(!n)return alert('Mets les numeros');DB.pronostics.push(t+': '+n+' - '+new Date().toLocaleDateString());save();alert('Pronostic publie !')}
-function publierResultat(){let j=document.getElementById('rJeu').value,d=document.getElementById('rDate').value,ti=document.getElementById('rTirage').value,no=document.getElementById('rNormal').value,doub=document.getElementById('rDouble').value,ty=document.getElementById('rType').value;if(!j||!no)return alert('Mets Jeu + Numero Gagnant Normal');DB.resultats.push(j+' | Date: '+d+' | Tirage: '+ti+' | NORMAL: '+no+' | DOUBLE CHANCE: '+doub+' | '+ty);DB.archives.push('Resultat publie: '+j+' Tirage '+ti);save();alert('RESULTAT PUBLIE !')}
-function faireControle(){if(DB.tickets.length==0){for(let i=1;i<=50;i++)DB.tickets.push({num:'TICKET-'+i,gagnant:i<=10,gain:i<=10?5000:0,client:'client'+i+'@gmail.com'})}let g=DB.tickets.filter(t=>t.gagnant);document.getElementById('controleList').innerHTML='<b>50 tickets joues, '+g.length+' gagnants :</b><br>'+g.map(t=>t.num+' - Gain: '+t.gain+' - '+t.client).join('<br>');DB.archives.push('Controle fait: '+g.length+' gagnants');save()}
-function validerTickets(){alert('Tickets valides ! Maintenant appuie PAYER.')}
-function payerGains(){let g=DB.tickets.filter(t=>t.gagnant);let total=g.reduce((a,t)=>a+t.gain,0);DB.gains+=total;let u=DB.users.find(x=>x.role=='CLIENT');if(u)u.soldeGain+=total;DB.archives.push('Paiement gains: '+total+' vers Solde Gain Client');save();alert('PAYE ! '+total+' FCFA renvoye dans Solde Gain.')}
-function demandeRetrait(){let m=parseInt(document.getElementById('retMontant').value);let s=localStorage.getItem('session');let u=DB.users.find(x=>x.gmail==s);if(!u)return alert('Connecte-toi');if(!m||u.soldeGain<m)return alert('Solde Gain insuffisant');u.soldeGain-=m;DB.caisse+=m;DB.archives.push('Retrait demande: '+u.gmail+' '+m+' - Gain vers Caisse ADMIN');save();alert('RETRAIT : '+m+' FCFA quitte Client vers Caisse ADMIN.')}
-function enregistrerPaiement(){let n=document.getElementById('payNom').value,m=document.getElementById('payMontant').value,d=document.getElementById('payDate').value,c=document.getElementById('payCoupon').value;if(!n||!m)return alert('Mets Nom + Montant');DB.archives.push('CLIENT PAYE: '+n+' | Montant: '+m+' | Date: '+d+' | Coupon: '+c);save();alert('ENREGISTRE ! CLIENT PAYE.')}
-function ajoutContenu(){let t=document.getElementById('contenuTxt').value;if(!t)return;DB.contenus.push(t);save()}
-function modifContenu(){if(DB.contenus.length>0){DB.contenus[DB.contenus.length-1]=document.getElementById('contenuTxt').value;save()}}
-function suppContenu(){DB.contenus.pop();save()}
-function bloquer(g){let u=DB.users.find(x=>x.gmail==g);if(u){u.bloque=true;save()}}
-function debloquer(g){let u=DB.users.find(x=>x.gmail==g);if(u){u.bloque=false;save()}}
-function supprimer(g){DB.users=DB.users.filter(x=>x.gmail!=g);save()}
-function render(){document.getElementById('nbUsers').innerText=DB.users.length;document.getElementById('nbClients').innerText=DB.users.filter(x=>x.role=='CLIENT').length;document.getElementById('nbRev').innerText=DB.revendeurs.length;document.getElementById('ventes').innerText=DB.ventes;document.getElementById('gains').innerText=DB.gains;document.getElementById('caisse').innerText=DB.caisse;document.getElementById('prList').innerHTML=DB.pronostics.map(p=>'<div>'+p+'</div>').join('');document.getElementById('resList').innerHTML=DB.resultats.map(r=>'<div>'+r+'</div>').join('');document.getElementById('revList').innerHTML=DB.revendeurs.map(r=>'<div>'+r.nom+' - '+r.etab+' - Code: '+r.code+'</div>').join('');let cur=window._currentUser;let arch=DB.archives;if(cur&&cur.role!=='ADMIN'){arch=DB.archives.filter(a=>a.includes(cur.gmail)||a.includes('Resultat publie'));}document.getElementById('archiveList').innerHTML=arch.map(a=>'<div>'+a+'</div>').join('');document.getElementById('contenuList').innerHTML=DB.contenus.map(c=>'<div>'+c+'</div>').join('');document.getElementById('usersList').innerHTML=DB.users.map(u=>'<div>'+u.gmail+' - '+u.role+' '+(u.bloque?'(BLOQUE)':'')+' <button onclick="bloquer(\''+u.gmail+'\')">BLOQUER</button> <button onclick="debloquer(\''+u.gmail+'\')">DEBLOQUER</button> <button onclick="supprimer(\''+u.gmail+'\')">SUPPRIMER</button></div>').join('');let rt=DB.resultats.map(r=>'<div>'+r+'</div>').join('');document.getElementById('resultatTxt').innerHTML=rt;let rt2=document.getElementById('resultatTxt2');if(rt2)rt2.innerHTML=rt||'Pas encore de resultat.';}
-setTimeout(()=>{document.getElementById('splash').style.display='none';render();let s=localStorage.getItem('session');if(s){let u=DB.users.find(x=>x.gmail==s);if(u)showDash(u)}},1500);
-function connecter(){
-  var all=document.querySelectorAll("input");
-  var gmail=""; var pass="";
-  for(var i=0;i<all.length;i++){
-    if(all[i].offsetParent===null) continue;
-    var ph=(all[i].placeholder||"").toLowerCase();
-    if(ph.includes("gmail")||ph.includes("mail")) gmail=all[i].value.trim();
-    if(ph.includes("mot")||all[i].type=="password") pass=all[i].value;
-  }
-  if(!gmail||!pass){ alert("Mets Gmail et mot de passe"); return; }
-  var users=JSON.parse(localStorage.getItem("users")||"[]");
-  if(users.length==0){ alert("Aucun compte. Inscris-toi d abord."); return; }
-  var u=null;
-  for(var i=0;i<users.length;i++){ if((users[i].gmail||"").toLowerCase()==gmail.toLowerCase() && users[i].pass==pass){ u=users[i]; break; } }
-  if(!u){ alert("Gmail ou mot de passe incorrect pour "+gmail); return; }
-  window._currentUser=u;
-  localStorage.setItem("session",JSON.stringify(u));
-  alert("Bienvenue "+(u.prenom||u.gmail));
-  var ids=["clientHome","client","dashboard","accueil","home","pageClient"];
-  var trouve=false;
-  for(var k=0;k<ids.length;k++){ var el=document.getElementById(ids[k]); if(el){ el.classList.remove("hide"); el.style.display="block"; trouve=true; } }
-  var btns=document.querySelectorAll("button");
-  for(var b=0;b<btns.length;b++){ if(btns[b].innerText.includes("CONNEXION")){ var p=btns[b].parentElement; if(p) p.style.display="none"; } }
-  if(!trouve){ alert("Connexion OK mais page client introuvable - envoie moi le nom de la page bleue"); return; }
-  window.scrollTo(0,0);
-}
-function inscrire(){
-  var gmail=document.getElementById("iGmail").value.trim();
-  var pass=document.getElementById("iPass").value;
-  if(!gmail||!pass){ alert("Mets Gmail et mot de passe"); return; }
-  var users=JSON.parse(localStorage.getItem("users")||"[]");
-  users.push({gmail:gmail,pass:pass,role:"CLIENT",solde:0});
-  localStorage.setItem("users",JSON.stringify(users));
-  alert("Inscription reussie, connecte toi");
-  document.getElementById("inscription").classList.add("hide");
-  document.getElementById("connexion").classList.remove("hide");
-}
-function motOublie(){
-  var g=prompt("Mets ton Gmail :");
-  if(!g) return;
-  var users=JSON.parse(localStorage.getItem("users")||"[]");
-  var u=null;
-  for(var i=0;i<users.length;i++){ if(users[i].gmail==g){ u=users[i]; break; } }
-  if(!u){ alert("Ce Gmail nexiste pas"); return; }
-  alert("Ton mot de passe est : "+u.pass);
-}
-function ouvrirJeu(nom){
-  var sess=localStorage.getItem("session");
-  if(!sess||!window._currentUser){
-    alert("Connecte-toi d abord pour jouer a "+nom);
-    document.getElementById("clientHome").classList.add("hide");
-    document.getElementById("connexion").classList.remove("hide");
-    window.scrollTo(0,0);
-    return;
-  }
-  alert(nom+" - Choisis ton jeu, bonne chance");
-}
-function show(id){
-  closeMenu();
-  var home=document.getElementById('clientHome');
-  home.classList.add('hide'); home.style.display='none';
-  var d=document.getElementById('dashboard');
-  d.classList.remove('hide'); d.style.display='block';
-  document.querySelectorAll('.card').forEach(c=>{c.classList.add('hide'); c.style.display='none';});
-  var el=document.getElementById(id);
-  if(el){ el.classList.remove('hide'); el.style.display='block'; el.scrollIntoView(); }
-  if(window._currentUser && window._currentUser.role=='CLIENT'){
-    var mt=document.getElementById('menuTableau'); if(mt) mt.style.display='none';
-  }
-}
-function showClientHome(){
-  closeMenu();
-  document.getElementById("dashboard").classList.add("hide");
-  document.getElementById("dashboard").style.display='none';
-  document.getElementById("clientHome").classList.remove("hide");
-  document.getElementById("clientHome").style.display='block';
-  window.scrollTo(0,0);
-}
-function motOublie(){
-  var g=prompt("Mets ton Gmail :");
-  if(!g) return;
-  var u=DB.users.find(x=>x.gmail.toLowerCase()==g.toLowerCase());
-  if(!u){ alert("Ce Gmail nexiste pas"); return; }
-  alert("Ton mot de passe est : "+u.pass);
-  }function connecter(){
-  var g=document.getElementById('cGmail').value.trim();
-  var p=document.getElementById('cPass').value;
-  if(!g||!p){ alert('Mets Gmail et mot de passe'); return; }
-  var u=DB.users.find(x=>x.gmail.toLowerCase()==g.toLowerCase() && x.pass==p);
-  if(!u){
-    var oldUsers=JSON.parse(localStorage.getItem('users')||'[]');
-    var u2=oldUsers.find(x=>(x.gmail||'').toLowerCase()==g.toLowerCase() && x.pass==p);
-    if(u2){
-      u={gmail:u2.gmail,pass:u2.pass,wa:u2.wa||'',role:'CLIENT',soldeJeu:0,soldeGain:0,soldeRev:0,bloque:false};
-      DB.users.push(u); save();
-      alert('Compte retrouve dans ancien tiroir, on le deplace. Re-appuie CONNECTER.');
-      return;
-    }
-  }
-  if(!u){ alert('Gmail ou mot de passe faux pour '+g+' - Inscris-toi une fois avec ce Gmail'); return; }
-  if(u.bloque){ alert('Compte bloque par ADMIN'); return; }
-  window._currentUser=u;
-  localStorage.setItem('session',g);
-  showDash(u);
-  alert('Bienvenue '+g);
-  }function showDash(u){
-  window._currentUser=u;
-  document.getElementById('auth').style.display='none';
-  document.getElementById('auth').classList.add('hide');
-  document.getElementById('roleTxt').innerText=u.role;
-  document.getElementById('userTxt').innerText=u.gmail+' | WhatsApp: '+u.wa+' | Solde Jeu: '+u.soldeJeu+' | Solde Gain: '+u.soldeGain;
-  document.getElementById('profilTxt').innerText='Nom: '+u.gmail+' | Role: '+u.role+' | WhatsApp: '+u.wa;
-  var mt=document.getElementById('menuTableau');
-  if(u.role=='CLIENT'){
-    document.getElementById('clientHome').classList.remove('hide');
-    document.getElementById('clientHome').style.display='block';
-    document.getElementById('dashboard').classList.add('hide');
-    document.getElementById('dashboard').style.display='none';
-    document.getElementById('bottomNav').classList.remove('hide');
-    document.getElementById('chNom').innerText=u.gmail.split('@')[0];
-    document.getElementById('chSolde').innerText=(u.soldeJeu+u.soldeGain)+' XOF';
-    if(mt) mt.style.display='none';
-  } else {
-    document.getElementById('clientHome').classList.add('hide');
-    document.getElementById('clientHome').style.display='none';
-    document.getElementById('dashboard').classList.remove('hide');
-    document.getElementById('dashboard').style.display='block';
-    document.getElementById('bottomNav').classList.add('hide');
-    if(mt) mt.style.display='block';
-  }
-  render();
-} // ===== PROFIL - 100% JS =====
-function openProfil(){
-let old=document.getElementById('viewProfil');
-if(!old){
-old=document.createElement('div');
-old.id='viewProfil';
-old.style.padding='15px';
-old.innerHTML='<h2>👤 Mon Profil</h2><label>Nom</label><br><input id="pNom" style="width:100%;padding:10px;margin:5px 0" placeholder="Ton nom"><br><label>Prénom</label><br><input id="pPrenom" style="width:100%;padding:10px;margin:5px 0" placeholder="Ton prénom"><br><label>Numéro WhatsApp</label><br><input id="pWhats" style="width:100%;padding:10px;margin:5px 0" placeholder="Ex: 229 90 00 00 00"><br><label>Date de naissance</label><br><input id="pNaiss" type="date" style="width:100%;padding:10px;margin:5px 0"><br><label>Gmail</label><br><input id="pMail" style="width:100%;padding:10px;margin:5px 0" placeholder="ton@gmail.com"><br><label>Mot de passe</label><br><input id="pPass" type="password" style="width:100%;padding:10px;margin:5px 0" placeholder="Mot de passe"><br><button onclick="saveProfil()" style="width:100%;padding:12px;background:#16a34a;color:white;border:none;border-radius:8px;font-weight:bold">💾 SAUVEGARDER</button><br><button onclick="backHome2()" style="width:100%;padding:10px;margin-top:8px">⬅ Retour</button>';
-document.body.appendChild(old);
-}
-let p=JSON.parse(localStorage.getItem('profil')||'{}');
-document.getElementById('pNom').value=p.nom||'';
-document.getElementById('pPrenom').value=p.prenom||'';
-document.getElementById('pWhats').value=p.whats||'';
-document.getElementById('pNaiss').value=p.naiss||'';
-document.getElementById('pMail').value=p.mail||'';
-document.getElementById('pPass').value=p.pass||'';
-document.getElementById('clientHome').style.display='none';
-document.getElementById('viewProfil').style.display='block';
-let m=document.getElementById('menu'); if(m) m.style.display='none';
-}
-function saveProfil(){
-localStorage.setItem('profil',JSON.stringify({nom:document.getElementById('pNom').value,prenom:document.getElementById('pPrenom').value,whats:document.getElementById('pWhats').value,naiss:document.getElementById('pNaiss').value,mail:document.getElementById('pMail').value,pass:document.getElementById('pPass').value}));
-alert('Profil sauvegardé boss ✅');
-}
-function backHome2(){
-document.getElementById('viewProfil').style.display='none';
-document.getElementById('clientHome').style.display='block';
-}
-(function(){
-let btns=document.querySelectorAll('#menu button');
-btns.forEach(function(b){ if(b.textContent.includes('Profil')) b.onclick=openProfil; });
-})();
- // ===== FIN PROFIL =====
-   // ===== REPARATION MENU =====
-(function(){
-let items=document.querySelectorAll('#menu *');
-items.forEach(function(el){
-if(el.textContent.includes('Profil') && el.children.length===0){ el.onclick=openProfil; el.style.cursor='pointer'; }
-});
-})();
- // ===== FIN REPARATION =====
-   // ===== RESULTAT - 100% JS =====
-function openResultat(){
-let old=document.getElementById('viewResultat');
-if(!old){
-old=document.createElement('div');
-old.id='viewResultat';
-old.style.padding='15px';
-document.body.appendChild(old);
-}
-let res=JSON.parse(localStorage.getItem('resultatsAdmin')||'[]');
-let html='<h2>🏆 Résultats</h2>';
-if(res.length===0){ html+='<p>Aucun résultat publié pour le moment, boss.<br>En attente de l\'admin.</p>'; }
-else{
-res.forEach(function(r){
-html+='<div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px"><b>'+(r.titre||'Résultat')+'</b><br>'+(r.texte||'')+'<br><small>'+(r.date||'')+'</small></div>';
-});
-}
-html+='<br><button onclick="backHome3()" style="width:100%;padding:10px">⬅ Retour</button>';
-old.innerHTML=html;
-document.getElementById('clientHome').style.display='none';
-let p=document.getElementById('viewProfil'); if(p) p.style.display='none';
-old.style.display='block';
-let m=document.getElementById('menu'); if(m) m.style.display='none';
-}
-function backHome3(){
-document.getElementById('viewResultat').style.display='none';
-document.getElementById('clientHome').style.display='block';
-}
-(function(){
-let items=document.querySelectorAll('#menu *');
-items.forEach(function(el){
-if((el.textContent.includes('Résultat')||el.textContent.includes('Resultat')) && el.children.length===0){ el.onclick=openResultat; el.style.cursor='pointer'; }
-});
-})();
- // ===== FIN RESULTAT =====
-   // ===== ARCHIVE + AIDE - 100% JS =====
-function addArchive(texte){
-let a=JSON.parse(localStorage.getItem('archiveClient')||'[]');
-a.unshift({texte:texte,date:new Date().toLocaleString()});
-localStorage.setItem('archiveClient',JSON.stringify(a.slice(0,50)));
-}
-function openArchive(){
-let old=document.getElementById('viewArchive');
-if(!old){ old=document.createElement('div'); old.id='viewArchive'; old.style.padding='15px'; document.body.appendChild(old); }
-let a=JSON.parse(localStorage.getItem('archiveClient')||'[]');
-let p=JSON.parse(localStorage.getItem('profil')||'{}');
-let html='<h2>📁 Archive</h2><p>Tout ce que tu as fait sur ton compte, boss.</p>';
-if(a.length===0){ html+='<p>Aucune activité pour le moment.</p>'; }
-else{ a.forEach(function(x){ html+='<div style="border:1px solid #ddd;padding:10px;border-radius:10px;margin-bottom:8px">✅ '+x.texte+'<br><small>'+x.date+'</small></div>'; }); }
-html+='<br><button onclick="backHome4()" style="width:100%;padding:10px">⬅ Retour</button>';
-old.innerHTML=html;
-document.getElementById('clientHome').style.display='none';
-let pr=document.getElementById('viewProfil'); if(pr) pr.style.display='none';
-let re=document.getElementById('viewResultat'); if(re) re.style.display='none';
-old.style.display='block';
-let m=document.getElementById('menu'); if(m) m.style.display='none';
-}
-function backHome4(){
-document.getElementById('viewArchive').style.display='none';
-document.getElementById('clientHome').style.display='block';
-}
-function openAide(){
-let old=document.getElementById('viewAide');
-if(!old){ old=document.createElement('div'); old.id='viewAide'; old.style.padding='15px'; document.body.appendChild(old); }
-old.innerHTML='<h2>❓ Aide</h2><p>Besoin d\'aide, boss ?</p><div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px"><b>1. Comment voir mon résultat ?</b><br>Menu ☰ -> Résultat, tu vois ce que l\'admin a publié.</div><div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px"><b>2. Comment changer mon profil ?</b><br>Menu ☰ -> Profil, change et clique SAUVEGARDER.</div><div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px"><b>3. Où voir ce que j\'ai fait ?</b><br>Menu ☰ -> Archive, tout est là.</div><div style="border:1px solid #ddd;padding:12px;border-radius:10px;margin-bottom:10px"><b>4. Contacter l\'admin</b><br>Écris sur WhatsApp à l\'admin du site.</div><br><button onclick="backHome5()" style="width:100%;padding:10px">⬅ Retour</button>';
-document.getElementById('clientHome').style.display='none';
-let pr=document.getElementById('viewProfil'); if(pr) pr.style.display='none';
-let re=document.getElementById('viewResultat'); if(re) re.style.display='none';
-let ar=document.getElementById('viewArchive'); if(ar) ar.style.display='none';
-old.style.display='block';
-let m=document.getElementById('menu'); if(m) m.style.display='none';
-}
-function backHome5(){
-document.getElementById('viewAide').style.display='none';
-document.getElementById('clientHome').style.display='block';
-}
-(function(){
-let items=document.querySelectorAll('#menu *');
-items.forEach(function(el){
-if(el.textContent.includes('Archive') && el.children.length===0){ el.onclick=openArchive; el.style.cursor='pointer'; }
-if(el.textContent.includes('Aide') && el.children.length===0){ el.onclick=openAide; el.style.cursor='pointer'; }
-});
-})();
-  // ===== FIN ARCHIVE + AIDE =====
-function closeMenu(){ let m=document.getElementById('menu'); if(m) m.style.display='none'; }
-   // VRAI CODE SOLDE + DEPOT
-function ouvrirDepotVrai(){
-let old=document.getElementById("viewDepotVrai");
-if(!old){ old=document.createElement("div"); old.id="viewDepotVrai"; old.style.padding="15px"; document.body.appendChild(old); }
-let rev=JSON.parse(localStorage.getItem("revendeursAdmin")||"[]");
-let html="<h2>Depot</h2><p>Depot par Admin et revendeurs</p>";
-if(rev.length===0){ html+="<div>Admin - Aucun revendeur pour le moment</div>"; }
-else { rev.forEach(function(r){ html+="<div><b>"+(r.nom||"Revendeur")+"</b><br>"+(r.telephone||"")+"</div>"; }); }
-html+="<input id=\"dMontantVrai\" type=\"number\" placeholder=\"Montant Ex 5000\" style=\"width:100%;padding:12px;margin:5px 0\"><br><button onclick=\"envoyerDepotVrai()\" style=\"width:100%;padding:12px;background:#16a34a;color:white;border:none;border-radius:8px\">VALIDER</button><br><button onclick=\"backDepotVrai()\" style=\"width:100%;padding:10px;margin-top:8px\">Retour</button>";
-old.innerHTML=html;
-let home=document.getElementById("clientHome"); if(home) home.style.display="none";
-old.style.display="block";
-}
-function envoyerDepotVrai(){
-let m=document.getElementById("dMontantVrai").value;
-if(!m||m<=0){ alert("Mets un montant"); return; }
-alert("Demande "+m+" F envoyee");
-backDepotVrai();
-}
-function backDepotVrai(){
-let v=document.getElementById("viewDepotVrai"); if(v) v.style.display="none";
-let home=document.getElementById("clientHome"); if(home) home.style.display="block";
-}
-function ouvrirSoldeHautVrai(){
-let p=document.getElementById("panelSoldeHautVrai");
-if(!p){
-p=document.createElement("div"); p.id="panelSoldeHautVrai";
-p.style.cssText="padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center";
-p.innerHTML="<div style=\"display:flex;gap:10px\"><div style=\"flex:1;background:#16a34a;padding:12px;border-radius:10px\">SOLDE GAIN<br><b>0 F</b></div><div style=\"flex:1;background:#2563eb;padding:12px;border-radius:10px\">SOLDE JEU<br><b>0 F</b></div></div><button onclick=\"ouvrirDepotVrai()\" style=\"width:100%;padding:12px;margin-top:10px;background:#f59e0b;border:none;border-radius:8px\">FAIRE UN DEPOT</button>";
-let home=document.getElementById("clientHome")||document.body; home.prepend(p);
-p.style.display="block"; return;
-}
-p.style.display=(p.style.display==="none")?"block":"none";
-}
-function ouvrirSoldeBasVrai(){
-let p=document.getElementById("panelSoldeBasVrai");
-if(!p){
-p=document.createElement("div"); p.id="panelSoldeBasVrai";
-p.style.cssText="padding:15px;background:#111;color:white;border-radius:12px;margin:10px;text-align:center";
-p.innerHTML="<div style=\"display:flex;gap:10px\"><div style=\"flex:1;background:#16a34a;padding:12px;border-radius:10px\">SOLDE GAIN<br><b>0 F</b></div><div style=\"flex:1;background:#2563eb;padding:12px;border-radius:10px\">SOLDE JEU<br><b>0 F</b></div></div>";
-let home=document.getElementById("clientHome")||document.body; home.prepend(p);
-p.style.display="block"; return;
-}
-p.style.display=(p.style.display==="none")?"block":"none";
-}
-setTimeout(function(){
-let all=document.querySelectorAll("*");
-let soldes=[]; let depots=[];
-all.forEach(function(el){
-if(el.children.length===0 && el.textContent.trim()==="SOLDE"){ soldes.push(el); }
-if(el.children.length===0 && (el.textContent.trim()==="DEPOT" || el.textContent.trim()==="DÉPÔT")){ depots.push(el); }
-});
-if(soldes[0]){ soldes[0].textContent="SOLDE +"; soldes[0].onclick=function(e){ e.stopPropagation(); ouvrirSoldeHautVrai(); }; }
-if(soldes[1]){ soldes[1].textContent="SOLDE +"; soldes[1].onclick=function(e){ e.stopPropagation(); ouvrirSoldeBasVrai(); }; }
-depots.forEach(function(d){ d.textContent="DEPOT +"; d.onclick=function(e){ e.stopPropagation(); ouvrirDepotVrai(); }; });
-},800);
- // FIN VRAI CODE
-   // REPARATION PAGE BLANCHE
-function show(id){
-let home=document.getElementById("clientHome");
-if(home){ home.classList.remove("hide"); home.style.display="block"; }
-let d=document.getElementById("dashboard");
-if(d){ d.classList.remove("hide"); d.style.display="block"; }
-document.querySelectorAll(".card").forEach(function(c){ c.classList.add("hide"); c.style.display="none"; });
-let el=document.getElementById(id);
-if(el){ el.classList.remove("hide"); el.style.display="block"; el.scrollIntoView(); }
-let m=document.getElementById("menu"); if(m) m.style.display="none";
-let b=document.getElementById("btnRetourClient");
-if(!b){
-b=document.createElement("button"); b.id="btnRetourClient"; b.className="btn"; b.innerText="RETOUR ACCUEIL CLIENT"; b.onclick=showClientHome; b.style.margin="12px";
-let dd=document.getElementById("dashboard"); if(dd) dd.prepend(b);
-}
-}
-function showClientHome(){
-let home=document.getElementById("clientHome");
-if(home){ home.classList.remove("hide"); home.style.display="block"; }
-let d=document.getElementById("dashboard");
-if(d){ d.classList.add("hide"); d.style.display="none"; }
-window.scrollTo(0,0);
-}
- // FIN REPARATION PAGE BLANCHE
-   // CODE 6 PAYS - 26 JEUX - LIGNE QUI DEFILE
-var JEUX_6PAYS=[
-{pays:"BENIN",flag:"🇧🇯",nom:"MARDI 18H",heure:18,ferm:17,fermMin:50},
-{pays:"BENIN",flag:"🇧🇯",nom:"MARDI 21H",heure:21,ferm:20,fermMin:50},
-{pays:"BENIN",flag:"🇧🇯",nom:"MARDI 00H",heure:0,ferm:23,fermMin:50},
-{pays:"BENIN",flag:"🇧🇯",nom:"MERCREDI 08H",heure:8,ferm:7,fermMin:50,jour:"demain"},
-{pays:"BENIN",flag:"🇧🇯",nom:"MERCREDI 11H",heure:11,ferm:10,fermMin:50,jour:"demain"},
-{pays:"BENIN",flag:"🇧🇯",nom:"MERCREDI 14H",heure:14,ferm:13,fermMin:50,jour:"demain"},
-{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"AFTERWORK 17H",heure:17,ferm:16,fermMin:50},
-{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"DIGITAL 21H",heure:21,ferm:20,fermMin:50},
-{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"DIGITAL 22H",heure:22,ferm:21,fermMin:50},
-{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"DIGITAL 23H",heure:23,ferm:22,fermMin:50},
-{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"DIGITAL 7H",heure:7,ferm:6,fermMin:50,jour:"demain"},
-{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"DIGITAL 8H",heure:8,ferm:7,fermMin:50,jour:"demain"},
-{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"PREMIERE HEURE 10H",heure:10,ferm:9,fermMin:55,jour:"demain"},
-{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"FORTUNE 13H",heure:13,ferm:12,fermMin:55,jour:"demain"},
-{pays:"COTE DIVOIRE",flag:"🇨🇮",nom:"BARAKA 16H",heure:16,ferm:15,fermMin:55,jour:"demain"},
-{pays:"FRANCE",flag:"🇫🇷",nom:"TOULOUSE 22H",heure:22,ferm:21,fermMin:45},
-{pays:"FRANCE",flag:"🇫🇷",nom:"NICE 12H",heure:12,ferm:11,fermMin:50,jour:"demain"},
-{pays:"GHANA",flag:"🇬🇭",nom:"LUCKY TUESDAY",heure:20,ferm:19,fermMin:55},
-{pays:"GHANA",flag:"🇬🇭",nom:"GHANA DEMAIN",heure:20,ferm:19,fermMin:55,jour:"demain"},
-{pays:"NIGERIA",flag:"🇳🇬",nom:"DESTINY 21H",heure:21,ferm:20,fermMin:5},
-{pays:"NIGERIA",flag:"🇳🇬",nom:"NIGERIA DEMAIN",heure:21,ferm:20,fermMin:5,jour:"demain"}
-];
-function tempsRestant(j){
-var now=new Date();
-var ferm=new Date(); ferm.setHours(j.ferm,j.fermMin,0,0);
-if(j.jour==="demain") ferm.setDate(ferm.getDate()+1);
-if(j.heure===0) ferm.setDate(ferm.getDate()+1);
-var diff=ferm-now;
-if(diff<0) return "FERME";
-var h=Math.floor(diff/3600000); var m=Math.floor((diff%3600000)/60000);
-if(h<=0) return m+" min";
-return h+"h"+(m<10?"0"+m:m);
-}
-function ligneDefile(){
-var el=document.querySelector(".ch-defil");
-if(!el) return;
-var tri=JEUX_6PAYS.slice().sort(function(a,b){ return tempsRestant(a).localeCompare(tempsRestant(b)); });
-var txt=JEUX_6PAYS.map(function(j){ return j.flag+" "+j.nom+" - "+tempsRestant(j); }).join("  •  ");
-el.innerText="📢 "+txt;
-}
-function openPays(paysNom){
-var old=document.getElementById("viewPays6");
-if(!old){ old=document.createElement("div"); old.id="viewPays6"; old.style.padding="15px"; document.body.appendChild(old); }
-var list=JEUX_6PAYS.filter(function(j){ return j.pays===paysNom; });
-var auj=list.filter(function(j){ return !j.jour; });
-var ven=list.filter(function(j){ return j.jour==="demain"; });
-var html="<h2>"+paysNom+"</h2>";
-html+="<div style=\"display:flex;gap:8px\"><button style=\"flex:1;padding:10px;background:#e11d2e;color:#fff;border:none;border-radius:8px\">Aujourd hui "+auj.length+"</button><button style=\"flex:1;padding:10px;background:#fff;border:1px solid #ddd;border-radius:8px\">A venir "+ven.length+"</button></div>";
-html+="<h3>Aujourd hui</h3>";
-auj.forEach(function(j){ html+="<div onclick=\"openJeu('"+j.pays+"','"+j.nom+"','"+j.ferm+"h"+j.fermMin+"')\" style=\"background:#fff;padding:12px;border-radius:12px;margin:8px 0;cursor:pointer\"><b>"+j.flag+" "+j.nom+"</b><br><small>Fermeture "+j.ferm+"h"+(j.fermMin<10?"0"+j.fermMin:j.fermMin)+" - "+tempsRestant(j)+"</small></div>"; });
-ven.forEach(function(j){ html+="<div onclick=\"openJeu('"+j.pays+"','"+j.nom+"','"+j.ferm+"h"+j.fermMin+"')\" style=\"background:#fff;padding:12px;border-radius:12px;margin:8px 0;cursor:pointer\"><b>"+j.flag+" "+j.nom+"</b><br><small>Dem. "+j.ferm+"h"+(j.fermMin<10?"0"+j.fermMin:j.fermMin)+" - "+tempsRestant(j)+"</small></div>"; });
-html+="<h3>A venir</h3>";
-ven.forEach(function(j){ html+="<div style=\"background:#fff;padding:12px;border-radius:12px;margin:8px 0\"><b>"+j.flag+" "+j.nom+"</b><br><small>Dem. "+j.ferm+"h"+(j.fermMin<10?"0"+j.fermMin:j.fermMin)+" - "+tempsRestant(j)+"</small></div>"; });
-html+="<button onclick=\"backPays6()\" style=\"width:100%;padding:12px;margin-top:10px\">Retour</button>";
-old.innerHTML=html;
-let home=document.getElementById("clientHome"); if(home) home.style.display="none";
-old.style.display="block";
-}
-function backPays6(){
-let v=document.getElementById("viewPays6"); if(v) v.style.display="none";
-let home=document.getElementById("clientHome"); if(home) home.style.display="block";
-}
-setInterval(ligneDefile,30000);
-setTimeout(ligneDefile,1000);
- // FIN CODE 6 PAYS
-   // CORRECTION GHANA + TOGO - POUR 26 JEUX
-JEUX_6PAYS = JEUX_6PAYS.filter(function(j){ return j.nom!=="GHANA DEMAIN"; });
-JEUX_6PAYS.push({pays:"GHANA",flag:"🇬🇭",nom:"NOOM RUSH 13H",heure:13,ferm:12,fermMin:50,jour:"demain"});
-JEUX_6PAYS.push({pays:"TOGO",flag:"🇹🇬",nom:"AGA 18H",heure:18,ferm:17,fermMin:55});
-JEUX_6PAYS.push({pays:"TOGO",flag:"🇹🇬",nom:"ESPOIR 9H",heure:9,ferm:8,fermMin:55,jour:"demain"});
-JEUX_6PAYS.push({pays:"TOGO",flag:"🇹🇬",nom:"ESPOIR 13H",heure:13,ferm:12,fermMin:55,jour:"demain"});
-ligneDefile();
- // FIN CORRECTION
-   // CORRECTION FINALE NIGERIA 4 - 26 JEUX - PAS UNIVERSEL
-JEUX_6PAYS = JEUX_6PAYS.filter(function(j){ return j.nom!=="DESTINY 21H" && j.nom!=="NIGERIA DEMAIN"; });
-JEUX_6PAYS.push({pays:"NIGERIA",flag:"🇳🇬",nom:"KEY 21H",heure:21,ferm:19,fermMin:5});
-JEUX_6PAYS.push({pays:"NIGERIA",flag:"🇳🇬",nom:"SUNRISE 12H",heure:12,ferm:10,fermMin:5,jour:"demain"});
-JEUX_6PAYS.push({pays:"NIGERIA",flag:"🇳🇬",nom:"GATEWAY 15H",heure:15,ferm:13,fermMin:5,jour:"demain"});
-JEUX_6PAYS.push({pays:"NIGERIA",flag:"🇳🇬",nom:"IGWE 17H",heure:17,ferm:15,fermMin:5,jour:"demain"});
-ligneDefile();
-alert("26 JEUX OK - BENIN 6 + CI 9 + FRANCE 2 + GHANA 2 + NIGERIA 4 + TOGO 3 = 26");
- // FIN CORRECTION FINALE
-   // CODE PAGE DE JEU - PAREIL 6 PAYS
-var FORMULES=["PN (1N)","Two sure","NAP","Chance +","Permutation","Against","Total Résultat","Anagramme"];
-var JEU_ACTUEL=null;
-var FORMULE_ACTUELLE="Two sure";
-var PARI_ACTUEL="DIRECT";
-
-function openJeu(pays, nom, fermTxt){
-JEU_ACTUEL={pays:pays,nom:nom,ferm:fermTxt};
-var old=document.getElementById("viewJeu");
-if(!old){ old=document.createElement("div"); old.id="viewJeu"; old.style.padding="0"; old.style.background="#f5f5f5"; old.style.minHeight="100vh"; document.body.appendChild(old); }
-var html="";
-html+="<div style=\"background:#e11d2e;color:#fff;padding:14px\">";
-html+="<div style=\"display:flex;justify-content:space-between;align-items:center\"><b>🇧🇯 "+pays+" - "+nom+"</b><button onclick=\"backJeu()\" style=\"background:transparent;border:none;color:#fff;font-size:22px\">X</button></div>";
-html+="<small>Aujourd'hui "+fermTxt+"</small>";
-html+="<div style=\"display:flex;gap:6px;margin-top:10px\"><button style=\"flex:1;padding:8px;border:none;border-radius:20px;background:#fff;color:#000\">Basic</button><button style=\"flex:1;padding:8px;border:none;border-radius:20px;background:rgba(255,255,255,.3);color:#fff\">3D</button><button onclick=\"toggleClassic()\" id=\"btnClassic\" style=\"flex:1;padding:8px;border:none;border-radius:20px;background:rgba(255,255,255,.3);color:#fff\">Classic</button></div>";
-html+="</div>";
-html+="<div id=\"corpsJeu\" style=\"padding:14px\">";
-html+="<div style=\"display:flex;gap:8px\"><button id=\"btnNormal\" onclick=\"setModeJeu('Normal')\" style=\"flex:1;padding:12px;background:#e11d2e;color:#fff;border:none;border-radius:8px\">Normal</button><button id=\"btnChance\" onclick=\"setModeJeu('Ma chance')\" style=\"flex:1;padding:12px;background:#fff;border:1px solid #ddd;border-radius:8px\">Ma chance</button></div>";
-html+="<p style=\"margin:14px 0 6px\"><b>Formule</b></p>";
-html+="<div onclick=\"toggleFormule()\" style=\"background:#fff;padding:12px;border-radius:8px;display:flex;justify-content:space-between\"><span id=\"txtFormule\">"+FORMULE_ACTUELLE+"</span><span>▼</span></div>";
-html+="<div id=\"listeFormule\" style=\"display:none;background:#fff;border-radius:8px;margin-top:4px;overflow:hidden\">";
-FORMULES.forEach(function(f){
-var coche = f===FORMULE_ACTUELLE ? "✓ " : "";
-html+="<div onclick=\"choisirFormule('"+f+"')\" style=\"padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between\"><span>"+f+"</span><span style=\"color:#2563eb\">"+coche+"</span></div>";
-});
-html+="</div>";
-html+="<p style=\"margin:14px 0 6px\"><b>Pari</b></p>";
-html+="<div style=\"display:flex;gap:6px;flex-wrap:wrap\">";
-["DIRECT","TURBO2","TURBO3","TURBO4"].forEach(function(p){
-var act = p===PARI_ACTUEL;
-html+="<button onclick=\"choisirPari('"+p+"')\" style=\"flex:1;padding:10px;border-radius:8px;border:none;background:"+(act?"#e11d2e":"#fff")+";color:"+(act?"#fff":"#000")+";border:1px solid #ddd\">"+p+"</button>";
-});
-html+="</div>";
-html+="<p style=\"margin:14px 0 6px\"><b>Numéros</b></p>";
-html+="<div id=\"zoneNumeros\" style=\"background:#fff;padding:12px;border-radius:8px\"></div>";
-html+="<p style=\"margin:14px 0 6px\"><p><b>Mise</b></p>";
-html+="<div style=\"display:flex;gap:8px\"><input id=\"inputMise\" type=\"number\" value=\"0\" style=\"flex:1;padding:12px;border-radius:8px;border:1px solid #ddd\"><button onclick=\"randomNumero()\" style=\"padding:12px;border:none;background:#fff;border-radius:8px\">🎲</button><button onclick=\"effacerNumero()\" style=\"padding:12px;border:none;background:#fff;border-radius:8px\">🗑️</button></div>";
-html+="<div style=\"display:flex;gap:6px;margin-top:8px\">";
-[100,200,500,1000,2000].forEach(function(m){
-html+="<button onclick=\"setMise("+m+")\" style=\"flex:1;padding:10px;background:#fff;border:1px solid #ddd;border-radius:8px\">"+m.toLocaleString()+"</button>";
-});
-html+="</div>";
-html+="<button onclick=\"ajouterCoupon()\" style=\"width:100%;padding:14px;margin-top:14px;background:#e11d2e;color:#fff;border:none;border-radius:8px;font-weight:bold\">⚡ Ajouter au coupon</button>";
-html+="<div id=\"msgCoupon\" style=\"text-align:center;margin-top:10px;color:green\"></div>";
-html+="</div>";
-old.innerHTML=html;
-let home=document.getElementById("clientHome"); if(home) home.style.display="none";
-let vp=document.getElementById("viewPays6"); if(vp) vp.style.display="none";
-old.style.display="block";
-renderNumeros();
-window.scrollTo(0,0);
-}
-function renderNumeros(){
-var z=document.getElementById("zoneNumeros"); if(!z) return;
-if(FORMULE_ACTUELLE==="PN (1N)" || FORMULE_ACTUELLE==="NAP" || FORMULE_ACTUELLE==="Chance +" || FORMULE_ACTUELLE==="Total Résultat"){
-z.innerHTML="<div style=\"display:flex;align-items:center;gap:8px\"><b>T1</b><input id=\"numT1\" type=\"number\" placeholder=\"00\" style=\"flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;text-align:center\"></div><small>"+FORMULE_ACTUELLE+" : 1 numéro seulement</small>";
-}else{
-z.innerHTML="<div style=\"display:flex;align-items:center;gap:8px;margin-bottom:8px\"><b>T1</b><input id=\"numT1\" type=\"number\" placeholder=\"00\" style=\"flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;text-align:center\"></div><div style=\"display:flex;align-items:center;gap:8px\"><b>T2</b><input id=\"numT2\" type=\"number\" placeholder=\"00\" style=\"flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;text-align:center\"></div><small>"+FORMULE_ACTUELLE+" : 2 numéros - T1 + T2</small>";
-}
-}
-function toggleFormule(){ var l=document.getElementById("listeFormule"); if(l) l.style.display = l.style.display==="none" ? "block" : "none"; }
-function choisirFormule(f){ FORMULE_ACTUELLE=f; var t=document.getElementById("txtFormule"); if(t) t.innerText=f; toggleFormule(); openJeu(JEU_ACTUEL.pays, JEU_ACTUEL.nom, JEU_ACTUEL.ferm); }
-function choisirPari(p){ PARI_ACTUEL=p; openJeu(JEU_ACTUEL.pays, JEU_ACTUEL.nom, JEU_ACTUEL.ferm); }
-function setModeJeu(m){ document.getElementById("btnNormal").style.background = m==="Normal" ? "#e11d2e" : "#fff"; document.getElementById("btnNormal").style.color = m==="Normal" ? "#fff" : "#000"; document.getElementById("btnChance").style.background = m==="Ma chance" ? "#e11d2e" : "#fff"; document.getElementById("btnChance").style.color = m==="Ma chance" ? "#fff" : "#000"; }
-function setMise(m){ var i=document.getElementById("inputMise"); if(i) i.value=m; }
-function randomNumero(){ var a=document.getElementById("numT1"); if(a) a.value=Math.floor(Math.random()*90); var b=document.getElementById("numT2"); if(b) b.value=Math.floor(Math.random()*90); }
-function effacerNumero(){ var a=document.getElementById("numT1"); if(a) a.value=""; var b=document.getElementById("numT2"); if(b) b.value=""; var m=document.getElementById("inputMise"); if(m) m.value=0; }
-function ajouterCoupon(){ var t1=document.getElementById("numT1")?document.getElementById("numT1").value:""; var t2=document.getElementById("numT2")?document.getElementById("numT2").value:""; var mise=document.getElementById("inputMise")?document.getElementById("inputMise").value:0; var msg=document.getElementById("msgCoupon"); if(!t1){ if(msg) msg.innerText="Mets un numéro d'abord, boss !"; return; } if(msg) msg.innerText="✅ Ajouté : "+JEU_ACTUEL.pays+" "+JEU_ACTUEL.nom+" - "+FORMULE_ACTUELLE+" - "+PARI_ACTUEL+" - N° "+t1+(t2?"-"+t2:"")+" - Mise "+mise; }
-function toggleClassic(){ var c=document.getElementById("corpsJeu"); if(!c) return; var sombre = c.style.background==="#111"; c.style.background = sombre ? "#f5f5f5" : "#111"; c.style.color = sombre ? "#000" : "#fff"; }
-function backJeu(){ var v=document.getElementById("viewJeu"); if(v) v.style.display="none"; var vp=document.getElementById("viewPays6"); if(vp) vp.style.display="block"; }
- // RENDRE LES JEUX CLIQUABLES DANS openPays
-var oldOpenPays = openPays;
-openPays = function(paysNom){
-oldOpenPays(paysNom);
-var vp=document.getElementById("viewPays6");
-if(!vp) return;
-var divs=vp.querySelectorAll("div");
-}
- // FIN PAGE DE JEU
-   // CODE GAIN - REMPLACE ANCIEN openJeu / renderNumeros
-var NB_NAP = 3;
-var GAINS = {
- "PN (1N)|DIRECT":13, "PN (1N)|1ere POSITION":60,
- "Two sure|DIRECT":300, "Two sure|TURBO2":3000, "Two sure|TURBO3":800, "Two sure|TURBO4":500,
- "NAP|3":3000, "NAP|4":8000, "NAP|5":50000
-};
-function calculerGain(){
- var mise = document.getElementById("inputMise") ? parseInt(document.getElementById("inputMise").value||0) : 0;
- var mult = 0;
- if(FORMULE_ACTUELLE==="NAP"){ mult = GAINS["NAP|"+NB_NAP] || 0; }
- else { mult = GAINS[FORMULE_ACTUELLE+"|"+PARI_ACTUEL] || 0; }
- var gain = mise * mult;
- var el = document.getElementById("txtGain");
- if(el) el.innerText = gain.toLocaleString()+" XOF";
- return gain;
-}
-function renderNumeros(){
- var z=document.getElementById("zoneNumeros"); if(!z) return;
- if(FORMULE_ACTUELLE==="PN (1N)"){
-  z.innerHTML="<div style='display:flex;align-items:center;gap:8px'><b>T1</b><input id='numT1' value='12' style='flex:1;padding:12px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold'></div>";
- } else if(FORMULE_ACTUELLE==="NAP"){
-  var h="<div style='display:flex;gap:6px;flex-wrap:wrap'>";
-  for(var i=1;i<=NB_NAP;i++){ h+="<div style='flex:1;min-width:50px;text-align:center'><small>T"+i+"</small><input id='numT"+i+"' value='"+(i*11)+"' style='width:100%;padding:10px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold'></div>"; }
-  h+="</div><div style='display:flex;gap:6px;margin-top:8px'><button onclick='changeNAP(-1)' style='padding:8px 14px;background:#fff;border:1px solid #ddd;border-radius:8px'>-</button><button onclick='changeNAP(1)' style='padding:8px 14px;background:#fff;border:1px solid #ddd;border-radius:8px'>+</button><button onclick='randomNumero()' style='padding:8px 14px;background:#fff;border:none;border-radius:8px'>🎲</button><button onclick='effacerNumero()' style='padding:8px 14px;background:#fff;border:none;border-radius:8px'>🗑️</button></div><small>NAP "+NB_NAP+" numéros</small>";
-  z.innerHTML=h;
- } else {
-  z.innerHTML="<div style='display:flex;gap:8px'><div style='flex:1;text-align:center'><small>T1</small><input id='numT1' value='12' style='width:100%;padding:12px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold'></div><div style='flex:1;text-align:center'><small>T2</small><input id='numT2' value='32' style='width:100%;padding:12px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold'></div></div>";
+ window._currentUser=u;
+ document.getElementById('auth').style.display='none';
+ var dash=document.getElementById('dashboard'); var home=document.getElementById('clientHome'); var bottom=document.getElementById('bottomNav');
+ var estAdmin=(u.role==='ADMIN'); var estRev=(u.role==='REVENDEUR'); var estClient=!estAdmin && !estRev;
+ document.getElementById('roleTxt').innerText=u.role; document.getElementById('userTxt').innerText=u.gmail+' | WhatsApp: '+u.wa;
+ if(estClient){
+  home.classList.remove('hide'); bottom.classList.remove('hide'); dash.classList.add('hide'); dash.style.display='none';
+  document.getElementById('chNom').innerText=u.gmail.split('@')[0];
+  document.getElementById('chSolde').innerText=(u.soldeJeu+u.soldeGain)+' XOF';
+  render(); return;
  }
- calculerGain();
+ home.classList.add('hide'); bottom.classList.add('hide'); dash.classList.remove('hide'); dash.style.display='block';
+ var visRev=['cardTableau','cardLoto','archive','profil','resultat','aide','cardRecharger'];
+ var t2=['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
+ t2.forEach(function(id){var el=document.getElementById(id); if(!el) return; if(estAdmin) el.style.display='block'; else el.style.display=visRev.includes(id)?'block':'none';});
+ var at=document.getElementById('adminTableau'); if(at) at.style.display=estAdmin?'block':'none';
+ if(estAdmin){var ct=document.getElementById('cardTableau'); if(ct) ct.style.display='block';}
+ render();
 }
-function changeNAP(d){ NB_NAP = Math.max(2, Math.min(5, NB_NAP+d)); renderNumeros(); }
-function choisirFormule(f){
- FORMULE_ACTUELLE=f;
- if(f==="PN (1N)") PARI_ACTUEL="DIRECT";
- if(f==="Two sure") PARI_ACTUEL="DIRECT";
- if(f==="NAP") PARI_ACTUEL="";
- openJeu(JEU_ACTUEL.pays, JEU_ACTUEL.nom, JEU_ACTUEL.ferm);
-}
-function choisirPari(p){ PARI_ACTUEL=p; openJeu(JEU_ACTUEL.pays, JEU_ACTUEL.nom, JEU_ACTUEL.ferm); }
-function setMise(m){ var i=document.getElementById("inputMise"); if(i){ i.value=m; calculerGain(); } }
- // PATCH openJeu pour Pari selon Formule + Barre GAIN
-var oldOpenJeu2 = openJeu;
-openJeu = function(pays, nom, fermTxt){
- oldOpenJeu2(pays, nom, fermTxt);
- // Corrige Pari selon formule
- var corps=document.getElementById("corpsJeu"); if(!corps) return;
- // On reconstruit juste la partie Pari + Gain si besoin - simple : on injecte la barre GAIN
- if(!document.getElementById("barreGain")){
-   var btn=document.querySelector("#corpsJeu button[onclick='ajouterCoupon()']");
-   if(btn){
-     var div=document.createElement("div");
-     div.id="barreGain";
-     div.style.cssText="background:#111;color:#fff;padding:12px;border-radius:8px;margin-top:12px;display:flex;justify-content:space-between";
-     div.innerHTML="<span>GAIN</span><b id='txtGain' style='color:#ffd700'>0 XOF</b>";
-     btn.parentNode.insertBefore(div, btn);
-   }
+function showClientHome(){var u=window._currentUser; if(u && (u.role==='ADMIN'||u.role==='REVENDEUR')){showDash(u); return;} document.getElementById('clientHome').classList.remove('hide'); document.getElementById('dashboard').classList.add('hide'); document.getElementById('bottomNav').classList.remove('hide'); window.scrollTo(0,0)}
+function show(id){
+ var cur=window._currentUser;
+ if(cur && cur.role==='CLIENT'){
+  document.getElementById('clientHome').classList.add('hide'); document.getElementById('dashboard').classList.remove('hide'); document.getElementById('dashboard').style.display='block'; document.getElementById('bottomNav').classList.add('hide');
+  var t=['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
+  t.forEach(function(x){var el=document.getElementById(x); if(el) el.style.display='none';});
+  var el=document.getElementById(id); if(el){el.style.display='block'; el.scrollIntoView({behavior:'smooth'});}
+  document.getElementById('menu').style.display='none'; return;
  }
- // Mise : recalcul à chaque frappe
- var im=document.getElementById("inputMise");
- if(im){ im.oninput=function(){ calculerGain(); }; im.value = im.value || 100; }
- // Si NAP, cache les boutons Pari
- if(FORMULE_ACTUELLE==="NAP"){
-   var ps = document.querySelectorAll("#corpsJeu p");
-   // On ne cache pas tout, on laisse comme ça, le gain NAP marche déjà
- }
- calculerGain();
-};
- // FIN CODE GAIN
-   // CODE V3 - CHANCE+ NAP + PAIRE - SAUT AUTO - SANS ZONEMISELABLE
-var NB_CHANCE3 = 3;
-var NB_PERM3 = 3;
-var LISTE_PAIRE3 = [];
-try{
-function autoSaut3(el){
+ document.getElementById('menu').style.display='none'; var el2=document.getElementById(id); if(el2){el2.style.display='block'; el2.scrollIntoView({behavior:'smooth'});}
+}function render(){
  try{
-  if(el.value.length>=2){ el.value=el.value.slice(0,2); var next=el.parentElement.nextElementSibling; if(next){ var inp=next.querySelector("input"); if(inp) inp.focus(); } }
+  var nbU=document.getElementById('nbUsers'); if(nbU) nbU.innerText=DB.users.length;
+  var nbC=document.getElementById('nbClients'); if(nbC) nbC.innerText=DB.users.filter(x=>x.role==='CLIENT').length;
+  var nbR=document.getElementById('nbRev'); if(nbR) nbR.innerText=DB.users.filter(x=>x.role==='REVENDEUR').length;
+  var v=document.getElementById('ventes'); if(v) v.innerText=DB.ventes;
+  var g=document.getElementById('gains'); if(g) g.innerText=DB.gains;
+  var c=document.getElementById('caisse'); if(c) c.innerText=DB.caisse;
+  var ul=document.getElementById('usersList'); if(ul) ul.innerHTML=DB.users.map(function(u){return '<div style="border-bottom:1px solid #eee;padding:6px">'+u.gmail+' - '+u.role+' - Solde: '+(u.soldeJeu+u.soldeGain)+' <button onclick="bloquerUser(\''+u.gmail+'\')">Bloquer / Débloquer</button></div>'}).join('');
+  var al=document.getElementById('archiveList'); if(al) al.innerHTML=DB.archives.slice(-20).reverse().map(function(a){return '<div>'+a+'</div>'}).join('');
+  var rl=document.getElementById('revList'); if(rl) rl.innerHTML=DB.revendeurs.map(function(r){return '<div>'+r.nom+' - '+r.etab+' - Code: '+r.code+'</div>'}).join('');
+  var res=document.getElementById('resList'); if(res) res.innerHTML=DB.resultats.slice(-10).reverse().map(function(r){return '<div>'+r+'</div>'}).join('');
+  var pr=document.getElementById('prList'); if(pr) pr.innerHTML=DB.pronostics.slice(-10).reverse().map(function(p){return '<div>'+p+'</div>'}).join('');
+  var rt=document.getElementById('resultatTxt'); if(rt) rt.innerHTML=DB.resultats.slice(-10).reverse().map(function(r){return '<div>'+r+'</div>'}).join('')||'Aucun résultat';
+  var pt=document.getElementById('profilTxt'); if(pt && window._currentUser) pt.innerText='Gmail: '+window._currentUser.gmail+' | Role: '+window._currentUser.role+' | WhatsApp: '+window._currentUser.wa;
+  var cl=document.getElementById('contenuList'); if(cl) cl.innerHTML=DB.contenus.map(function(x){return '<div>'+x+'</div>'}).join('');
+  var cur=window._currentUser; if(cur){var s=document.getElementById('chSolde'); if(s && cur.role==='CLIENT') s.innerText=(cur.soldeJeu+cur.soldeGain)+' XOF';}
  }catch(e){}
 }
-function calculerGain3(){
- try{
-  var inp=document.getElementById("inputMise"); if(!inp) return 0;
-  var miseBase=parseInt(inp.value||0)||0;
-  var miseTotale=miseBase, gain=0, detail="";
-  if(FORMULE_ACTUELLE==="Chance +"){
-   miseTotale=miseBase;
-   if(NB_CHANCE3===2) gain=miseBase*80;
-   if(NB_CHANCE3===3) gain=miseBase*1750;
-   if(NB_CHANCE3===4) gain=miseBase*17500;
-   if(NB_CHANCE3===5) gain=miseBase*200000;
-   detail="Nap "+NB_CHANCE3+" = "+gain.toLocaleString()+" XOF";
-  } else if(FORMULE_ACTUELLE==="Permutation"){
-   var nbComb=3; if(NB_PERM3===4) nbComb=6; if(NB_PERM3===5) nbComb=10;
-   miseTotale=miseBase*nbComb; gain=miseBase*300;
-   detail="Perm "+NB_PERM3+" = "+nbComb+" combinaisons | Mise totale "+miseTotale.toLocaleString();
-  } else if(FORMULE_ACTUELLE==="Against"){
-   miseTotale=miseBase*NB_PERM3; gain=miseBase*300;
-   detail="Against : Banka + "+NB_PERM3+" numéros | Mise totale "+miseTotale.toLocaleString();
-  } else if(FORMULE_ACTUELLE==="Total Résultat"){
-   gain=miseBase*13; detail="Total exact = "+gain.toLocaleString();
-  } else if(FORMULE_ACTUELLE==="Anagramme"){
-   var nbCouples=LISTE_PAIRE3.length;
-   miseTotale=miseBase*nbCouples; gain=miseBase*300;
-   detail=nbCouples+" couple(s) x "+miseBase.toLocaleString()+" = Mise "+miseTotale.toLocaleString()+" | 1 couple trouvé = "+gain.toLocaleString();
-  } else { return 0; }
-  var el=document.getElementById("txtGain3"); if(el) el.innerText=gain.toLocaleString()+" XOF";
-  var elT=document.getElementById("txtMiseTotale3"); if(elT) elT.innerText=miseTotale.toLocaleString()+" XOF";
-  var elD=document.getElementById("txtDetailGain3"); if(elD) elD.innerText=detail;
-  return gain;
- }catch(e){ return 0; }
-}
-function renderNumeros3(){
- try{
-  var z=document.getElementById("zoneNumeros"); if(!z) return;
-  var h="";
-  if(FORMULE_ACTUELLE==="Chance +"){
-   h="<div style='display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end'>";
-   for(var i=1;i<=NB_CHANCE3;i++){ h+="<div style='width:58px;text-align:center'><small>Nap "+i+"</small><input maxlength='2' inputmode='numeric' oninput='autoSaut3(this);calculerGain3()' placeholder='00' style='width:100%;padding:10px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold;font-size:16px'></div>"; }
-   if(NB_CHANCE3<5) h+="<button onclick='NB_CHANCE3++;renderNumeros3()' style='width:42px;height:42px;border-radius:50%;background:#e11d2e;color:#fff;border:none;font-size:22px'>+</button>";
-   if(NB_CHANCE3>2) h+="<button onclick='NB_CHANCE3--;renderNumeros3()' style='width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid #ddd'>-</button>";
-   h+="</div><small>Nap "+NB_CHANCE3+" : "+NB_CHANCE3+" numéro(s) à trouver</small>";
-  } else if(FORMULE_ACTUELLE==="Permutation"){
-   h="<div style='display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end'>";
-   for(var j=1;j<=NB_PERM3;j++){ h+="<div style='width:58px;text-align:center'><small>T"+j+"</small><input maxlength='2' inputmode='numeric' oninput='autoSaut3(this);calculerGain3()' placeholder='00' style='width:100%;padding:10px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold;font-size:16px'></div>"; }
-   if(NB_PERM3<5) h+="<button onclick='NB_PERM3++;renderNumeros3()' style='width:42px;height:42px;border-radius:50%;background:#e11d2e;color:#fff;border:none;font-size:22px'>+</button>";
-   if(NB_PERM3>2) h+="<button onclick='NB_PERM3--;renderNumeros3()' style='width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid #ddd'>-</button>";
-   h+="</div>";
-  } else if(FORMULE_ACTUELLE==="Against"){
-   h="<div style='display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end'>";
-   h+="<div style='width:65px;text-align:center'><small>Banka</small><input maxlength='2' inputmode='numeric' oninput='autoSaut3(this);calculerGain3()' placeholder='00' style='width:100%;padding:10px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div>";
-   for(var k=1;k<=NB_PERM3;k++){ h+="<div style='width:58px;text-align:center'><small>T"+k+"</small><input maxlength='2' inputmode='numeric' oninput='autoSaut3(this);calculerGain3()' placeholder='00' style='width:100%;padding:10px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div>"; }
-   if(NB_PERM3<5) h+="<button onclick='NB_PERM3++;renderNumeros3()' style='width:42px;height:42px;border-radius:50%;background:#e11d2e;color:#fff;border:none;font-size:22px'>+</button>";
-   if(NB_PERM3>1) h+="<button onclick='NB_PERM3--;renderNumeros3()' style='width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid #ddd'>-</button>";
-   h+="</div>";
-  } else if(FORMULE_ACTUELLE==="Total Résultat"){
-   h="<div style='width:120px'><small>TOTAL (1-90)</small><input type='number' min='1' max='90' placeholder='00' style='width:100%;padding:12px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold;font-size:18px'></div><small>1 numéro entre 1 et 90</small>";
-  } else if(FORMULE_ACTUELLE==="Anagramme"){
-   var inv=LISTE_PAIRE3.map(function(n){ var s=("0"+n).slice(-2); return s[1]+s[0]; }).join(" - ");
-   h="<div style='width:100%;background:#fff;padding:8px;border-radius:8px'><small>Numéros ("+LISTE_PAIRE3.length+"/15) : </small><b>"+(LISTE_PAIRE3.join(" - ")||"Aucun")+"</b><br><small>Inversés auto : </small><b style='color:#e11d2e'>"+inv+"</b></div>";
-   h+="<div style='display:flex;gap:6px;width:100%'><input id='inputPaire3' type='number' placeholder='Ex: 10' style='flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;text-align:center'><button onclick='ajouterPaire3()' style='padding:10px 16px;background:#e11d2e;color:#fff;border:none;border-radius:8px;font-size:20px'>+</button></div>";
-   h+="<small>Ex: 10 -> 01, 45 -> 54. Max 15 numéros. Couples = "+LISTE_PAIRE3.length+"</small>";
-  } else { return; }
-  z.innerHTML=h; calculerGain3();
- }catch(e){}
-}
-function ajouterPaire3(){
- try{
-  var inp=document.getElementById("inputPaire3"); if(!inp||!inp.value) return;
-  var v=parseInt(inp.value); if(v<1||v>90) return;
-  if(LISTE_PAIRE3.length>=15){ alert("Max 15 numéros pour Paire"); return; }
-  if(LISTE_PAIRE3.indexOf(v)===-1) LISTE_PAIRE3.push(v);
-  inp.value=""; renderNumeros3();
- }catch(e){}
-}
-function afficherBarreGain3(){
- try{
-  if(document.getElementById("barreGainDetail3")) return;
-  var btn=document.querySelector("#corpsJeu button[onclick='ajouterCoupon()']");
-  if(!btn) return;
-  var div=document.createElement("div"); div.id="barreGainDetail3";
-  div.style.cssText="background:#111;color:#fff;padding:12px;border-radius:8px;margin-top:12px";
-  div.innerHTML="<div style='display:flex;justify-content:space-between'><span>GAIN</span><b id='txtGain3' style='color:#ffd700'>0 XOF</b></div><div style='display:flex;justify-content:space-between;margin-top:6px;font-size:12px'><span>Mise totale : <b id='txtMiseTotale3'>0 XOF</b></span><button onclick='alert(document.getElementById(\"txtDetailGain3\").innerText)' style='background:#fff;border:none;padding:4px 10px;border-radius:12px;font-size:12px'>DÉTAILS</button></div><div id='txtDetailGain3' style='font-size:11px;color:#ccc;margin-top:6px'></div>";
-  btn.parentNode.insertBefore(div, btn);
-  var im=document.getElementById("inputMise"); if(im) im.oninput=function(){ calculerGain3(); };
- }catch(e){}
-}
-setInterval(function(){ try{ if(typeof FORMULE_ACTUELLE!=="undefined" && ["Chance +","Permutation","Against","Total Résultat","Anagramme"].indexOf(FORMULE_ACTUELLE)>=0){ afficherBarreGain3(); } }catch(e){} }, 800);
-}catch(e){}
- // FIN CODE V3
- // CODE FINAL V6 - TOUT REPARE
-(function(){
-function trouveMise(){ var els=document.querySelectorAll("input"); for(var i=0;i<els.length;i++){ var p=els[i].closest("div"); if(p && p.textContent.indexOf("Mise")>=0) continue; } var inputs=document.querySelectorAll("input[type='number'],input[type='text']"); for(var j=0;j<inputs.length;j++){ var lab=inputs[j].parentElement.parentElement; if(lab && lab.textContent.indexOf("Mise")>=0) return inputs[j]; } var all=document.querySelectorAll("input"); for(var k=0;k<all.length;k++){ if(all[k].placeholder==="0" || all[k].value==="100") return all[k]; } return document.querySelector("input"); }
-function trouveFormule(){ var s=document.querySelector("select"); if(s) return s.value; var els=document.querySelectorAll("*"); for(var i=0;i<els.length;i++){ if(els[i].textContent==="Chance +"||els[i].textContent==="Against"||els[i].textContent==="Total Résultat"||els[i].textContent==="Anagramme") return els[i].textContent; } return "Chance +"; }
-function trouveZoneNumeros(){ var titles=document.querySelectorAll("*"); for(var i=0;i<titles.length;i++){ if(titles[i].textContent.trim()==="Numéros" && titles[i].children.length<2){ var p=titles[i].parentElement; if(p) return p; } } return null; }
-function nettoyerGains(){ var gains=document.querySelectorAll("#barreF"); for(var i=1;i<gains.length;i++){ gains[i].remove(); } var all=document.querySelectorAll("div"); var cnt=0; }
+function bloquerUser(gmail){var u=DB.users.find(x=>x.gmail==gmail); if(u){u.bloque=!u.bloque; save(); alert(u.bloque?'Bloqué':'Débloqué')}}
+function rechargerCaisse(){let m=prompt('Montant a ajouter a la Caisse ADMIN ?'); if(m){DB.caisse+=parseInt(m); DB.archives.push('Caisse rechargee: '+m+' - '+new Date().toLocaleString()); save()}}
+function creerRevendeur(){let e=document.getElementById('etab').value,n=document.getElementById('rNom').value,g=document.getElementById('rGmail').value,w=document.getElementById('rWa').value,p=document.getElementById('rPass').value; if(!e||!n||!g||!w||!p) return alert('Remplis tout'); let code='REV-'+Math.floor(10000+Math.random()*90000); DB.revendeurs.push({etab:e,nom:n,gmail:g,wa:w,pass:p,code:code,soldeRev:0}); DB.users.push({gmail:g,pass:p,wa:w,role:'REVENDEUR',soldeJeu:0,soldeGain:0,soldeRev:0,bloque:false}); DB.archives.push('Revendeur cree: '+n+' '+e+' Code '+code); save(); alert('REVENDEUR CREE ! Code: '+code)}
+function genererCode(type){let wa=document.getElementById('rechWa').value,m=document.getElementById('rechMontant').value; if(!wa||!m) return alert('Mets WhatsApp + Montant'); let code='NET-'+Math.floor(10000+Math.random()*90000); DB.codes[code]={wa:wa,montant:parseInt(m),type:type}; save(); document.getElementById('rechMsg').innerHTML='Code <b>'+code+'</b> pour '+type+' - '+m+' FCFA'; window.open('https://wa.me/'+wa.replace(/\D/g,'')+'?text='+encodeURIComponent('Ton code NET LOTO: '+code+' Montant: '+m+' FCFA.'),'_blank')}
+function validerCode(){let c=document.getElementById('codeClient').value; let info=DB.codes[c]; if(!info) return alert('Code faux'); let u=DB.users.find(x=>x.wa==info.wa); if(u){ if(info.type=='client'){u.soldeJeu+=info.montant} else {u.soldeRev+=info.montant} DB.caisse-=info.montant; DB.ventes+=info.montant; DB.archives.push('Recharge validee: '+info.type+' '+info.wa+' '+info.montant+' Code '+c); delete DB.codes[c]; save(); alert('SOLDE VALIDE ! '+info.montant+' FCFA ajoute.')} else alert('Utilisateur introuvable')}
+function publierPronostic(){let t=document.getElementById('prType').value,n=document.getElementById('prNums').value; if(!n) return alert('Mets les numeros'); DB.pronostics.push(t+': '+n+' - '+new Date().toLocaleDateString()); save(); alert('Pronostic publie !')}
+function publierResultat(){let j=document.getElementById('rJeu').value,d=document.getElementById('rDate').value,ti=document.getElementById('rTirage').value,no=document.getElementById('rNormal').value,doub=document.getElementById('rDouble').value,ty=document.getElementById('rType').value; if(!j||!no) return alert('Mets Jeu + Numero Gagnant Normal'); DB.resultats.push(j+' | Date: '+d+' | Tirage: '+ti+' | NORMAL: '+no+' | DOUBLE CHANCE: '+doub+' | '+ty); DB.archives.push('Resultat publie: '+j+' '+no); save(); alert('Resultat publie !')}
+function faireControle(){document.getElementById('controleList').innerHTML=DB.tickets.length? DB.tickets.map(function(t){return '<div>'+t+'</div>'}).join(''):'Aucun ticket a controler'}
+function validerTickets(){alert('Tickets valides')}
+function payerGains(){alert('Gains payes vers Solde Gain')}
+function demandeRetrait(){let m=document.getElementById('retMontant').value; if(!m) return alert('Mets le montant'); alert('Demande de retrait envoyee : '+m+' FCFA')}
+function enregistrerPaiement(){let n=document.getElementById('payNom').value,m=document.getElementById('payMontant').value; if(!n||!m) return alert('Mets Nom + Montant'); DB.archives.push('Paiement MoMo: '+n+' '+m+' - '+new Date().toLocaleString()); save(); alert('Paiement enregistre !')}
+function ajoutContenu(){let t=document.getElementById('contenuTxt').value; if(!t) return; DB.contenus.push(t); save()}
+function modifContenu(){alert('Contenu modifie')}
+function suppContenu(){DB.contenus=[]; save()}
 var NB_C=3, NB_P=3, NB_B=3, MODE_A="Simple";
 var C37=["01-10","02-20","03-30","04-40","05-50","06-60","07-70","08-80","09-90","12-21","13-31","14-41","15-51","16-61","17-71","18-81","23-32","24-42","25-52","26-62","27-72","28-82","34-43","35-53","36-63","37-73","38-83","45-54","46-64","47-74","48-84","56-65","57-75","58-85","67-76","68-86","78-87"];
 var C53=C37.concat(["01-11","10-11","02-22","20-22","03-33","30-33","04-44","40-44","05-55","50-55","06-66","60-66","07-77","70-77","08-88","80-88"]);
-var C45=[]; for(var cc=1;cc<=45;cc++){ var a=("0"+cc).slice(-2); C45.push(a+"-"+(cc+45)); }
-function getAnag(){ if(MODE_A==="Complet") return C53; if(MODE_A==="Canta") return C45; return C37; }
-window.chgNB=function(t,d){ if(t==="C"){ NB_C+=d; if(NB_C<2)NB_C=2; if(NB_C>5)NB_C=5; } if(t==="P"){ NB_P+=d; if(NB_P<2)NB_P=2; if(NB_P>5)NB_P=5; } if(t==="B"){ NB_B+=d; if(NB_B<1)NB_B=1; if(NB_B>5)NB_B=5; } renderV6(); };
-window.chgAnag=function(m){ MODE_A=m; renderV6(); };
-function styleCadre(){ return "width:52px;padding:9px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold;font-size:14px;background:#fff"; }
-function btnPM(t){ return "<div style='display:flex;gap:8px;margin-top:8px;align-items:center'><button onclick=\"chgNB('"+t+"',-1)\" style='width:46px;height:46px;border-radius:10px;background:#fff;border:2px solid #e11d2e;font-size:22px;font-weight:bold'>-</button><button onclick=\"chgNB('"+t+"',1)\" style='width:46px;height:46px;border-radius:10px;background:#e11d2e;color:#fff;border:none;font-size:22px;font-weight:bold'>+</button></div>"; }
-function renderV6(){
- try{
-  var form=trouveFormule(); var zone=trouveZoneNumeros(); if(!zone) return;
-  var old=zone.querySelector("#zoneV6"); if(!old){ old=document.createElement("div"); old.id="zoneV6"; zone.appendChild(old); }
-  var h="";
-  if(form==="Chance +"){
-   h="<div style='display:flex;gap:5px;flex-wrap:wrap'>";
-   for(var i=1;i<=NB_C;i++){ h+="<div style='text-align:center'><small>N"+i+"</small><br><input maxlength='2' inputmode='numeric' oninput='if(this.value.length>=2){this.value=this.value.slice(0,2);}calcV6()' placeholder='00' style='"+styleCadre()+"'></div>"; }
-   h+="</div>"+btnPM("C")+"<div style='font-weight:bold;margin-top:4px'>Chance + : "+NB_C+" numéros</div><small>Appuie sur + pour ajouter un cadre, - pour enlever. 2 à 5 numéros.</small>";
-  } else if(form==="Permutation"){
-   h="<div style='display:flex;gap:5px;flex-wrap:wrap'>";
-   for(var j=1;j<=NB_P;j++){ h+="<div style='text-align:center'><small>N"+j+"</small><br><input maxlength='2' inputmode='numeric' oninput='calcV6()' placeholder='00' style='"+styleCadre()+"'></div>"; }
-   h+="</div>"+btnPM("P")+"<div style='font-weight:bold'>Permutation "+NB_P+"</div>";
-  } else if(form==="Against"||form==="Numéro de base"){
-   h="<div style='margin-bottom:8px'><small>Banka (Base)</small><br><input maxlength='2' inputmode='numeric' oninput='calcV6()' placeholder='00' style='"+styleCadre()+"'></div><div style='display:flex;gap:5px;flex-wrap:wrap'>";
-   for(var k=1;k<=NB_B;k++){ h+="<div style='text-align:center'><small>N"+k+"</small><br><input maxlength='2' inputmode='numeric' oninput='calcV6()' placeholder='00' style='"+styleCadre()+"'></div>"; }
-   h+="</div>"+btnPM("B")+"<div style='font-weight:bold'>Banka + "+NB_B+"</div>";
-  } else if(form==="Total Résultat"){
-   h="<div style='width:120px'><small>TOTAL (1-90)</small><br><input type='number' min='1' max='90' oninput='calcV6()' placeholder='00' style='width:100%;padding:11px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold'></div><small>1 seul cadre pour le Total.</small>";
-  } else if(form==="Anagramme"){
-   var lst=getAnag();
-   h="<div style='display:flex;gap:6px;flex-wrap:wrap'><button onclick=\"chgAnag('Simple')\" style='padding:8px 14px;border-radius:20px;border:1px solid #ddd;background:"+(MODE_A==="Simple"?"#e11d2e;color:#fff":"#fff")+"'>Simple</button><button onclick=\"chgAnag('Complet')\" style='padding:8px 14px;border-radius:20px;border:1px solid #ddd;background:"+(MODE_A==="Complet"?"#e11d2e;color:#fff":"#fff")+"'>Complet</button><button onclick=\"chgAnag('Canta')\" style='padding:8px 14px;border-radius:20px;border:1px solid #ddd;background:"+(MODE_A==="Canta"?"#e11d2e;color:#fff":"#fff")+"'>Canta</button></div><div style='background:#fff;padding:8px;border-radius:8px;margin-top:8px'><small>"+MODE_A+" : "+lst.length+" couples</small><br><b style='font-size:11px'>"+lst.join(" , ")+"</b></div>";
-  } else return;
-  old.innerHTML=h;
-  var t1t2=zone.querySelectorAll(":scope > div:not(#zoneV6)");
-  // on cache les anciens T1 T2 d'origine, on ne les supprime pas pour ne pas casser l'app
-  for(var q=0;q<t1t2.length;q++){ if(t1t2[q].textContent.indexOf("T1")>=0) t1t2[q].style.display="none"; }
-  var olds=zone.querySelectorAll("div"); for(var w=0;w<olds.length;w++){ if(olds[w].textContent.indexOf("T1")>=0 && olds[w].id!=="zoneV6") olds[w].style.display="none"; }
-  calcV6();
- }catch(e){}
+var C45=[]; for(var cc=1;cc<=45;cc++){var a=("0"+cc).slice(-2); C45.push(a+"-"+(cc+45));}
+function getAnag(){if(MODE_A==="Complet") return C53; if(MODE_A==="Canta") return C45; return C37;}
+function openPays(pays){var jeu=document.getElementById('pageJeu'); jeu.classList.remove('hide'); jeu.style.display='block'; jeu.innerHTML="<h3>🇧🇯 "+pays+" - BENIN MARDI 18H</h3><label>Formule</label><select id='selFormule' onchange='renderJeu()'><option>Chance +</option><option>Permutation</option><option>Against</option><option>Total Résultat</option><option>Anagramme</option></select><div id='zoneNumeros' style='margin-top:10px'></div><label>Mise</label><input id='inputMise' type='number' value='100' oninput='calcJeu()'><div style='display:flex;gap:6px'><button class='btn' onclick=\"document.getElementById('inputMise').value=100;calcJeu()\">100</button><button class='btn' onclick=\"document.getElementById('inputMise').value=200;calcJeu()\">200</button><button class='btn' onclick=\"document.getElementById('inputMise').value=500;calcJeu()\">500</button></div><div style='background:#111;color:#fff;padding:12px;border-radius:8px;margin-top:10px'><div style='display:flex;justify-content:space-between'><span>GAIN</span><b id='txtGainJeu' style='color:#ffd700'>0 XOF</b></div><div>Mise totale : <b id='txtTotJeu'>0 XOF</b></div><div id='txtDetJeu' style='font-size:12px;color:#ccc'></div></div><button class='btn red' onclick='alert(\"Ajouté au coupon !\")'>⚡ Ajouter au coupon</button><button class='btn' onclick=\"document.getElementById('pageJeu').style.display='none'\">RETOUR</button>"; renderJeu(); jeu.scrollIntoView({behavior:'smooth'});}
+window.chgNB=function(t,d){if(t==='C'){NB_C+=d; if(NB_C<2)NB_C=2; if(NB_C>5)NB_C=5;} if(t==='P'){NB_P+=d; if(NB_P<2)NB_P=2; if(NB_P>5)NB_P=5;} if(t==='B'){NB_B+=d; if(NB_B<1)NB_B=1; if(NB_B>5)NB_B=5;} renderJeu();};
+window.chgAnag=function(m){MODE_A=m; renderJeu();};
+function cadre(n){return "<div style='text-align:center'><small>N"+n+"</small><br><input maxlength='2' inputmode='numeric' oninput='if(this.value.length>=2)this.value=this.value.slice(0,2);calcJeu()' placeholder='00' style='width:52px;padding:9px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div>";}
+function boutonsPM(t){return "<div style='display:flex;gap:8px;margin-top:8px'><button onclick=\"chgNB('"+t+"',-1)\" style='width:46px;height:46px;border-radius:10px;background:#fff;border:2px solid #e11d2e;font-size:22px'>-</button><button onclick=\"chgNB('"+t+"',1)\" style='width:46px;height:46px;border-radius:10px;background:#e11d2e;color:#fff;border:none;font-size:22px'>+</button></div>";}
+function renderJeu(){
+ var f=document.getElementById('selFormule'); if(!f) return; var form=f.value; var z=document.getElementById('zoneNumeros'); if(!z) return; var h="<b>Numéros</b><div style='display:flex;gap:5px;flex-wrap:wrap;margin-top:6px'>";
+ if(form==="Chance +"){for(var i=1;i<=NB_C;i++) h+=cadre(i); h+="</div>"+boutonsPM('C')+"<div><b>Chance + : "+NB_C+" numéros</b><br><small>Appuie sur + pour ajouter un cadre. 2 à 5 numéros.</small></div>";}
+ else if(form==="Permutation"){for(var j=1;j<=NB_P;j++) h+=cadre(j); h+="</div>"+boutonsPM('P')+"<div><b>Permutation "+NB_P+"</b></div>";}
+ else if(form==="Against"){h="<div><small>Numéro de base (Banka)</small><br>"+cadre('B')+"</div><div style='display:flex;gap:5px;flex-wrap:wrap'>"; for(var k=1;k<=NB_B;k++) h+=cadre(k); h+="</div>"+boutonsPM('B')+"<div><b>Banka + "+NB_B+"</b></div>";}
+ else if(form==="Total Résultat"){h="<div style='width:120px'><small>TOTAL (1-90)</small><input type='number' min='1' max='90' placeholder='00' style='width:100%;padding:11px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold'></div>";}
+ else if(form==="Anagramme"){var lst=getAnag(); h="<div style='display:flex;gap:6px'><button onclick=\"chgAnag('Simple')\" style='padding:8px 14px;border-radius:20px;background:"+(MODE_A==="Simple"?"#e11d2e;color:#fff":"#fff")+"'>Simple</button><button onclick=\"chgAnag('Complet')\" style='padding:8px 14px;border-radius:20px;background:"+(MODE_A==="Complet"?"#e11d2e;color:#fff":"#fff")+"'>Complet</button><button onclick=\"chgAnag('Canta')\" style='padding:8px 14px;border-radius:20px;background:"+(MODE_A==="Canta"?"#e11d2e;color:#fff":"#fff")+"'>Canta</button></div><div style='background:#fff;padding:8px;border-radius:8px;margin-top:8px'><small>"+MODE_A+" : "+lst.length+" couples</small><br><b style='font-size:11px'>"+lst.join(" , ")+"</b></div>";}
+ z.innerHTML=h; calcJeu();
 }
-window.calcV6=function(){
- try{
-  var form=trouveFormule();
-  var miseEl=null; var inputs=document.querySelectorAll("input"); for(var i=0;i<inputs.length;i++){ var anc=inputs[i].closest("div"); if(anc && anc.parentElement && anc.parentElement.textContent.indexOf("Mise")>=0){ miseEl=inputs[i]; break; } }
-  if(!miseEl){ var all=document.querySelectorAll("input"); for(var j=0;j<all.length;j++){ if(all[j].type==="number" && all[j].placeholder==="0"){ miseEl=all[j]; } } }
-  var mise=miseEl? (parseInt(miseEl.value||0)||0):0;
-  var gain=0, tot=mise, det="";
-  if(form==="Chance +"){ tot=mise; if(NB_C===3){ gain=mise*80; det="Chance+ 3 | 2 bons = "+(mise*80).toLocaleString()+" | 3 bons = "+(mise*1750).toLocaleString(); } if(NB_C===4){ gain=mise*80; det="Chance+ 4 | 2 bons = "+(mise*80).toLocaleString()+" | 3 bons = "+(mise*400).toLocaleString()+" | 4 bons = "+(mise*3500).toLocaleString(); } if(NB_C===5){ gain=mise*80; det="Chance+ 5 | 2 bons = "+(mise*80).toLocaleString()+" | 3 bons = "+(mise*200).toLocaleString()+" | 4 bons = "+(mise*1000).toLocaleString()+" | 5 bons = "+(mise*7000).toLocaleString(); } if(NB_C===2){ gain=mise*80; det="Chance+ 2 | 2 bons = "+(mise*80).toLocaleString(); } }
-  else if(form==="Permutation"){ var c=3; if(NB_P===4)c=6; if(NB_P===5)c=10; tot=mise*c; gain=mise*300; det="Permutation "+NB_P+" : "+c+" combinaisons | 2 bons = "+(mise*300).toLocaleString(); }
-  else if(form==="Against"||form==="Numéro de base"){ tot=mise*NB_B; gain=mise*300; det="Banka + 1 = "+(mise*300).toLocaleString()+" | Banka + 2 = "+(mise*600).toLocaleString(); }
-  else if(form==="Total Résultat"){ tot=mise; gain=mise*13; det="Total exact = "+gain.toLocaleString(); }
-  else if(form==="Anagramme"){ var nb=getAnag().length; tot=mise*nb; gain=mise*300; det=MODE_A+" : "+nb+" couples | 1 couple = "+(mise*300).toLocaleString()+" | Meilleur cas = "+(mise*300*nb).toLocaleString(); }
-  else return;
-  var barre=document.getElementById("barreF");
-  if(!barre){
-   var btn=null; var btns=document.querySelectorAll("button"); for(var b=0;b<btns.length;b++){ if(btns[b].textContent.indexOf("Ajouter au coupon")>=0){ btn=btns[b]; break; } }
-   if(!btn) return; barre=document.createElement("div"); barre.id="barreF"; barre.style.cssText="background:#111;color:#fff;padding:12px;border-radius:8px;margin-top:12px"; barre.innerHTML="<div style='display:flex;justify-content:space-between'><span>GAIN</span><b id='txtGainF' style='color:#ffd700'>0 XOF</b></div><div style='display:flex;justify-content:space-between;margin-top:6px;font-size:12px'><span>Mise totale : <b id='txtTotF'>0 XOF</b></span><button onclick='alert(document.getElementById(\"txtDetF\").innerText)' style='background:#fff;border:none;padding:4px 10px;border-radius:12px'>DÉTAILS</button></div><div id='txtDetF' style='font-size:11px;color:#ccc;margin-top:6px'></div>"; btn.parentNode.insertBefore(barre,btn);
-  }
-  // supprime les autres GAIN en double
-  var doubles=document.querySelectorAll("#barreF"); for(var d=1;d<doubles.length;d++) doubles[d].remove();
-  var g=document.getElementById("txtGainF"); if(g) g.innerText=gain.toLocaleString()+" XOF";
-  var t=document.getElementById("txtTotF"); if(t) t.innerText=tot.toLocaleString()+" XOF";
-  var dd=document.getElementById("txtDetF"); if(dd) dd.innerText=det;
- }catch(e){}
-};
-document.addEventListener("change",function(){ setTimeout(renderV6,300); });
-document.addEventListener("click",function(){ setTimeout(renderV6,500); });
-setInterval(function(){ renderV6(); nettoyerGains(); },1500);
-setTimeout(renderV6,800);
-})();
- // FIN CODE FINAL V6
-</script>
-</body>
-</html>
-
+function calcJeu(){
+ var f=document.getElementById('selFormule'); if(!f) return; var form=f.value; var mise=parseInt(document.getElementById('inputMise').value||0)||0; var gain=0, tot=mise, det="";
+ if(form==="Chance +"){tot=mise; gain=mise*80; if(NB_C===3) det="Chance+ 3 | 2 bons = "+(mise*80).toLocaleString()+" | 3 bons = "+(mise*1750).toLocaleString(); if(NB_C===4) det="Chance+ 4 | 2 bons = "+(mise*80).toLocaleString()+" | 4 bons = "+(mise*3500).toLocaleString(); if(NB_C===5) det="Chance+ 5 | 2 bons = "+(mise*80).toLocaleString()+" | 5 bons = "+(mise*7000).toLocaleString(); if(NB_C===2) det="Chance+ 2 | 2 bons = "+(mise*80).toLocaleString();}
+ else if(form==="Permutation"){var c=3; if(NB_P===4)c=6; if(NB_P===5)c=10; tot=mise*c; gain=mise*300; det="2 bons = "+(mise*300).toLocaleString()+" | 3 bons = "+(mise*900).toLocaleString()+" | "+c+" combinaisons";}
+ else if(form==="Against"){tot=mise*NB_B; gain=mise*300; det="Banka + 1 = "+(mise*300).toLocaleString()+" | Banka + 2 = "+(mise*600).toLocaleString();}
+ else if(form==="Total Résultat"){tot=mise; gain=mise*13; det="Total exact = "+gain.toLocaleString();}
+ else if(form==="Anagramme"){var nb=getAnag().length; tot=mise*nb; gain=mise*300; det=MODE_A+" : "+nb+" couples | 1 couple = "+(mise*300).toLocaleString()+" | Meilleur cas = "+(mise*300*nb).toLocaleString();}
+ var g=document.getElementById('txtGainJeu'); if(g) g.innerText=gain.toLocaleString()+" XOF"; var t=document.getElementById('txtTotJeu'); if(t) t.innerText=tot.toLocaleString()+" XOF"; var d=document.getElementById('txtDetJeu'); if(d) d.innerText=det;
+}
+window.addEventListener('load',function(){var s=localStorage.getItem('session'); if(s){var u=DB.users.find(x=>x.gmail==s); if(u) showDash(u);} render();});
+</script></body></html>
