@@ -219,4 +219,125 @@ function calcJeu(){
  var g=document.getElementById('txtGainJeu'); if(g) g.innerText=gain.toLocaleString()+" XOF"; var t=document.getElementById('txtTotJeu'); if(t) t.innerText=tot.toLocaleString()+" XOF"; var d=document.getElementById('txtDetJeu'); if(d) d.innerText=det;
 }
 window.addEventListener('load',function(){var s=localStorage.getItem('session'); if(s){var u=DB.users.find(x=>x.gmail==s); if(u) showDash(u);} render();});
+ // CORRECTION BOSS - COLLER JUSTE AVANT </script> - NE RIEN EFFACER
+(function(){
+ // 1. ARCHIVE : chacun voit seulement ce qu'il a fait, sauf ADMIN qui voit tout
+ window.renderArchiveFiltree=function(){
+  var cur=window._currentUser; var al=document.getElementById('archiveList'); if(!al) return;
+  if(!cur) { al.innerHTML=DB.archives.slice(-20).reverse().map(function(a){return '<div>'+a+'</div>'}).join(''); return; }
+  if(cur.role==='ADMIN'){ al.innerHTML=DB.archives.slice(-30).reverse().map(function(a){return '<div>'+a+'</div>'}).join(''); return; }
+  // REVENDEUR et CLIENT : seulement ce qui contient son gmail ou son WhatsApp
+  var mes=DB.archives.filter(function(a){ return a.indexOf(cur.gmail)>=0 || a.indexOf(cur.wa)>=0 || a.indexOf('Coupon')>=0 && cur.role==='CLIENT' && a.indexOf(cur.gmail)>=0; });
+  if(cur.role==='REVENDEUR'){ mes=DB.archives.filter(function(a){ return a.indexOf(cur.gmail)>=0 || a.indexOf(cur.wa)>=0 || a.indexOf(cur.nom)>=0; }); }
+  if(cur.role==='CLIENT'){ mes=DB.archives.filter(function(a){ return a.indexOf(cur.gmail)>=0; }); var mesTickets=(DB.tickets||[]).filter(function(t){ return t.owner===cur.gmail; }); var html=mesTickets.map(function(t){return '<div>🎟️ COUPON : '+t.texte+' | Mise: '+t.mise+' | Gain: '+t.gain+'</div>'}).join(''); al.innerHTML=(html||'') + (mes.length? mes.slice(-20).reverse().map(function(a){return '<div>'+a+'</div>'}).join('') : '<div>Aucun coupon pour le moment. Joue et tu verras ton coupon ici.</div>'); return; }
+  al.innerHTML=mes.slice(-20).reverse().map(function(a){return '<div>'+a+'</div>'}).join('')||'Rien pour le moment.';
+ };
+ // On remplace render d'origine pour l'archive sans casser le reste
+ var oldRender=window.render; window.render=function(){ try{oldRender();}catch(e){} renderArchiveFiltree(); };
+
+ // 2. PAGE ADMIN : réduire en boutons - on cache tout, on montre par bouton
+ function menuAdmin(){
+  var dash=document.getElementById('dashboard'); if(!dash || document.getElementById('menuAdminBtns')) return;
+  var div=document.createElement('div'); div.id='menuAdminBtns'; div.className='card'; div.innerHTML="<h3>👑 MENU ADMIN</h3><div style='display:grid;grid-template-columns:1fr 1fr;gap:8px'>"
+  +"<button class='btn' onclick=\"montrerAdmin('cardTableau')\">📊 Tableau</button>"
+  +"<button class='btn' onclick=\"montrerAdmin('cardPronostic')\">🔮 Pronostic</button>"
+  +"<button class='btn' onclick=\"montrerAdmin('cardPublierResultat')\">🏆 Résultat</button>"
+  +"<button class='btn' onclick=\"montrerAdmin('creerRevBox')\">🧑‍💼 Créer Revendeur</button>"
+  +"<button class='btn orange' onclick=\"montrerAdmin('cardRecharger')\">💰 Recharger Client / Revendeur</button>"
+  +"<button class='btn' onclick=\"montrerAdmin('controle')\">🎯 Contrôle</button>"
+  +"<button class='btn' onclick=\"montrerAdmin('cardRetrait')\">💸 Retrait / Paiement</button>"
+  +"<button class='btn' onclick=\"montrerAdmin('cardUsers')\">👥 Utilisateurs</button>"
+  +"<button class='btn' onclick=\"montrerAdmin('archive')\">📁 Archive Tout le monde</button>"
+  +"<button class='btn' onclick=\"montrerAdmin('cardContenu')\">📝 Contenu</button></div><small>Appuie sur un bouton, la page s'affiche. Appuie sur Retour pour revenir au menu.</small>";
+  dash.prepend(div);
+ }
+ window.montrerAdmin=function(id){
+  var t2=['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
+  t2.forEach(function(x){var el=document.getElementById(x); if(el) el.style.display='none';});
+  var el=document.getElementById(id); if(el){el.style.display='block'; el.scrollIntoView({behavior:'smooth'});}
+  // Bouton retour menu
+  if(!document.getElementById('btnRetourMenu')){var b=document.createElement('button'); b.id='btnRetourMenu'; b.className='btn'; b.innerText='⬅ RETOUR MENU ADMIN'; b.onclick=function(){ t2.forEach(function(x){var e=document.getElementById(x); if(e) e.style.display='none';}); document.getElementById('menuAdminBtns').style.display='block';}; el.prepend(b);}
+  document.getElementById('menuAdminBtns').style.display='none';
+  if(id==='archive') renderArchiveFiltree();
+ };
+ var oldShowDash=window.showDash; window.showDash=function(u){
+  oldShowDash(u);
+  setTimeout(function(){
+   menuAdmin();
+   if(u.role==='ADMIN'){
+    var t2=['cardTableau','cardLoto','cardPronostic','cardPublierResultat','creerRevBox','cardRecharger','controle','cardRetrait','cardUsers','cardContenu','archive','profil','resultat','aide'];
+    t2.forEach(function(x){var el=document.getElementById(x); if(el) el.style.display='none';});
+    var m=document.getElementById('menuAdminBtns'); if(m) m.style.display='block';
+    var ct=document.getElementById('cardTableau'); if(ct) ct.style.display='block';
+   }
+   if(u.role==='REVENDEUR'){
+    // Bouton SE RECHARGER pour revendeur
+    var dash=document.getElementById('dashboard');
+    if(!document.getElementById('boxRechargeRev')){
+     var d=document.createElement('div'); d.id='boxRechargeRev'; d.className='card';
+     d.innerHTML="<h3>🔋 SE RECHARGER - REVENDEUR</h3><small>Tu mets le montant que tu veux, tu mets le CODE que l'Admin t'a envoyé, tu appuies VALIDER, ton Solde Revendeur se recharge.</small><input id='revMontantRecharge' type='number' placeholder='Montant que tu veux recharger'><input id='revCodeRecharge' placeholder='Code reçu de l Admin ex: NET-12345'><button class='btn green' onclick='validerRechargeRev()'>✅ VALIDER - RECHARGER MON SOLDE</button><div>Solde Revendeur : <b id='soldeRevTxt'>0</b> FCFA</div>";
+     dash.prepend(d);
+    }
+    var s=document.getElementById('soldeRevTxt'); if(s) s.innerText=u.soldeRev||0;
+   }
+  },300);
+ };
+ window.validerRechargeRev=function(){
+  var cur=window._currentUser; var m=parseInt(document.getElementById('revMontantRecharge').value||0); var c=document.getElementById('revCodeRecharge').value; var info=DB.codes[c];
+  if(!info) return alert('Code faux. Demande le code à l Admin.');
+  if(info.montant!==m) return alert('Montant différent du code. Le code est pour '+info.montant+' FCFA.');
+  cur.soldeRev=(cur.soldeRev||0)+m; var u2=DB.users.find(function(x){return x.gmail===cur.gmail}); if(u2) u2.soldeRev=cur.soldeRev; DB.caisse-=m; DB.archives.push('Recharge Revendeur: '+cur.gmail+' '+m+' Code '+c+' - '+new Date().toLocaleString()); delete DB.codes[c]; if(typeof save==='function') save(); else localStorage.setItem('netloto',JSON.stringify(DB)); alert('SOLDE REVENDEUR RECHARGÉ ! '+m+' FCFA'); var s=document.getElementById('soldeRevTxt'); if(s) s.innerText=cur.soldeRev;
+ };
+
+ // 3. CLIENT DEPOT : liste des Revendeurs AD + Code à part
+ window.ouvrirDepotClient=function(){
+  var cur=window._currentUser; var zone=document.getElementById('pageJeu'); if(!zone){ zone=document.createElement('div'); zone.id='pageJeu'; zone.className='card'; document.getElementById('clientHome').appendChild(zone); }
+  zone.classList.remove('hide'); zone.style.display='block';
+  var revs=DB.revendeurs||[]; var html="<h3>➕ DÉPÔT - Choisis un Revendeur AD</h3><small>Appuie sur un Revendeur AD, tu verras son WhatsApp. Tu lui envoies l'argent, il t'envoie un Code.</small>";
+  if(!revs.length) html+="<div>Aucun Revendeur pour le moment. Contacte l'Admin.</div>";
+  revs.forEach(function(r,i){ html+="<div onclick=\"voirRevendeurAD("+i+")\" style='border:1px solid #ddd;padding:10px;border-radius:10px;margin:6px 0'><b>REVENDEUR AD - "+r.nom+"</b><br><small>"+r.etab+" - Appuie pour voir WhatsApp ></small></div>"; });
+  html+="<hr><h3>🎟️ J'AI REÇU MON CODE - JE VALIDE À PART</h3><small>Tu as reçu Code + Montant. Mets-les ici, à part, et valide.</small><input id='codeDepotClient' placeholder='Ton Code ex: NET-12345'><input id='montantDepotClient' type='number' placeholder='Montant reçu'><button class='btn green' onclick='validerDepotClient()'>✅ VALIDER MON CODE</button><button class='btn' onclick=\"document.getElementById('pageJeu').style.display='none'\">RETOUR</button>";
+  zone.innerHTML=html; zone.scrollIntoView({behavior:'smooth'});
+ };
+ window.voirRevendeurAD=function(i){ var r=DB.revendeurs[i]; var zone=document.getElementById('pageJeu'); zone.innerHTML="<h3>REVENDEUR AD - "+r.nom+"</h3><div style='background:#fff8b0;padding:12px;border-radius:10px'><b>Établissement :</b> "+r.etab+"<br><b>WhatsApp :</b> "+r.wa+"<br><b>Nom :</b> "+r.nom+"</div><p>Envoie l'argent sur ce WhatsApp. Le Revendeur va t'envoyer un Code + Montant.</p><button class='btn green' onclick=\"window.open('https://wa.me/"+r.wa.replace(/\\D/g,'')+"?text='+encodeURIComponent('Bonjour, je veux recharger NET LOTO'))\">💬 OUVRIR WHATSAPP</button><button class='btn' onclick='ouvrirDepotClient()'>⬅ RETOUR LISTE</button>"; };
+ window.validerDepotClient=function(){ var c=document.getElementById('codeDepotClient').value; var m=parseInt(document.getElementById('montantDepotClient').value||0); var info=DB.codes[c]; if(!info) return alert('Code faux'); if(info.montant!==m) return alert('Montant différent. Le code est pour '+info.montant); var cur=window._currentUser; cur.soldeJeu=(cur.soldeJeu||0)+m; var u2=DB.users.find(function(x){return x.gmail===cur.gmail}); if(u2) u2.soldeJeu=cur.soldeJeu; DB.archives.push('Dépôt Client: '+cur.gmail+' '+m+' Code '+c); delete DB.codes[c]; localStorage.setItem('netloto',JSON.stringify(DB)); if(typeof render==='function') render(); alert('DÉPÔT VALIDÉ ! '+m+' FCFA ajouté à ton Solde Jeu.'); document.getElementById('chSolde').innerText=(cur.soldeJeu+cur.soldeGain)+' XOF'; };
+
+ // Brancher le bouton Dépôt du client sur la nouvelle fonction
+ document.addEventListener('click',function(e){ if(e.target && e.target.textContent.indexOf('Dépôt')>=0 && window._currentUser && window._currentUser.role==='CLIENT'){ e.stopPropagation(); ouvrirDepotClient(); } });
+
+ // 4. RETRAIT CLIENT : Numéro MoMo + Montant + Valider
+ window.demandeRetrait=function(){ var cur=window._currentUser; var momo=prompt('Ton Numéro MoMo ?'); if(!momo) return; var mont=parseInt(document.getElementById('retMontant').value||0); if(!mont) return alert('Mets le montant à retirer'); if(mont>(cur.soldeGain||0)+(cur.soldeJeu||0)) return alert('Solde insuffisant'); DB.archives.push('Retrait demandé: '+cur.gmail+' MoMo: '+momo+' Montant: '+mont); localStorage.setItem('netloto',JSON.stringify(DB)); alert('Demande de retrait envoyée ! MoMo: '+momo+' Montant: '+mont+' FCFA. Admin va payer.'); };
+
+ // 5. SOLDE : quand on appuie sur Solde, on voit Solde Jeu + Solde Gain
+ document.addEventListener('click',function(e){ if(e.target && e.target.textContent.indexOf('Solde')>=0 && window._currentUser && window._currentUser.role==='CLIENT'){ var cur=window._currentUser; setTimeout(function(){ alert('SOLDE JEU : '+(cur.soldeJeu||0)+' XOF\\nSOLDE GAIN : '+(cur.soldeGain||0)+' XOF\\nTOTAL : '+((cur.soldeJeu||0)+(cur.soldeGain||0))+' XOF'); },200); } });
+
+ // 6. COUPON + PAVÉ NUMÉRIQUE 0-90 + ADMIN VOIT LES JEUX
+ if(!DB.tickets) DB.tickets=[];
+ window.ajouterCoupon=function(texte,mise,gain){ var cur=window._currentUser; var t={owner:cur?cur.gmail:'', texte:texte, mise:mise, gain:gain, date:new Date().toLocaleString()}; DB.tickets.push(t); DB.archives.push('Coupon joué: '+cur.gmail+' - '+texte+' Mise: '+mise+' Gain possible: '+gain); localStorage.setItem('netloto',JSON.stringify(DB)); if(typeof render==='function') render(); alert('COUPON AJOUTÉ ! Va dans Archive / Tickets pour voir ton coupon.'); };
+ window.voirMesCoupons=function(){ var cur=window._currentUser; var zone=document.getElementById('pageJeu'); if(!zone){ zone=document.createElement('div'); zone.id='pageJeu'; zone.className='card'; document.getElementById('clientHome').appendChild(zone); } zone.classList.remove('hide'); zone.style.display='block'; var mes=(DB.tickets||[]).filter(function(t){return t.owner===cur.gmail}); var html="<h3>🎟️ MES COUPONS</h3>"; if(!mes.length) html+="<div>Aucun coupon. Joue et ton coupon va apparaître ici.</div>"; mes.forEach(function(t){ html+="<div style='border:1px solid #ddd;padding:10px;border-radius:10px;margin:6px 0'><b>"+t.texte+"</b><br>Mise: "+t.mise+" | Gain: "+t.gain+"<br><small>"+t.date+"</small></div>"; }); html+="<h4>⌨️ PAVÉ NUMÉRIQUE 0-90 - Ajouter un autre coupon</h4><div id='paveNum' style='display:grid;grid-template-columns:repeat(5,1fr);gap:6px'></div><div style='margin-top:8px'>Numéro choisi : <b id='numChoisi'>--</b></div><button class='btn red' onclick=\"ajouterCoupon('Numéro '+document.getElementById('numChoisi').innerText, 100, 8000)\">⚡ AJOUTER CE COUPON</button><button class='btn' onclick=\"document.getElementById('pageJeu').style.display='none'\">RETOUR</button>"; zone.innerHTML=html; var pave=document.getElementById('paveNum'); for(var n=0;n<=90;n++){ var b=document.createElement('button'); b.innerText=n; b.style.cssText='padding:10px;border-radius:8px;border:1px solid #ddd;background:#fff;font-weight:bold'; b.onclick=(function(num){return function(){ document.getElementById('numChoisi').innerText=num; };})(n); pave.appendChild(b); } zone.scrollIntoView({behavior:'smooth'}); };
+
+ // 7. JEU : NAP 1, NAP 2 Toussou Turbo 2/3/4, NAP Direct 3/4/5, Permutation jusqu'à 15, Base jusqu'à 45
+ var OLD_RENDERJEU=window.renderJeu; window.renderJeu=function(){
+  var f=document.getElementById('selFormule'); if(!f) return;
+  // On ajoute les nouvelles formules si elles n'existent pas
+  var opts=['NAP 1 - Direct 1ère Position','NAP 2 - Toussou Turbo 2','NAP 2 - Toussou Turbo 3','NAP 2 - Toussou Turbo 4','NAP Direct - NAP 3','NAP Direct - NAP 4','NAP Direct - NAP 5'];
+  opts.forEach(function(o){ var existe=false; for(var i=0;i<f.options.length;i++){ if(f.options[i].text===o) existe=true; } if(!existe){ var op=document.createElement('option'); op.text=o; f.add(op); } });
+  var form=f.value; var z=document.getElementById('zoneNumeros'); if(!z) return;
+  if(form.indexOf('NAP 1')>=0){ z.innerHTML="<b>Numéros - NAP 1 Direct 1ère Position</b><div style='display:flex;gap:5px'><input maxlength='2' placeholder='00' style='width:52px;padding:9px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div><small>1 numéro, il doit sortir en 1ère position. Gain : Mise x 300</small>"; if(typeof calcJeu==='function') calcJeu(); return; }
+  if(form.indexOf('NAP 2')>=0){ var turbo=form.indexOf('Turbo 2')>=0?2:(form.indexOf('Turbo 3')>=0?3:4); z.innerHTML="<b>NAP 2 - Toussou Turbo "+turbo+"</b><div style='display:flex;gap:5px'><input maxlength='2' placeholder='00' style='width:52px;padding:9px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'><input maxlength='2' placeholder='00' style='width:52px;padding:9px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div><small>2 numéros - Toussou Turbo "+turbo+" - Gain selon Turbo</small>"; if(typeof calcJeu==='function') calcJeu(); return; }
+  if(form.indexOf('NAP Direct')>=0){ var nb=form.indexOf('NAP 3')>=0?3:(form.indexOf('NAP 4')>=0?4:5); var h="<b>NAP Direct - NAP "+nb+"</b><div style='display:flex;gap:5px;flex-wrap:wrap'>"; for(var k=1;k<=nb;k++){ h+="<input maxlength='2' placeholder='00' style='width:52px;padding:9px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'>"; } h+="</div><small>"+nb+" numéros directs. Tous doivent sortir.</small>"; z.innerHTML=h; if(typeof calcJeu==='function') calcJeu(); return; }
+  // Pour les anciennes formules, on change les limites : Permutation jusqu'à 15, Base jusqu'à 45
+  OLD_RENDERJEU();
+  // On corrige les boutons + pour Permutation et Against après le rendu
+  setTimeout(function(){
+   var btns=document.querySelectorAll('#zoneNumeros button'); btns.forEach(function(b){ if(b.textContent==='+'){ b.onclick=function(){ var curForm=document.getElementById('selFormule').value; if(curForm==='Permutation'){ window.NB_P=(window.NB_P||3)+1; if(window.NB_P>15) window.NB_P=15; } if(curForm==='Against'){ window.NB_B=(window.NB_B||3)+1; if(window.NB_B>45) window.NB_B=45; } if(curForm==='Chance +'){ window.NB_C=(window.NB_C||3)+1; if(window.NB_C>5) window.NB_C=5; } window.renderJeu(); }; } if(b.textContent==='-'){ b.onclick=function(){ var curForm2=document.getElementById('selFormule').value; if(curForm2==='Permutation'){ window.NB_P=(window.NB_P||3)-1; if(window.NB_P<2) window.NB_P=2; } if(curForm2==='Against'){ window.NB_B=(window.NB_B||3)-1; if(window.NB_B<1) window.NB_B=1; } if(curForm2==='Chance +'){ window.NB_C=(window.NB_C||3)-1; if(window.NB_C<2) window.NB_C=2; } window.renderJeu(); }; } });
+   // On affiche le vrai nombre pour Permutation et Base
+   var info=document.getElementById('zoneNumeros'); if(info && info.textContent.indexOf('Permutation')>=0){ } 
+  },100);
+ };
+ window.chgNB=function(t,d){ if(t==='C'){ window.NB_C=(window.NB_C||3)+d; if(window.NB_C<2) window.NB_C=2; if(window.NB_C>5) window.NB_C=5; } if(t==='P'){ window.NB_P=(window.NB_P||3)+d; if(window.NB_P<2) window.NB_P=2; if(window.NB_P>15) window.NB_P=15; } if(t==='B'){ window.NB_B=(window.NB_B||3)+d; if(window.NB_B<1) window.NB_B=1; if(window.NB_B>45) window.NB_B=45; } if(typeof NB_C!=='undefined') NB_C=window.NB_C; if(typeof NB_P!=='undefined') NB_P=window.NB_P; if(typeof NB_B!=='undefined') NB_B=window.NB_B; window.renderJeu(); };
+
+ // Si renderJeu n'existait pas, on crée un minimum
+ if(!OLD_RENDERJEU){ window.renderJeu=function(){ var z=document.getElementById('zoneNumeros'); if(z) z.innerHTML='Choisis une formule'; }; }
+})();
 </script></body></html>
