@@ -305,5 +305,98 @@ function renderAideBoss(){
 function openAideBoss(n){ var det=document.getElementById('aideDetail'); if(!det) return; det.classList.remove('hide'); document.getElementById('aideTitre').innerText=n; var data=JSON.parse(localStorage.getItem('aideBoss')||'{}'); document.getElementById('aideTexte').innerText=data[n]||'Boss, ce texte est encore vide. Remplis-le dans MENU ADMIN > Modifier Aide.'; }
 function saveAideBoss(){ var sel=document.getElementById('aideSel'); var inp=document.getElementById('aideInput'); if(!sel||!inp) return; var data=JSON.parse(localStorage.getItem('aideBoss')||'{}'); data[sel.value]=inp.value; localStorage.setItem('aideBoss',JSON.stringify(data)); alert('Enregistre, boss: '+sel.value); }
 window.addEventListener('load',function(){var s=localStorage.getItem('session'); if(s){var u=DB.users.find(x=>x.gmail==s); if(u) showDash(u);} render();});
+// === JEU - TWO SÛR AVEC DIRECT / TURBO2 / TURBO3 / TURBO4 + BLOCAGE SOLDE ===
+var NB_C=3, NB_P=3, NB_B=3, MODE_A="Simple", PN_MODE="DIRECT", TWO_PARI="DIRECT";
+var C37=["01-10","02-20","03-30","04-40","05-50","06-60","07-70","08-80","09-90","12-21","13-31","14-41","15-51","16-61","17-71","18-81","23-32","24-42","25-52","26-62","27-72","28-82","34-43","35-53","36-63","37-73","38-83","45-54","46-64","47-74","48-84","56-65","57-75","58-85","67-76","68-86","78-87"];
+var C53=C37.concat(["01-11","10-11","02-22","20-22","03-33","30-33","04-44","40-44","05-55","50-55","06-66","60-66","07-77","70-77","08-88","80-88"]);
+var C45=[]; for(var cc=1;cc<=45;cc++){var a=("0"+cc).slice(-2); C45.push(a+"-"+(cc+45));}
+function getAnag(){if(MODE_A==="Complet") return C53; if(MODE_A==="Canta") return C45; return C37;}
+function openPays(pays){var jeu=document.getElementById('pageJeu'); jeu.classList.remove('hide'); jeu.style.display='block'; jeu.innerHTML="<h3>🇧🇯 "+pays+" - BENIN MARDI 18H</h3><label>Formule</label><select id='selFormule' onchange='renderJeu()'><option>Chance +</option><option>Permutation</option><option>Against</option><option>Total Résultat</option><option>Anagramme</option><option>PN (1N) - NAP 1</option><option>Two sure</option><option>NAP Direct - NAP 3</option><option>NAP Direct - NAP 4</option><option>NAP Direct - NAP 5</option></select><div id='zoneNumeros' style='margin-top:10px'></div><label>Mise</label><input id='inputMise' type='number' value='100' oninput='calcJeu()'><div style='display:flex;gap:6px'><button class='btn' onclick=\"document.getElementById('inputMise').value=100;calcJeu()\">100</button><button class='btn' onclick=\"document.getElementById('inputMise').value=200;calcJeu()\">200</button><button class='btn' onclick=\"document.getElementById('inputMise').value=500;calcJeu()\">500</button></div><div style='background:#111;color:#fff;padding:12px;border-radius:8px;margin-top:10px'><div style='display:flex;justify-content:space-between'><span>GAIN</span><b id='txtGainJeu' style='color:#ffd700'>0 XOF</b></div><div>Mise totale : <b id='txtTotJeu'>0 XOF</b></div><div id='txtDetJeu' style='font-size:12px;color:#ccc'></div></div><button class='btn red' onclick='ajouterCouponJeu()'>⚡ Ajouter au coupon</button><button class='btn' onclick=\"document.getElementById('pageJeu').style.display='none'\">RETOUR</button>"; renderJeu(); jeu.scrollIntoView({behavior:'smooth'});}
+function chgNB(t,d){if(t==='C'){NB_C+=d; if(NB_C<2)NB_C=2; if(NB_C>5)NB_C=5;} if(t==='P'){NB_P+=d; if(NB_P<2)NB_P=2; if(NB_P>15)NB_P=15;} if(t==='B'){NB_B+=d; if(NB_B<1)NB_B=1; if(NB_B>45)NB_B=45;} renderJeu();}
+function chgAnag(m){MODE_A=m; renderJeu();}
+function cadre(n){return "<div style='text-align:center'><small>N"+n+"</small><br><input maxlength='2' inputmode='numeric' oninput='if(this.value.length>=2)this.value=this.value.slice(0,2);calcJeu()' placeholder='00' style='width:52px;padding:9px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div>";}
+function boutonsPM(t){return "<div style='display:flex;gap:8px;margin-top:8px'><button onclick=\"chgNB('"+t+"',-1)\" style='width:46px;height:46px;border-radius:10px;background:#fff;border:2px solid #e11d2e;font-size:22px'>-</button><button onclick=\"chgNB('"+t+"',1)\" style='width:46px;height:46px;border-radius:10px;background:#e11d2e;color:#fff;border:none;font-size:22px'>+</button></div>";}
+function setPN(m){PN_MODE=m; document.querySelectorAll('.pnBtn').forEach(function(b){b.classList.remove('on');}); var btn=document.getElementById('pn'+m); if(btn) btn.classList.add('on'); calcJeu();}
+function setTwo(p){TWO_PARI=p; document.querySelectorAll('.twoBtn').forEach(function(b){b.classList.remove('on');}); var btn=document.getElementById('two'+p); if(btn) btn.classList.add('on'); calcJeu();}
+function renderJeu(){
+ var f=document.getElementById('selFormule'); if(!f) return; var form=f.value; var z=document.getElementById('zoneNumeros'); if(!z) return; var h="<b>Numéros</b><div style='display:flex;gap:5px;flex-wrap:wrap;margin-top:6px'>";
+ if(form==="Chance +"){for(var i=1;i<=NB_C;i++) h+=cadre(i); h+="</div>"+boutonsPM('C')+"<div><b>Chance + : "+NB_C+" numéros</b><br><small>2 à 5 numéros.</small></div>";}
+ else if(form==="Permutation"){for(var j=1;j<=NB_P;j++) h+=cadre(j); h+="</div>"+boutonsPM('P')+"<div><b>Permutation "+NB_P+"</b><br><small>Jusqu'à 15</small></div>";}
+ else if(form==="Against"){h="<div><small>Numéro de base (Banka)</small><br>"+cadre('B')+"</div><div style='display:flex;gap:5px;flex-wrap:wrap'>"; for(var k=1;k<=NB_B;k++) h+=cadre(k); h+="</div>"+boutonsPM('B')+"<div><b>Banka + "+NB_B+"</b><br><small>Jusqu'à 45</small></div>";}
+ else if(form==="Total Résultat"){h="<div style='width:120px'><small>TOTAL (1-90)</small><input type='number' min='1' max='90' placeholder='00' style='width:100%;padding:11px;border:1px dashed #e11d2e;border-radius:10px;text-align:center;color:#e11d2e;font-weight:bold'></div>";}
+ else if(form==="Anagramme"){var lst=getAnag(); h="<div style='display:flex;gap:6px'><button onclick=\"chgAnag('Simple')\" style='padding:8px 14px;border-radius:20px;background:"+(MODE_A==="Simple"?"#e11d2e;color:#fff":"#fff")+"'>Simple</button><button onclick=\"chgAnag('Complet')\" style='padding:8px 14px;border-radius:20px;background:"+(MODE_A==="Complet"?"#e11d2e;color:#fff":"#fff")+"'>Complet</button><button onclick=\"chgAnag('Canta')\" style='padding:8px 14px;border-radius:20px;background:"+(MODE_A==="Canta"?"#e11d2e;color:#fff":"#fff")+"'>Canta</button></div><div style='background:#fff;padding:8px;border-radius:8px;margin-top:8px'><small>"+MODE_A+" : "+lst.length+" couples</small><br><b style='font-size:11px'>"+lst.join(" , ")+"</b></div>";}
+ else if(form.indexOf('PN')>=0){ h="<div style='display:flex;gap:8px;margin-bottom:10px'><button id='pnDIRECT' class='pnBtn "+(PN_MODE==='DIRECT'?'on':'')+"' onclick=\"setPN('DIRECT')\" style='flex:1;padding:12px;border-radius:10px;border:1px solid #ddd;background:#fff;font-weight:bold'>DIRECT<br><small>100 = 1 300</small></button><button id='pnPOSITION' class='pnBtn "+(PN_MODE==='POSITION'?'on':'')+"' onclick=\"setPN('POSITION')\" style='flex:1;padding:12px;border-radius:10px;border:1px solid #ddd;background:#fff;font-weight:bold'>1ere POSITION<br><small>100 = 6 000</small></button></div><div>"+cadre(1)+"</div><small>PN (1N) - 1 numéro.</small>"; }
+ else if(form==="Two sure"){ h="<b>Pari</b><div style='display:flex;gap:6px;margin-bottom:10px'><button id='twoDIRECT' class='twoBtn "+(TWO_PARI==='DIRECT'?'on':'')+"' onclick=\"setTwo('DIRECT')\" style='flex:1;padding:10px;border-radius:20px;border:1px solid #ddd;background:#fff;font-weight:bold'>DIRECT</button><button id='twoTURBO2' class='twoBtn "+(TWO_PARI==='TURBO2'?'on':'')+"' onclick=\"setTwo('TURBO2')\" style='flex:1;padding:10px;border-radius:20px;border:1px solid #ddd;background:#fff;font-weight:bold'>TURBO2</button><button id='twoTURBO3' class='twoBtn "+(TWO_PARI==='TURBO3'?'on':'')+"' onclick=\"setTwo('TURBO3')\" style='flex:1;padding:10px;border-radius:20px;border:1px solid #ddd;background:#fff;font-weight:bold'>TURBO3</button><button id='twoTURBO4' class='twoBtn "+(TWO_PARI==='TURBO4'?'on':'')+"' onclick=\"setTwo('TURBO4')\" style='flex:1;padding:10px;border-radius:20px;border:1px solid #ddd;background:#fff;font-weight:bold'>TURBO4</button></div><div style='display:flex;gap:5px;flex-wrap:wrap'>"; for(var s=1;s<=2;s++) h+=cadre('T'+s); h+="</div><small>Two sure - T1 + T2 - Choisis DIRECT ou TURBO2 / TURBO3 / TURBO4</small>"; }
+ else if(form.indexOf('NAP Direct')>=0){ var nb=form.indexOf('NAP 3')>=0?3:(form.indexOf('NAP 4')>=0?4:5); h="<b>NAP Direct - NAP "+nb+"</b><div style='display:flex;gap:5px;flex-wrap:wrap'>"; for(var q=1;q<=nb;q++) h+=cadre(q); h+="</div><small>"+nb+" numéros directs.</small>"; }
+ z.innerHTML=h; calcJeu();
+}
+function calcJeu(){
+ var f=document.getElementById('selFormule'); if(!f) return; var form=f.value; var mise=parseInt(document.getElementById('inputMise').value||0)||0; var gain=0, tot=mise, det="";
+ if(form==="Chance +"){
+  tot=mise;
+  if(NB_C===2){gain=mise*30; det="Chance+ 2 | 2 bons = "+gain.toLocaleString();}
+  if(NB_C===3){gain=mise*30; det="Chance+ 3 | 2 bons = "+(mise*30).toLocaleString()+" | 3 bons = "+(mise*120).toLocaleString();}
+  if(NB_C===4){gain=mise*30; det="CHANCE + 4 | 2 bons = 3 000 (pour 100) | 3 bons = 12 000 | 4 bons = 300 000 | 5 bons = 5 000 000 | Pour "+mise+" : 2 bons = "+(mise*30).toLocaleString();}
+  if(NB_C===5){gain=mise*30; det="Chance+ 5 | 2 bons = "+(mise*30).toLocaleString()+" | 5 bons = "+(mise*50000).toLocaleString();}
+ }
+ else if(form==="Permutation"){var c=3; if(NB_P===4)c=6; if(NB_P===5)c=10; if(NB_P>=6)c=NB_P*(NB_P-1)/2; tot=mise*c; gain=mise*300; det="Permutation "+NB_P+" | "+c+" couples | Mise x Couples = "+tot.toLocaleString();}
+ else if(form==="Against"){tot=mise*NB_B; gain=mise*300; det="Banka + 1 = "+(mise*300).toLocaleString();}
+ else if(form==="Total Résultat"){tot=mise; gain=mise*13; det="Total exact = "+gain.toLocaleString();}
+ else if(form==="Anagramme"){var nb=getAnag().length; tot=mise*nb; gain=mise*300; det=MODE_A+" : "+nb+" couples";}
+ else if(form.indexOf('PN')>=0){
+  if(PN_MODE==='POSITION'){gain=mise*60; det='PN (1N) - 1ere POSITION | 100 = 6 000 | Gain: '+gain.toLocaleString();}
+  else {gain=mise*13; det='PN (1N) - DIRECT | 100 = 1 300 | Gain: '+gain.toLocaleString();}
+  tot=mise;
+ }
+ else if(form==="Two sure"){
+  // TWO SURE - GAINS PHOTOS + TOI
+  if(TWO_PARI==='DIRECT'){gain=mise*90; det='Two sure - DIRECT | 2 numéros n\'importe où | 100 = 9 000 | Gain: '+gain.toLocaleString();}
+  if(TWO_PARI==='TURBO2'){gain=mise*3000; det='Two sure - TURBO2 | Intervalle 1 à 2 | 1ère + 2ème position | 100 = 300 000 | Gain: '+gain.toLocaleString();}
+  if(TWO_PARI==='TURBO3'){gain=mise*800; det='Two sure - TURBO3 | Intervalle 1 à 3 | 100 = 80 000 | Gain: '+gain.toLocaleString();}
+  if(TWO_PARI==='TURBO4'){gain=mise*500; det='Two sure - TURBO4 | Intervalle 1 à 4 | 100 = 50 000 | Gain: '+gain.toLocaleString();}
+  tot=mise;
+ }
+ else if(form.indexOf('NAP Direct')>=0){var nb2=form.indexOf('NAP 3')>=0?3:(form.indexOf('NAP 4')>=0?4:5); if(nb2===3)gain=mise*3000; if(nb2===4)gain=mise*3500; if(nb2===5)gain=mise*7000; tot=mise; det='NAP Direct - NAP '+nb2+' | Gain: '+gain.toLocaleString();}
+ var g=document.getElementById('txtGainJeu'); if(g) g.innerText=gain.toLocaleString()+" XOF"; var t=document.getElementById('txtTotJeu'); if(t) t.innerText=tot.toLocaleString()+" XOF"; var d=document.getElementById('txtDetJeu'); if(d) d.innerText=det;
+}
+function ajouterCouponJeu(){
+ var f=document.getElementById('selFormule'); var mise=parseInt(document.getElementById('inputMise').value||0)||0; var gain=document.getElementById('txtGainJeu').innerText; var cur=window._currentUser;
+ // === CORRECTION BOSS : SI SOLDE = 0, ON NE JOUE PAS ===
+ if(!cur) return alert('Connecte-toi d\'abord.');
+ var solde=(cur.soldeJeu||0);
+ var tot=mise;
+ if(formIsPermutation()){ var c2=3; if(NB_P===4)c2=6; if(NB_P===5)c2=10; if(NB_P>=6)c2=NB_P*(NB_P-1)/2; tot=mise*c2; }
+ if(formIsAnagramme()){ tot=mise*getAnag().length; }
+ if(formIsAgainst()){ tot=mise*NB_B; }
+ if(solde < tot){ return alert('SOLDE INSUFFISANT, BOSS. Ton Solde Jeu = '+solde+' XOF. Mise totale = '+tot+' XOF. Recharge d\'abord avec un Revendeur AD.'); }
+ if(solde===0){ return alert('SOLDE = 0. Tu ne peux pas jouer sans Solde Jeu. Recharge d\'abord.'); }
+ // On enlève la mise du solde
+ cur.soldeJeu=solde-tot; var u2=DB.users.find(function(x){return x.gmail===cur.gmail}); if(u2) u2.soldeJeu=cur.soldeJeu;
+ var pariTxt=(f?f.value:'')+(f&&f.value==='Two sure'?' - '+TWO_PARI:'')+(f&&f.value.indexOf('PN')>=0?' - '+PN_MODE:'');
+ DB.tickets.push({owner:cur.gmail,texte:pariTxt+' - Mise '+tot, mise:tot, gain:gain, date:new Date().toLocaleString()}); DB.archives.push('Coupon joue: '+cur.gmail+' - '+pariTxt+' Mise: '+tot+' Gain: '+gain); save(); alert('COUPON AJOUTE ! Mise '+tot+' enlevée. Nouveau Solde Jeu = '+cur.soldeJeu+' XOF. Va dans Archive / Tickets.');
+}
+function formIsPermutation(){var f=document.getElementById('selFormule'); return f && f.value==='Permutation';}
+function formIsAnagramme(){var f=document.getElementById('selFormule'); return f && f.value==='Anagramme';}
+function formIsAgainst(){var f=document.getElementById('selFormule'); return f && f.value==='Against';}
+function ouvrirDepotClient(){
+ var cur=window._currentUser; var zone=document.getElementById('pageJeu'); zone.classList.remove('hide'); zone.style.display='block';
+ var revs=DB.revendeurs||[]; var html="<h3>➕ DÉPÔT - Choisis un Revendeur AD</h3><small>Appuie sur un Revendeur AD, tu verras son WhatsApp.</small>";
+ if(!revs.length) html+="<div>Aucun Revendeur pour le moment. Contacte l'Admin.</div>";
+ revs.forEach(function(r,i){ html+="<div onclick=\"voirRevendeurAD("+i+")\" style='border:1px solid #ddd;padding:10px;border-radius:10px;margin:6px 0'><b>REVENDEUR AD - "+r.nom+"</b><br><small>"+r.etab+" - Appuie pour voir WhatsApp ></small></div>"; });
+ html+="<hr><h3>🎟️ J'AI REÇU MON CODE - JE VALIDE À PART</h3><input id='codeDepotClient' placeholder='Ton Code ex: NET-12345'><input id='montantDepotClient' type='number' placeholder='Montant reçu'><button class='btn green' onclick='validerDepotClient()'>✅ VALIDER MON CODE</button><button class='btn' onclick=\"document.getElementById('pageJeu').style.display='none'\">RETOUR</button>";
+ zone.innerHTML=html; zone.scrollIntoView({behavior:'smooth'});
+}
+function voirRevendeurAD(i){ var r=DB.revendeurs[i]; var zone=document.getElementById('pageJeu'); zone.innerHTML="<h3>REVENDEUR AD - "+r.nom+"</h3><div style='background:#fff8b0;padding:12px;border-radius:10px'><b>Établissement :</b> "+r.etab+"<br><b>WhatsApp :</b> "+r.wa+"<br><b>Nom :</b> "+r.nom+"</div><button class='btn green' onclick=\"window.open('https://wa.me/"+r.wa.replace(/\D/g,'')+"?text='+encodeURIComponent('Bonjour, je veux recharger NET LOTO'))\">💬 OUVRIR WHATSAPP</button><button class='btn' onclick='ouvrirDepotClient()'>⬅ RETOUR LISTE</button>"; }
+function validerDepotClient(){ var c=document.getElementById('codeDepotClient').value; var m=parseInt(document.getElementById('montantDepotClient').value||0); var info=DB.codes[c]; if(!info) return alert('Code faux'); if(info.montant!==m) return alert('Montant différent. Le code est pour '+info.montant); var cur=window._currentUser; cur.soldeJeu=(cur.soldeJeu||0)+m; var u2=DB.users.find(function(x){return x.gmail===cur.gmail}); if(u2) u2.soldeJeu=cur.soldeJeu; DB.archives.push('Dépôt Client: '+cur.gmail+' '+m+' Code '+c); delete DB.codes[c]; localStorage.setItem('netloto',JSON.stringify(DB)); render(); alert('DÉPÔT VALIDÉ ! '+m+' FCFA ajouté.'); document.getElementById('chSolde').innerText=(cur.soldeJeu+cur.soldeGain)+' XOF'; }
+var aideTitres=['Bien demarrer','Comment se lit un tirage','Les modes de jeu','Les types de paris','Les formules','Les paris Ma chance','Le formulaire de pari','E-games','Portefeuille et tickets'];
+function renderAideBoss(){
+ var cont=document.getElementById('aideBtns'); if(!cont) return;
+ if(cont.children.length===0){ cont.innerHTML=aideTitres.map(function(n){return '<button class="btn" style="background:#fff;color:#111;border:1px solid #eee;text-align:left" onclick="openAideBoss(\''+n+'\')">'+n+' <span>›</span></button>';}).join(''); }
+ var sel=document.getElementById('aideSel'); if(sel && sel.options.length===0){ sel.innerHTML=aideTitres.map(function(n){return '<option>'+n+'</option>';}).join(''); sel.onchange=function(){var inp=document.getElementById('aideInput'); if(inp) inp.value=(JSON.parse(localStorage.getItem('aideBoss')||'{}')[sel.value]||'');}; }
+ var box=document.getElementById('aideAdminBox'); if(box){ var cur=window._currentUser; box.classList.toggle('hide',!(cur && cur.role==='ADMIN')); }
+}
+function openAideBoss(n){ var det=document.getElementById('aideDetail'); if(!det) return; det.classList.remove('hide'); document.getElementById('aideTitre').innerText=n; var data=JSON.parse(localStorage.getItem('aideBoss')||'{}'); document.getElementById('aideTexte').innerText=data[n]||'Boss, ce texte est encore vide. Remplis-le dans MENU ADMIN > Modifier Aide.'; }
+function saveAideBoss(){ var sel=document.getElementById('aideSel'); var inp=document.getElementById('aideInput'); if(!sel||!inp) return; var data=JSON.parse(localStorage.getItem('aideBoss')||'{}'); data[sel.value]=inp.value; localStorage.setItem('aideBoss',JSON.stringify(data)); alert('Enregistre, boss: '+sel.value); }
+window.addEventListener('load',function(){var s=localStorage.getItem('session'); if(s){var u=DB.users.find(x=>x.gmail==s); if(u) showDash(u);} render();});
 </script>
 </body></html>
