@@ -219,7 +219,7 @@ function calcJeu(){
  var g=document.getElementById('txtGainJeu'); if(g) g.innerText=gain.toLocaleString()+" XOF"; var t=document.getElementById('txtTotJeu'); if(t) t.innerText=tot.toLocaleString()+" XOF"; var d=document.getElementById('txtDetJeu'); if(d) d.innerText=det;
 }
 window.addEventListener('load',function(){var s=localStorage.getItem('session'); if(s){var u=DB.users.find(x=>x.gmail==s); if(u) showDash(u);} render();});
- // CORRECTION BOSS - COLLER JUSTE AVANT </script> - NE RIEN EFFACER
+ // CORRECTION BOSS
 (function(){
  // 1. ARCHIVE : chacun voit seulement ce qu'il a fait, sauf ADMIN qui voit tout
  window.renderArchiveFiltree=function(){
