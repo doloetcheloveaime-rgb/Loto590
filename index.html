@@ -265,9 +265,9 @@ function calcJeu(){
  if(form==="Chance +"){
   tot=mise;
   if(NB_C===2){gain=mise*30; det="Chance+ 2 | 2 bons = "+gain.toLocaleString()+" XOF";}
-  if(NB_C===3){gain=mise*30; det="Chance+ 3 | 2 bons = "+(mise*30).toLocaleString()+" | 3 bons = "+(mise*120).toLocaleString();}
-  if(NB_C===4){gain=mise*30; det="CHANCE + avec 4 numeros | 2 bons = 3 000 XOF (pour 100) | 3 bons = 12 000 XOF | 4 bons = 300 000 XOF | 5 bons = 5 000 000 XOF | Pour ta mise "+mise+" : 2 bons = "+(mise*30).toLocaleString()+" | 3 bons = "+(mise*120).toLocaleString()+" | 4 bons = "+(mise*3000).toLocaleString();}
-  if(NB_C===5){gain=mise*30; det="Chance+ 5 | 2 bons = "+(mise*30).toLocaleString()+" | 5 bons = "+(mise*50000).toLocaleString();}
+  if(NB_C===3){gain=mise*30; det="Chance+ 3 | 2 bons = "+(mise*80).toLocaleString()+" | 3 bons = "+(mise*1700).toLocaleString();}
+  if(NB_C===4){gain=mise*30; det="CHANCE + avec 4 numeros | 2 bons = 8 000 XOF (pour 100) | 3 bons = 170 000 XOF | 4 bons = 300 000 XOF | 5 bons = 5 000 000 XOF | Pour ta mise "+mise+" : 2 bons = "+(mise*30).toLocaleString()+" | 3 bons = "+(mise*120).toLocaleString()+" | 4 bons = "+(mise*3000).toLocaleString();}
+  if(NB_C===5){gain=mise*30; det="Chance+ 5 | 2 bons = "+(mise*80).toLocaleString()+" | 5 bons = "+(mise*50000).toLocaleString();}
  }
  else if(form==="Permutation"){var c=3; if(NB_P===4)c=6; if(NB_P===5)c=10; if(NB_P>=6)c=NB_P*(NB_P-1)/2; tot=mise*c; gain=mise*300; det="Permutation "+NB_P+" | "+c+" couples | Mise x Couples = "+tot.toLocaleString()+" | 2 bons = "+gain.toLocaleString();}
  else if(form==="Against"){tot=mise*NB_B; gain=mise*300; det="Banka + 1 = "+(mise*300).toLocaleString()+" | Banka + 2 = "+(mise*600).toLocaleString();}
@@ -279,7 +279,7 @@ function calcJeu(){
   tot=mise;
  }
  else if(form==="TWO SÛR" || form.indexOf('NAP 2')>=0){
-  gain=mise*90; tot=mise; det='TWO SÛR / NAP 2 - 2 numéros, les 2 doivent sortir | 100 = 9 000 | Gain: '+gain.toLocaleString();
+  gain=mise*300; tot=mise; det='TWO SÛR / NAP 2 - 2 numéros, les 2 doivent sortir | 100 = 30 000 | Gain: '+gain.toLocaleString();
  }
  else if(form.indexOf('NAP Direct')>=0){var nb2=form.indexOf('NAP 3')>=0?3:(form.indexOf('NAP 4')>=0?4:5); if(nb2===3)gain=mise*900; if(nb2===4)gain=mise*3500; if(nb2===5)gain=mise*7000; tot=mise; det='NAP Direct - NAP '+nb2+' | Gain: '+gain.toLocaleString();}
  var g=document.getElementById('txtGainJeu'); if(g) g.innerText=gain.toLocaleString()+" XOF"; var t=document.getElementById('txtTotJeu'); if(t) t.innerText=tot.toLocaleString()+" XOF"; var d=document.getElementById('txtDetJeu'); if(d) d.innerText=det;
