@@ -374,7 +374,32 @@ var C37=["01-10","02-20","03-30","04-40","05-50","06-60","07-70","08-80","09-90"
 var C53=C37.concat(["01-11","10-11","02-22","20-22","03-33","30-33","04-44","40-44","05-55","50-55","06-66","60-66","07-77","70-77","08-88","80-88"]);
 var C45=[]; for(var cc=1;cc<=45;cc++){var a=("0"+cc).slice(-2); C45.push(a+"-"+(cc+45));}
 function getAnag(){if(MODE_A==="Complet") return C53; if(MODE_A==="Canta") return C45; return C37;}
-function openPays(pays){var jeu=document.getElementById('pageJeu'); jeu.classList.remove('hide'); jeu.style.display='block'; jeu.innerHTML="<h3>🇧🇯 "+pays+" - BENIN MARDI 18H</h3><label>Formule</label><select id='selFormule' onchange='renderJeu()'><option>Chance +</option><option>Permutation</option><option>Against</option><option>Total Résultat</option><option>Anagramme</option><option>PN (1N) - NAP 1</option><option>Two sure</option><option>NAP Direct - NAP 3</option><option>NAP Direct - NAP 4</option><option>NAP Direct - NAP 5</option></select><div id='zoneNumeros' style='margin-top:10px'></div><label>Mise</label><input id='inputMise' type='number' value='100' oninput='calcJeu()'><div style='display:flex;gap:6px'><button class='btn' onclick=\"document.getElementById('inputMise').value=100;calcJeu()\">100</button><button class='btn' onclick=\"document.getElementById('inputMise').value=200;calcJeu()\">200</button><button class='btn' onclick=\"document.getElementById('inputMise').value=500;calcJeu()\">500</button></div><div style='background:#111;color:#fff;padding:12px;border-radius:8px;margin-top:10px'><div style='display:flex;justify-content:space-between'><span>GAIN</span><b id='txtGainJeu' style='color:#ffd700'>0 XOF</b></div><div>Mise totale : <b id='txtTotJeu'>0 XOF</b></div><div id='txtDetJeu' style='font-size:12px;color:#ccc'></div></div><button class='btn red' onclick='ajouterCouponJeu()'>⚡ Ajouter au coupon</button><button class='btn' onclick=\"document.getElementById('pageJeu').style.display='none'\">RETOUR</button>"; renderJeu(); jeu.scrollIntoView({behavior:'smooth'});}
+function openPays(pays){
+ var jeu=document.getElementById('pageJeu');
+ jeu.classList.remove('hide'); jeu.style.display='block';
+ // Liste des 6 jeux par pays
+ var jeuxParPays={
+  'BENIN':['Loto Bénin 10h','Loto Bénin 14h','Loto Bénin 18h','Bénin Fortune 00h','CHANCE 13H - Bénin','BOOSTER 30 - Bénin'],
+  'COTE DIVOIRE':['Loto Côte d\'Ivoire 10h','Loto Côte d\'Ivoire 13h','Loto Côte d\'Ivoire 18h','Côte d\'Ivoire Fortune','CHANCE 18H - Côte d\'Ivoire','BOOSTER 30 - Côte d\'Ivoire'],
+  'FRANCE':['Loto France 10h','Loto France 18h','France Fortune','CHANCE 18H - France','BOOSTER 30 - France','JACKPOT - France'],
+  'GHANA':['Loto Ghana 10h','Loto Ghana 14h','Loto Ghana 18h','Ghana Fortune','CHANCE 18H - Ghana','BOOSTER 30 - Ghana'],
+  'NIGERIA':['Loto Nigeria 10h','Loto Nigeria 14h','Loto Nigeria 18h','Nigeria Fortune','CHANCE 18H - Nigeria','BOOSTER 30 - Nigeria'],
+  'TOGO':['CHANCE 18H - Togo','Loto Togo 10h','Loto Togo 13h','Loto Togo 18h','Togo Fortune','BOOSTER 30 - Togo']
+ };
+ var liste=jeuxParPays[pays]||['Loto '+pays+' 10h','Loto '+pays+' 14h','Loto '+pays+' 18h','Fortune '+pays,'CHANCE 18H - '+pays,'BOOSTER 30 - '+pays];
+ var html="<h3>🇧🇯 "+pays+" - 6 jeux ouverts</h3><small>Choisis un jeu, boss, puis tu joues.</small>";
+ liste.forEach(function(nomJeu){
+  html+="<div onclick=\"openJeuPays('"+pays+"','"+nomJeu+"')\" style='background:#fff;border:1px solid #ddd;padding:14px;border-radius:12px;margin:8px 0;cursor:pointer'><b>"+nomJeu+"</b><br><small>Appuie pour jouer ></small></div>";
+ });
+ html+="<button class='btn' onclick=\"document.getElementById('pageJeu').style.display='none'\">⬅ RETOUR PAYS</button>";
+ jeu.innerHTML=html; jeu.scrollIntoView({behavior:'smooth'});
+}
+function openJeuPays(pays,nomJeu){
+ // Ici seulement on ouvre le pavé de jeu
+ var jeu=document.getElementById('pageJeu');
+ jeu.innerHTML="<h3>🇧🇯 "+pays+" - "+nomJeu+"</h3><label>Formule</label><select id='selFormule' onchange='renderJeu()'><option>Chance +</option><option>Permutation</option><option>Against</option><option>Total Résultat</option><option>Anagramme</option><option>PN (1N) - NAP 1</option><option>Two sure</option><option>NAP Direct - NAP 3</option><option>NAP Direct - NAP 4</option><option>NAP Direct - NAP 5</option></select><div id='zoneNumeros' style='margin-top:10px'></div><label>Mise</label><input id='inputMise' type='number' value='100' oninput='calcJeu()'><div style='display:flex;gap:6px'><button class='btn' onclick=\"document.getElementById('inputMise').value=100;calcJeu()\">100</button><button class='btn' onclick=\"document.getElementById('inputMise').value=200;calcJeu()\">200</button><button class='btn' onclick=\"document.getElementById('inputMise').value=500;calcJeu()\">500</button></div><div style='background:#111;color:#fff;padding:12px;border-radius:8px;margin-top:10px'><div style='display:flex;justify-content:space-between'><span>GAIN</span><b id='txtGainJeu' style='color:#ffd700'>0 XOF</b></div><div>Mise totale : <b id='txtTotJeu'>0 XOF</b></div><div id='txtDetJeu' style='font-size:12px;color:#ccc'></div></div><button class='btn red' onclick='ajouterCouponJeu()'>⚡ Ajouter au coupon</button><button class='btn' onclick=\"openPays('"+pays+"')\">⬅ RETOUR AUX 6 JEUX</button>";
+ renderJeu(); jeu.scrollIntoView({behavior:'smooth'});
+}
 function chgNB(t,d){if(t==='C'){NB_C+=d; if(NB_C<2)NB_C=2; if(NB_C>5)NB_C=5;} if(t==='P'){NB_P+=d; if(NB_P<2)NB_P=2; if(NB_P>15)NB_P=15;} if(t==='B'){NB_B+=d; if(NB_B<1)NB_B=1; if(NB_B>45)NB_B=45;} renderJeu();}
 function chgAnag(m){MODE_A=m; renderJeu();}
 function cadre(n){return "<div style='text-align:center'><small>N"+n+"</small><br><input maxlength='2' inputmode='numeric' oninput='if(this.value.length>=2)this.value=this.value.slice(0,2);calcJeu()' placeholder='00' style='width:52px;padding:9px 2px;border:1px dashed #e11d2e;border-radius:8px;text-align:center;color:#e11d2e;font-weight:bold'></div>";}
