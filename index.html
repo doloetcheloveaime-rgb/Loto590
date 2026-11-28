@@ -167,6 +167,7 @@
 <div class="card" id="aide"><h3>❓ Aide</h3><div id="aideBtns"></div><div id="aideDetail" class="hide" style="background:#fff;padding:12px;border-radius:10px;margin-top:10px"><b id="aideTitre"></b><p id="aideTexte" style="color:#555"></p></div><div id="aideAdminBox" class="hide" style="background:#fff8d6;padding:12px;border-radius:10px;margin-top:10px"><b>MODIFIER AIDE (ADMIN)</b><select id="aideSel"></select><textarea id="aideInput" placeholder="Ecris ton texte ici, boss..." style="min-height:100px"></textarea><button class="btn green" onclick="saveAideBoss()">Enregistrer ce texte</button></div></div>
 <button class="btn" onclick="showClientHome()" style="margin:12px">RETOUR ACCUEIL</button>
 </div>
+ <script>
 let DB=JSON.parse(localStorage.getItem('netloto')||'{"users":[{"gmail":"admin@netloto.com","pass":"Admin123!","wa":"22990000000","role":"ADMIN","soldeJeu":0,"soldeGain":0,"soldeRev":0,"bloque":false}],"revendeurs":[],"codes":{},"pronostics":[],"resultats":[],"tickets":[],"archives":[],"contenus":[],"caisse":500000,"ventes":0,"gains":0}');
 if(!DB.tickets) DB.tickets=[];
 function save(){localStorage.setItem('netloto',JSON.stringify(DB));render()}
